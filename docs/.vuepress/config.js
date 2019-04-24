@@ -1,23 +1,104 @@
 
 module.exports = {
-  title: '皮卡丘的知识体系',
+  title: '皮卡丘的前端体系',
   base: '/sy-fontend-system/', // 设置站点根目录
-  description: '宁静致远 淡泊明志',
+  description: '飘飘乎如遗世独立 羽化而登仙',
   head: [
     [
       'link',
       {
         rel: 'icon',
-        href: '/favicon.ico'
+        href: '/pkq.jpeg'
       } 
     ]
   ],
   themeConfig: {
+    editLinkText: '在 GitHub 上编辑此页',
     nav: [
-      { text: '前端', link: '/fontEnd' },
-      { text: 'python', link: '/python' },
-      { text: 'leetcode', link: 'leetcode' }
-    ],   
+      { 
+        text: '前端',
+        items: [
+          {
+            text: 'JavaScript基础知识',
+            link: '/fontEnd/JS/'
+          },
+          {
+            text: 'JS功能函数',
+            link: '/fontEnd/functionMap/'
+          },
+          {
+            text: 'node',
+            link: '/fontEnd/Node/'
+          },
+          {
+            text: 'JS提升阶段',
+            link: '/fontEnd/Improve/'
+          }
+        ]
+      },
+      {
+        text: '计算机基础',
+        link: '/computerBasics/'
+      },
+      {
+        text: 'python',
+        link: '/python/'
+      },
+      { text: 'leetcode', link: '/leetcode/' },
+      {
+        text: '其他',
+        items: [
+          { text: '英文', link: '/Other/English/' }
+        ]
+      }
+    ],
+    sidebar: {
+      '/fontEnd/JS/' : [
+        {
+          title: 'JavaScript基础知识',
+          collapsable: false,
+          children: [
+            '/fontEnd/JS/'
+          ]
+        }
+      ],
+      '/fontEnd/functionMap/': [
+        {
+          title: 'JS功能函数',
+          collapsable: false,
+          children: [
+            '/fontEnd/functionMap/'
+          ]
+        }
+      ],
+      '/fontEnd/Improve/': [
+        {
+          title: 'Js提升阶段',
+          collapsable: false,
+          children: [
+            '/fontEnd/Improve/'
+          ]
+        }
+      ],
+      '/computerBasics/': [
+        {
+          title: '计算机基础',
+          collapsable: false,
+          children: [
+            '/computerBasics/'
+          ]
+        }
+      ],
+      '/Other/English/': [
+        {
+          title: '英文',
+          collapsable: false,
+          children: [
+            '/Other/English/'
+          ]
+        }
+      ]
+    },
     repo: 'facebook201/sy-fontend-system', // github 地址
     docsRepo: 'facebook201/sy-fontend-system',
     docsDir: 'docs',
