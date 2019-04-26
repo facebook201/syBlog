@@ -33,6 +33,10 @@ module.exports = {
           {
             text: 'JS提升阶段',
             link: '/fontEnd/Improve/'
+          },
+          {
+            text: 'JS内置方法',
+            link: '/fontEnd/Native/'
           }
         ]
       },
@@ -77,6 +81,15 @@ module.exports = {
           collapsable: false,
           children: [
             '/fontEnd/Improve/'
+          ]
+        }
+      ],
+      '/fontEnd/Native/': [
+        {
+          title: 'JS原生内置方法',
+          collapsable: false,
+          children: [
+            '/fontEnd/Native/'
           ]
         }
       ],
