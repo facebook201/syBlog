@@ -4,7 +4,7 @@ pageClass: getting-started
 
 # Object
 
-## for...in... Object.keys 和 Object.getOwnPropertyNames 还有 for of
+## for...in... Object.keys 和 Object.getOwnPropertyNames
 
 **for in** 是以任意顺序遍历一个对象 自有、可继承、可枚举的非Symbol的属性。如果仅想输出自身的属性可以借助 hasOwnProperty。可以过滤掉原型链上的属性。for in是ES3就有的特性，ES3我们不能定义属性的枚举性，后来ES5可以定义枚举之后，就新增了 Object.keys、getOwnPropertyNames。所以现在基本用不到for in，可以用其他的方案替代。
 
@@ -57,7 +57,9 @@ console.log(Object.keys(child)); // ['b']
 console.log(Object.getOwnPropertyNames(child)); // ['b', 'c']
 ```
 
-****
+## for..of 和迭代器 Iterator
+
+**for…of** 是ES6新增的遍历方式，它提供了统一的遍历机制。所有实现了[Symbol.iterator]接口的对象都可以被遍历。
 
 
 
