@@ -37,6 +37,10 @@ module.exports = {
           {
             text: 'JS内置方法',
             link: '/fontEnd/Native/'
+          },
+          {
+            text: 'element-ui使用',
+            link: '/fontEnd/ElementUI/'
           }
         ]
       },
@@ -90,6 +94,15 @@ module.exports = {
           collapsable: false,
           children: [
             '/fontEnd/Native/'
+          ]
+        }
+      ],
+      '/fontEnd/ElementUI/': [
+        {
+          title: 'ElementUI的使用',
+          collapsable: false,
+          children: [
+            '/fontEnd/ElementUI/'
           ]
         }
       ],
