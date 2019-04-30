@@ -41,6 +41,14 @@ module.exports = {
           {
             text: 'element-ui使用',
             link: '/fontEnd/ElementUI/'
+          },
+          {
+            text: 'JavaScript的技巧',
+            link: '/fontEnd/Skills/'
+          },
+          {
+            text: '正则表达式',
+            link: '/fontEnd/RegExr/'
           }
         ]
       },
@@ -104,6 +112,22 @@ module.exports = {
           children: [
             '/fontEnd/ElementUI/'
           ]
+        }
+      ],
+      '/fontEnd/Skills/': [
+        {
+          title: 'JavaScript开发技巧',
+          collapsable: false,
+          children: [
+            '/fontEnd/Skills/'
+          ]
+        }
+      ],
+      '/fontEnd/RegExr/': [
+        {
+          title: '正则表达式',
+          collapsable: false,
+          link: '/fontEnd/RegExr/'
         }
       ],
       '/computerBasics/': [
