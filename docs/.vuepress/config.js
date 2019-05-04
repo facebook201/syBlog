@@ -64,7 +64,8 @@ module.exports = {
       {
         text: '其他',
         items: [
-          { text: '英文', link: '/Other/English/' }
+          { text: '英文', link: '/Other/English/' },
+          { text: '面试', link: '/Other/Interview/' }
         ]
       }
     ],
@@ -145,6 +146,15 @@ module.exports = {
           collapsable: false,
           children: [
             '/Other/English/'
+          ]
+        }
+      ],
+      '/Other/Interview/': [
+        {
+          title: '面试',
+          collapsable: false,
+          children: [
+            '/Other/Interview/'
           ]
         }
       ]

@@ -80,10 +80,15 @@ this.$nextTick(_ => {
 handleCloseTag(tag) {
   let index = this.middleSelection.findIndex(el => el.coupCardId == tag.coupCardId);
   if (index > -1) {
-    this.middleSelection.splice(index, 1);
-		let row = this.middleSelection[index];
+    // 这里要使用cardData的元素
+    let row = this.middleSelection[index];
+    let tag = this.cardData.find(el => el.coupCardId == row.coupCardId);
 		// 切换表格的状态 调用组件暴露的方法
-    this.$refs.multipleTable.toggleRowSelection(row);
+    if (tag) {
+      this.$refs.multipleTable.toggleRowSelection(tag);
+    }
+    // 删除不是当前页
+    this.middleSelection.splice(index, 1);
   }
 }
 
