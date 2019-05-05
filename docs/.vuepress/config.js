@@ -65,7 +65,8 @@ module.exports = {
         text: '其他',
         items: [
           { text: '英文', link: '/Other/English/' },
-          { text: '面试', link: '/Other/Interview/' }
+          { text: '面试', link: '/Other/Interview/' },
+          { text: '前端知乎好文连接', link: '/Other/fontendLink/' }
         ]
       }
     ],
@@ -155,6 +156,15 @@ module.exports = {
           collapsable: false,
           children: [
             '/Other/Interview/'
+          ]
+        }
+      ],
+      '/Other/fontendLink/': [
+        {
+          title: '前端知乎好文链接',
+          collapsable: false,
+          children: [
+            '/Other/fontendLink/'
           ]
         }
       ]
