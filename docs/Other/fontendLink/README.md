@@ -13,6 +13,7 @@ pageClass: getting-started
 
 * [阮一峰javascript教程](https://wangdoc.com/javascript/oop/object.html)
 * [javascript的迷你库](https://github.com/jsmini)
+* [阮一峰javascript教程2](https://javascript.ruanyifeng.com)
 
 ## 牛人博客
 * [颜海镜(美团)](https://yanhaijing.com/)
@@ -35,12 +36,15 @@ pageClass: getting-started
 * [一起学Node](https://github.com/nswbmw/N-blog)
 
 
-# Vue
-## vue
+## Vue
 * [基于vue的中台系统 vue-element-admin](https://panjiachen.gitee.io/vue-element-admin-site/zh/)
 * [Vue + TypeScript + Element 项目](https://zhuanlan.zhihu.com/p/60952007)
 * [基于vue的拖拽上传文件组件](https://rowanwins.github.io/vue-dropzone/docs/dist/#/events)
 * [博客](https://lq782655835.github.io/blogs/team-standard/0.standard-ai-summary.html)
+
+## React
+* [react+redux framework](https://dvajs.com)
+
 
 # 数据库
 ## 数据库
@@ -59,4 +63,18 @@ pageClass: getting-started
 
 ## Git
 * [Git分支开发规范](https://juejin.im/post/5b4328bbf265da0fa21a6820)
+
+
+## 国内大公司网站
+
+* [淘宝前端团队](http://taobaofed.org/) 
+* [FEX 百度前端研发部](http://fex.baidu.com/) 
+* [Alloy Team 腾讯Web前端团队](http://www.alloyteam.com/) 
+* [奇舞团](https://75team.com/) 
+* [凹凸实验室](https://aotu.io/) 
+* [YMFE 去哪儿大前端技术中心](https://ymfe.org/) 
+* [JDC 京东设计中心](http://jdc.jd.com/) 
+* [饿了么前端](https://zhuanlan.zhihu.com/ElemeFE) 
+* [携程UED](http://ued.ctrip.com/) 
+* [美团前端](https://tech.meituan.com/) 
 

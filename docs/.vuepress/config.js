@@ -49,18 +49,34 @@ module.exports = {
           {
             text: '正则表达式',
             link: '/fontEnd/RegExr/'
-          }
+          },
+          {
+            text: 'CSS',
+            link: '/fontEnd/CSS/'
+          },
         ]
       },
       {
         text: '计算机基础',
-        link: '/computerBasics/'
+        items: [
+          {
+            text: '计算机基础',
+            link: '/computerBasics/basic/'
+          },
+          {
+            text: '数据结构和算法',
+            link: '/computerBasics/algorithm/'
+          },
+          {
+            text: 'leetcode算法',
+            link: '/computerBasics/leetcode/'
+          },
+        ]
       },
       {
         text: 'python',
         link: '/python/'
       },
-      { text: 'leetcode', link: '/leetcode/' },
       {
         text: '其他',
         items: [
@@ -132,15 +148,6 @@ module.exports = {
           link: '/fontEnd/RegExr/'
         }
       ],
-      '/computerBasics/': [
-        {
-          title: '计算机基础',
-          collapsable: false,
-          children: [
-            '/computerBasics/'
-          ]
-        }
-      ],
       '/Other/English/': [
         {
           title: '英文',
@@ -165,6 +172,42 @@ module.exports = {
           collapsable: false,
           children: [
             '/Other/fontendLink/'
+          ]
+        }
+      ],
+      '/computerBasics/basic/': [
+        {
+          title: '计算机基础',
+          collapsable: false,
+          children: [
+            '/computerBasics/basic/'
+          ]
+        }
+      ],
+      '/computerBasics/algorithm/': [
+        {
+          title: '数据结构和算法',
+          collapsable: false,
+          children: [
+            '/computerBasics/algorithm/'
+          ]
+        }
+      ],
+      '/computerBasics/leetcode/': [
+        {
+          title: 'leetcode算法题',
+          collapsable: false,
+          children: [
+            '/computerBasics/leetcode/'
+          ]
+        }
+      ],
+      '/fontEnd/CSS/': [
+        {
+          title: 'CSS',
+          collapsable: false,
+          children: [
+            '/fontEnd/CSS/'
           ]
         }
       ]
