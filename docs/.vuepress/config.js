@@ -35,10 +35,6 @@ module.exports = {
             link: '/fontEnd/Improve/'
           },
           {
-            text: 'JS内置方法',
-            link: '/fontEnd/Native/'
-          },
-          {
             text: 'element-ui使用',
             link: '/fontEnd/ElementUI/'
           },
@@ -74,9 +70,18 @@ module.exports = {
         ]
       },
       {
-        text: 'python',
-        link: '/python/'
+        text: '原生方法',
+        items: [
+          {
+            text: 'Object',
+            link: '/Native/Object/'
+          },
+        ]
       },
+      // {
+      //   text: 'python',
+      //   link: '/python/'
+      // },
       {
         text: '其他',
         items: [
@@ -114,12 +119,12 @@ module.exports = {
           ]
         }
       ],
-      '/fontEnd/Native/': [
+      '/Native/Object/': [
         {
-          title: 'JS原生内置方法',
+          title: 'Object',
           collapsable: false,
           children: [
-            '/fontEnd/Native/'
+            '/Native/Object/'
           ]
         }
       ],
