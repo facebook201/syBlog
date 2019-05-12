@@ -91,11 +91,9 @@ module.exports = {
         items: [
           { text: '英文', link: '/Other/English/' },
           { text: '面试', link: '/Other/Interview/' },
-          { text: '前端知乎好文连接', link: '/Other/fontendLink/' },
-          {
-            text: 'git指南',
-            link: '/Other/Git/'
-          }
+          { text: '知乎好文连接', link: '/Other/fontendLink/' },
+          { text: 'git指南', link: '/Other/Git/' },
+          { text: 'HTTP', link: '/Other/HTTP/'}
         ]
       }
     ],
@@ -239,6 +237,15 @@ module.exports = {
           collapsable: false,
           children: [
             '/Other/Git/'
+          ]
+        }
+      ],
+      '/Other/HTTP/': [
+        {
+          title: 'HTTP',
+          collapsable: false,
+          children: [
+            '/Other/HTTP/'
           ]
         }
       ]

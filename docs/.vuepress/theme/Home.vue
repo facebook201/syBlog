@@ -70,9 +70,8 @@ export default {
       }
     };
 
-    console.log(test > 20);
-    console.log(+test);
-    alert(test);
+    console.log(test > 20); // true 首先 valueOf
+    console.log(+test); // 60 计算都是valueOf
   }
 }
 </script>
