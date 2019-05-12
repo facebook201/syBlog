@@ -58,10 +58,25 @@ export default {
     }
   },
   mounted() {
+    let test = {
+      age: 20,
+      // 重写 toString
+      toString() {
+        return this.age - 10;
+      },
+      // 重写 valueOf
+      valueOf() {
+        return this.age + 40;
+      }
+    };
+
+    console.log(test > 20);
+    console.log(+test);
+    alert(test);
   }
 }
 </script>
-
+ cdfd
 <style lang="stylus">
 @import '~@default-theme/styles/config.styl';
 .home {
