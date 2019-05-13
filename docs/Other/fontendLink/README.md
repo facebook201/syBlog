@@ -14,6 +14,7 @@ pageClass: getting-started
 * [阮一峰javascript教程](https://wangdoc.com/javascript/oop/object.html)
 * [javascript的迷你库](https://github.com/jsmini)
 * [阮一峰javascript教程2](https://javascript.ruanyifeng.com)
+* [JS的迷你库合集](http://microjs.com/)
 
 ## 牛人博客
 * [颜海镜(美团)](https://yanhaijing.com/)
@@ -22,7 +23,7 @@ pageClass: getting-started
 * [编程中文书籍](https://github.com/justjavac/free-programming-books-zh_CN)
 * [前端面试图谱](https://yuchengkai.cn/docs/frontend/)
 * [好博客](https://github.com/jawil/blog)
-* [牙羽](https://github.com/mqyqingfeng/Blog)
+* [冴羽](https://github.com/mqyqingfeng/Blog)
 
 ## 大公司博客
 * [今日头条](https://techblog.toutiao.com/)

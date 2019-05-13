@@ -19,7 +19,7 @@ module.exports = {
         text: '前端',
         items: [
           {
-            text: 'JavaScript基础知识',
+            text: 'JS基础知识',
             link: '/fontEnd/JS/'
           },
           {
@@ -35,11 +35,11 @@ module.exports = {
             link: '/fontEnd/Improve/'
           },
           {
-            text: 'element-ui使用',
+            text: 'ElementUI',
             link: '/fontEnd/ElementUI/'
           },
           {
-            text: 'JavaScript的技巧',
+            text: 'JS的技巧',
             link: '/fontEnd/Skills/'
           },
           {
