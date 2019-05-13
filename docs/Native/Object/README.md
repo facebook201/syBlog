@@ -61,6 +61,19 @@ if (typeof Object.create !== 'function') {
 
 
 ## defineProperty 
+
+Javascript 有一个用来描述属性的数据结构(属性描述对象)，控制它的行为。
+```javascript
+{
+  value: 123,
+  writable: false,
+  enumerable: true,
+  configurable: false,
+  get: undefined,
+  set: undefined
+}
+```
+
 该方法会直接在一个对象上定义一个新属性，或者修改一个对象的现有属性， 并返回这个对象。
 ECMAScript 中有两种属性：数据属性和访问器属性。
 1. 数据属性
@@ -98,7 +111,6 @@ setter 函数并传入新值，这个函数负责决定如何处理数据。访�
 
  [[Set]]：在写入属性时调用的函数。默认值为undefined。
 
-
 ## getPrototypeOf 
 
 **getPrototypeOf** 方法返回指定对象的原型 
@@ -114,12 +126,11 @@ Object.getPrototypeOf(obj) === proto; // true
 
 Object.getPrototypeOf( Function );             // ƒ () { [native code] }
 Object.getPrototypeOf( Object ) === Function.prototype;        // true
-
 Object.prototype === Object.getPrototypeOf( {} );               // true
 ```
+
 Object.getPrototypeOf( Object )是把Object这一构造函数看作对象，
 返回的当然是函数对象的原型，也就是 Function.prototype。
-
 
 ## getOwnPropertyDescriptor 
 该方法返回指定对象上一个自有属性对应的属性描述符。（自有属性指的是直接赋予该对象的属性，不需要从原型链上进行查找的属性）
@@ -138,7 +149,8 @@ let desc = Object.getOwnPropertyDescriptor(obj, 'a');
 // { value: 12,
 //   writable: true,
 //   enumerable: true,
-//   configurable: true }
+//   configurable: true
+// }
 ```
 
 ## keys

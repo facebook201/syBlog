@@ -80,6 +80,10 @@ module.exports = {
             text: 'JSON',
             link: '/Native/JSON/'
           },
+          {
+            text: '数据类型',
+            link: '/Native/DataType/'
+          }
         ]
       },
       // {
@@ -98,6 +102,15 @@ module.exports = {
       }
     ],
     sidebar: {
+      '/Native/DataType/': [
+        {
+            title: '数据类型',
+            collapsable: false,
+            children: [
+              '/Native/DataType/'
+            ]
+        }
+      ],
       '/fontEnd/JS/' : [
         {
           title: 'JavaScript基础知识',
