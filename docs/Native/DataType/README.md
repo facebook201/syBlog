@@ -248,13 +248,158 @@ var obj = { p: 1 };
 
 ## 布尔操作符
 
-* 逻辑非
-* 逻辑与
-* 逻辑或
+* 逻辑非 !
 
+  可以应用于ECMAScript中的任何值。都会返回一个布尔值。逻辑非操作符首先将操作数转为一个布尔值，然后再对其求反。
 
+   如果操作数是一个对象，返回false；
+
+   如果操作数是一个空字符串，返回true；
+
+   如果操作数是一个非空字符串，返回false；
+
+   如果操作数是数值0，返回true；
+
+   如果操作数是任意非0 数值（包括Infinity），返回false；
+
+   如果操作数是null，返回true；
+
+   如果操作数是NaN，返回true；
+
+   如果操作数是undefined，返回true。
+
+  
+
+* 逻辑与 && 
+
+  | 第一个操作数 | 第二个操作数 | 结果  |
+  | ------------ | ------------ | ----- |
+  | true         | true         | true  |
+  | true         | false        | false |
+  | false        | false        | false |
+  | false        | true         | false |
+
+  也可以应用于任何类型
+
+   如果第一个操作数是对象，则返回第二个操作数；
+
+   如果第二个操作数是对象，则只有在第一个操作数的求值结果为true 的情况下才会返回该
+
+  对象；
+
+   如果两个操作数都是对象，则返回第二个操作数；
+
+   如果有一个操作数是null，则返回null；
+
+   如果有一个操作数是NaN，则返回NaN；
+
+   如果有一个操作数是undefined，则返回undefined。
+
+  它属于短路操作符。只要第一个是fase 无论第二个是什么都是false。
+
+  
+
+* 逻辑或 ||
+
+  | 第一个操作数 | 第二个操作数 | 结果  |
+  | ------------ | ------------ | ----- |
+  | true         | true         | true  |
+  | true         | false        | true  |
+  | false        | true         | true  |
+  | false        | false        | false |
+
+   如果第一个操作数是对象，则返回第一个操作数；
+
+   如果第一个操作数的求值结果为false，则返回第二个操作数；
+
+   如果两个操作数都是对象，则返回第一个操作数；
+
+   如果两个操作数都是null，则返回null；
+
+   如果两个操作数都是NaN，则返回NaN；
+
+   如果两个操作数都是undefined，则返回undefined。
+
+  与逻辑与操作符相似，逻辑或操作符也是短路操作符。也就是说，如果第一个操作数的求值结果为
+
+​       true，就不会对第二个操作数求值了
 
 
 
 ## 相等操作符 ==
+
+相等操作符不会比较两个操作数的类型，所以存在隐式转换的问题。
+
+在转换不同的数据类型时，相等和不相等操作符遵循下列基本规则：
+
+ 如果有一个操作数是布尔值，则在比较相等性之前先将其转换为数值——false 转换为0，而
+
+true 转换为1；
+
+ 如果一个操作数是字符串，另一个操作数是数值，在比较相等性之前先将字符串转换为数值；
+
+ 如果一个操作数是对象，另一个操作数不是，则调用对象的valueOf()方法，用得到的基本类
+
+型值按照前面的规则进行比较；
+
+这两个操作符在进行比较时则要遵循下列规则。
+
+ null 和undefined 是相等的。
+
+ 要比较相等性之前，不能将null 和undefined 转换成其他任何值。
+
+ 如果有一个操作数是NaN，则相等操作符返回false，而不相等操作符返回true。重要提示：
+
+即使两个操作数都是NaN，相等操作符也返回false；因为按照规则，NaN 不等于NaN。
+
+ 如果两个操作数都是对象，则比较它们是不是同一个对象。如果两个操作数都指向同一个对象，
+
+则相等操作符返回true；否则，返回false。
+
+
+
+## switch case
+
+
+
+switch … case 结构要求。在每一个case的最后一行必须是break语句。否则会接着运行下一个case。这样太冗长。而且不使用大括号 不利于代码形式的统一。
+
+```javascript
+function doSomething(action) {
+  switch(action) {
+    case 1:
+      return 1;
+    break;
+    
+    case 2:
+      return 2;
+    break;
+    
+    case 3:
+      return 3;
+    break;
+
+    default:
+      throw new Error('Invalid action');
+  }
+}
+
+// 可以把上面的结构改成 对象结构
+function doSomething(action) {
+  var action = {
+  	'1': function() {
+      return 1;
+    },
+    '2': function() {
+      return 2;
+    },
+    '3': function() {
+      return 3;
+    }
+  };
+  if (typeof action[action] !== 'function') {
+  	throw new Error('Invalid action');
+  }
+}
+```
 

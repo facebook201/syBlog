@@ -83,6 +83,10 @@ module.exports = {
           {
             text: '数据类型',
             link: '/Native/DataType/'
+          },
+          {
+            text: 'RegExp',
+            link: '/Native/RegExp/'
           }
         ]
       },
@@ -102,12 +106,22 @@ module.exports = {
       }
     ],
     sidebar: {
+      '/Native/RegExp/': [
+        {
+          title: 'RexExp正则',
+            collapsable: false,
+            children: [
+              '/Native/RegExp/'
+            ]
+        }
+      ],
       '/Native/DataType/': [
         {
             title: '数据类型',
             collapsable: false,
             children: [
-              '/Native/DataType/'
+              '/Native/DataType/',
+              '/Native/DataType/Error.md'
             ]
         }
       ],
