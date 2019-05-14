@@ -19,10 +19,6 @@ module.exports = {
         text: '前端',
         items: [
           {
-            text: 'JS基础知识',
-            link: '/fontEnd/JS/'
-          },
-          {
             text: 'JS功能函数',
             link: '/fontEnd/functionMap/'
           },
@@ -70,30 +66,18 @@ module.exports = {
         ]
       },
       {
-        text: '原生方法',
+        text: 'JS基础知识',
         items: [
           {
-            text: 'Object',
-            link: '/Native/Object/'
+            text: 'JS基础知识',
+            link: '/Native/JS/'
           },
           {
-            text: 'JSON',
-            link: '/Native/JSON/'
-          },
-          {
-            text: '数据类型',
-            link: '/Native/DataType/'
-          },
-          {
-            text: 'RegExp',
+            text: '正则表达式',
             link: '/Native/RegExp/'
           }
         ]
       },
-      // {
-      //   text: 'python',
-      //   link: '/python/'
-      // },
       {
         text: '其他',
         items: [
@@ -106,31 +90,25 @@ module.exports = {
       }
     ],
     sidebar: {
-      '/Native/RegExp/': [
+      '/Native/JS/': [
         {
-          title: 'RexExp正则',
-            collapsable: false,
-            children: [
-              '/Native/RegExp/'
-            ]
-        }
-      ],
-      '/Native/DataType/': [
-        {
-            title: '数据类型',
-            collapsable: false,
-            children: [
-              '/Native/DataType/',
-              '/Native/DataType/Error.md'
-            ]
-        }
-      ],
-      '/fontEnd/JS/' : [
-        {
-          title: 'JavaScript基础知识',
+          title: 'JS基础知识',
           collapsable: false,
           children: [
-            '/fontEnd/JS/'
+            '/Native/JS/',
+            '/Native/JS/RegExp.md',
+            '/Native/JS/Error.md',
+            '/Native/JS/Object.md',
+            '/Native/JS/JSON.md'
+          ]
+        }
+      ],
+      '/Native/RegExp/': [
+        {
+          title: '正则表达式',
+          collapsable: false,
+          children: [
+            '/Native/RegExp/'
           ]
         }
       ],
