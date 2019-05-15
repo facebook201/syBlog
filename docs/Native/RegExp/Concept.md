@@ -22,9 +22,6 @@ pageClass: getting-started
 
 
 
-
-
-
 ## 数量元字符
 
 | 字符   | 描述                                                         |
@@ -165,7 +162,7 @@ console.log( string.match(regex) );
 
 
 
-![]()
+![](https://github.com/facebook201/sy-fontend-system/blob/master/img/reg.jpg?raw=true)
 
 ### 实用案例
 
