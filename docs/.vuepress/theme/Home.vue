@@ -70,11 +70,21 @@ export default {
     // }
     // htmlEscape("<p class=\"greeting\">Hello world!</p>");
 
-    function replacer(match, p1, p2, p3, offset, string) {
-      console.log(match);
-      return [p1, p2, p3].join(' - ');
-    }
-    var newString = 'abc12345#$*%'.replace(/\d/, replacer);
+    // function replacer(match, p1, p2, p3, offset, string) {
+    //   console.log(match);
+    //   return [p1, p2, p3].join(' - ');
+    // }
+    // var newString = 'abc12345#$*%'.replace(/\d/, replacer);
+
+    let str = '-wqewq-abc';
+
+    let ret = str.replace(/-\w/g, function(match, p1, str) {
+      console.log(match); // 匹配项 -w 和 -a
+      console.log(p1); // 位置 0 6
+      console.log(str); // 原字符 -wqewq-abc
+      return match.charAt(1).toUpperCase();
+    });
+    console.log(ret); // WqewqAbc
   }
 }
 </script>
