@@ -58,23 +58,7 @@ export default {
     }
   },
   mounted() {
-    // function htmlEscape(text) {
-    //   return text.replace(/[<>"&]/g, (match, pos, originalText) => {
-    //     console.log(match);
-    //     switch(match) {
-    //       case "<":
-    //         return "&lt;";
-    //       break;
-    //     }
-    //   })
-    // }
-    // htmlEscape("<p class=\"greeting\">Hello world!</p>");
-
-    function replacer(match, p1, p2, p3, offset, string) {
-      console.log(match);
-      return [p1, p2, p3].join(' - ');
-    }
-    var newString = 'abc12345#$*%'.replace(/\d/, replacer);
+    
   }
 }
 </script>
