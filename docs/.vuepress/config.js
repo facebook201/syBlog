@@ -96,7 +96,6 @@ module.exports = {
           collapsable: false,
           children: [
             '/Native/JS/',
-            '/Native/JS/RegExp.md',
             '/Native/JS/Error.md',
             '/Native/JS/Object.md',
             '/Native/JS/JSON.md'
@@ -108,7 +107,8 @@ module.exports = {
           title: '正则表达式',
           collapsable: false,
           children: [
-            '/Native/RegExp/'
+            '/Native/RegExp/',
+            '/Native/RegExp/Concept.md'
           ]
         }
       ],

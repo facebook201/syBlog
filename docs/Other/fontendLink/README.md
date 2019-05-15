@@ -17,7 +17,6 @@ pageClass: getting-started
 * [JS的迷你库合集](http://microjs.com/)
 
 ## 牛人博客
-* [颜海镜(美团)](https://yanhaijing.com/)
 * [小胡子哥(阿里)](https://www.barretlee.com/entry/)
 * [前端工具集](https://github.com/nieweidong/fetool)
 * [编程中文书籍](https://github.com/justjavac/free-programming-books-zh_CN)
