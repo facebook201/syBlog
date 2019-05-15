@@ -96,7 +96,6 @@ module.exports = {
           collapsable: false,
           children: [
             '/Native/JS/',
-            '/Native/JS/RegExp.md',
             '/Native/JS/Error.md',
             '/Native/JS/Object.md',
             '/Native/JS/JSON.md'
