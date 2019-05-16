@@ -1,6 +1,4 @@
----
-pageClass: getting-started
----
+
 
 # Object
 
@@ -230,7 +228,31 @@ obj.propertyIsEnumerable('toString') // false
 ```
 
 ## setPrototypeOf
-Object.setPrototypeOf() 方法设置一个指定的对象的原型 ( 即, 内部[[Prototype]]属性）到另一个对象或  null。
+`Object.setPrototypeOf`方法为参数对象设置原型，返回该参数对象。它接受两个参数，第一个是现有对象，第二个是原型对象。
+
+```javascript
+var a = {};
+var b = {x: 1};
+Object.setPrototypeOf(a, b);
+
+Object.getPrototypeOf(a) === b // true
+a.x // 1
+```
+
+Object.setPrototypeOf 方法将对象`a`的原型，设置为对象`b`，因此`a`可以共享`b`的属性。
+
+`new`命令可以使用`Object.setPrototypeOf`方法模拟
+
+```javascript
+var F = function () {
+  this.foo = 'bar';
+};
+
+var f = new F();
+// 等同于
+var f = Object.setPrototypeOf({}, F.prototype);
+F.call(f);
+```
 
 
 ## valueOf

@@ -66,10 +66,10 @@ module.exports = {
         ]
       },
       {
-        text: 'JS基础知识',
+        text: 'JavaScript',
         items: [
           {
-            text: 'JS基础知识',
+            text: 'javascript',
             link: '/Native/JS/'
           },
           {
@@ -98,6 +98,7 @@ module.exports = {
             '/Native/JS/',
             '/Native/JS/Error.md',
             '/Native/JS/Object.md',
+            '/Native/JS/Advanced.md',
             '/Native/JS/JSON.md'
           ]
         }

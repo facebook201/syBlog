@@ -1,6 +1,4 @@
----
-pageClass: getting-started
----
+
 
 # 错误处理机制
 ```javascript

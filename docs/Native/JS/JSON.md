@@ -1,6 +1,3 @@
----
-pageClass: getting-started
----
 
 # JSON
 
