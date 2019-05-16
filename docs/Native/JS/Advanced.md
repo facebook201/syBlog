@@ -211,3 +211,138 @@ function createNew(F, ...args) {
 }
 ```
 
+还一个需要主要的是运算符的优先级。 new Foo（）的优先级大于 new Foo;
+
+```javascript
+function Foo() { return this; }
+Foo.getName = function() { console.log('1'); }
+
+Foo.prototype.getName = function() { console.log('2'); }
+
+new Foo.getName(); // new (Foo.getName()) 1
+new Foo().getName(); // (new Foo()).getName() 2
+```
+
+对于第一个函数来说，先执行了 `Foo.getName()` ，所以结果为 1；对于后者来说，先执行 `new Foo()` 产生了一个实例，然后通过原型链找到了 `Foo` 上的 `getName` 函数，所以结果为 2。
+
+
+
+## instanceof 运算符
+
+instanceof 运算符返回一个布尔值。表示对象是否为某个构造函数的实例。**运算符的左边是实例对象，右边是构造函数。检查构造函数的prototype属性是否出现在对象的原型链中的任何位置**
+
+```javascript
+function Foo() {};
+let f = new Foo();
+// f.__proto__ === Foo.prototype;
+f instanceof Foo; // true
+f instanceof Object; // true
+```
+
+**instanceof其实是通过隐式原型来对比，可以模拟实现一下**
+
+```javascript
+    function instaceLike(obj, ctr) {
+      // 获取构造函数的原型
+      let proto = ctr.prototype;
+      // 等到隐式原型
+      obj = obj.__proto__;
+      while(true) {
+        // 如果是null 就直接返回
+        if (obj === null)
+          return false;
+        // 如果相等就返回true
+        if (obj === proto)
+          return true;
+        // 否则就继续去原型链上找
+        obj = obj.__proto__;
+      }
+    }
+    
+    function Foo() {}
+    let f = new Foo();
+
+    console.log(instaceLike(f, Foo)); // true
+    console.log(instaceLike(f, Object)); // true
+```
+
+
+
+## 基本类型和引用类型
+
+#### 基本类型
+
+下面这六种基本类型。 这些基本数据类型都是**按值访问。因为可以操作保存在变量中的实际的值**
+
+Undefined 、Null 、Boolean、String、Number、Symbol。
+
+**引用类型的值是保存在内存的对象中。js不能直接访问内存中的位置，所以操作对象的时候 是在操作对象的引用而不是实际的对象。引用类型的值是按引用访问，也就不存在引用传递的方式 只有传递引用**
+
+#### 传递参数
+
+向参数传递基本类型的值，被传递的值会被复制给一个局部变量。向参数传递引用类型的值，会把这个值的内存中的地址赋值给一个局部变量。这个局部变量的变化会反映在函数的外部。
+
+```javascript
+// 例子一
+function addTen(num) {
+  num += 10;
+}
+var count = 20;
+var ret = addTen(count);
+console.log(count, ret); // 20, 30
+
+// 例子二
+function setName(obj) {
+  obj.name = '张三';    
+}
+var p = new Object();
+setName(p);
+console.log(p.name); // 张三
+
+// 例子三
+function setName(obj) {
+  obj.name = '张三';
+  obj = new Object();
+  obj.name = '李四';  
+}
+var p = new Object();
+setName(p);
+console.log(p.name); // 张三
+```
+
+上面的代码展示 如果我们对传递的对象进行操作的是引用的属性，会修改对象引用的副本属性值，但是如果修改对象的引用，就不会修改原值。**其实传递进来的不管是基本类型还是引用类型 其实都是一个函数内部的局部变量 这个局部变量对象会在函数执行完毕后立即被销毁**
+
+
+
+## 闭包
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

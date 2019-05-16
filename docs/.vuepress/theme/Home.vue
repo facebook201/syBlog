@@ -58,8 +58,7 @@ export default {
     }
   },
   mounted() {
-    
-  }
+  }     
 }
 </script>
  cdfd
