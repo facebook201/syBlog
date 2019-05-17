@@ -316,15 +316,116 @@ console.log(p.name); // 张三
 
 ## 闭包
 
+> **闭包指的是能够访问自由变量的函数，自由变量是指不是函数参数也不是函数内部局部变量的变量**
+
+**javascript高程三里面介绍闭包：有权访问另一个函数作用域中的变量的函数**
 
 
 
+```javascript
+var scope = 'global';
+
+function checkScope() {
+  var scope = 'local';
+  function f() {
+    return scope;
+  }
+  return f;
+}
+
+var foo = checkScope();
+foo(); // 'local'
+```
 
 
 
+```javascript
+function createFunctions() {
+  let ret = [];
+  for (let i = 0; i < 10; i++) {
+    ret[i] = (function(num){
+      	return function() {
+          return num;
+        }
+    }(i))
+  }
+}
+```
+
+上面定义了一个匿名函数，并将立即执行该匿名函数的结果赋给数组。这里的匿名函数有一个参数num，也就是最终函数要返回的值。在调用每个匿名函数时 传入i。由于函数参数是按值传递的，所以就会将变量i的当前值复制给参数num。**而在这个匿名函数的内部 又创建并返回一个访问num的闭包。所以ret数组中的每个函数都有num变量的一个副本，因此就可以返回各自不同的数值。**
 
 
 
+## call 和 apply、bind的模拟
+
+这两个方法使用一个指定的this值和一个单独的参数来调用一个函数。其中call 传递的是一个参数列表，apply的是一个数组的形式。在javascript权威指南里面指出。
+
+```javascript
+fn.call(o);
+fn.apply(o);
+
+// 上面这两行代码等价于下面的
+o.m = fn; // 将fn存储为o的临时方法
+o.m(); // 然后通过o去调用m方法
+delete o.m; // 最后删除这个临时方法
+```
+
+上面的代码可以看到 call 的原理。再来看看call的用法
+
+```javascript
+let obj = { name: '张三' };
+function getName() {
+  return this.name;
+}
+getName(); // 这样调用this指向window 返回undefined
+
+getName.call(obj); // 这样就会将this指向传入的obj 返回张三
+```
+
+**模拟实现**
+
+* 将函数设为对象的属性
+* 执行该函数
+* 删除该函数
+
+```javascript
+Function.prototype.call = function(context) {
+  context = context || window; // 如果不传就默认window
+  context.fn = this;
+  // 剩下的参数取出来
+  let args = [...arguments].slice(1);
+  let result = context.fn(...args);
+  delete context.fn;
+  
+  return result;
+}
+
+// apply跟call这个类似
+Function.prototype.apply = function(context) {
+  context = context || window; // 如果不传就默认window
+  context.fn = this;
+  
+  let result;
+  if (arguments[1]) {
+  	result = context.fn(arguments[1])
+  } else {
+    result = context.fn();
+  }
+  delete context.fn;
+  return result;
+}
+
+```
+
+bind方法和其他两个方法作用一样，只不过bind 会返回一个函数，不会立即执行 要主动调用。
+
+```javascript
+Function.prototype.myBind = function() {
+  if () {
+      
+      }
+}
+```
 
 
 
