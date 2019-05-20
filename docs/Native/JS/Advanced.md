@@ -419,31 +419,116 @@ Function.prototype.apply = function(context) {
 
 bind方法和其他两个方法作用一样，只不过bind 会返回一个函数，不会立即执行 要主动调用。
 
+
+
+**注意以下几点**
+
+* bind会返回一个绑定函数 不会立即执行 
+* 一个绑定函数也能使用new操作符创建对象：这种行为就像把原函数当成构造器。提供的 this 值被忽略，同时调用时的参数被提供给模拟函数。
+
+
+
+看个例子
+
 ```javascript
-Function.prototype.myBind = function() {
-  if () {
-      
-      }
+var value = 2;
+
+let obj = {
+  value: 1
+};
+
+function bar(name, age) {
+  this.habit = 'shopping';
+  console.log(this.value);
+  console.log(name, age);
+}
+
+bar.prototype.home = 'shanghai';
+
+let bin = bar.bind(obj, 12);
+let b = new bin('李四');
+console.log(b);
+```
+
+这里看打印的结果发现bar相当于一个构造器。new出来的b可以访问bar原型上的属性。
+
+![border]()
+
+```javascript
+Function.prototype.bind = Function.prototype.bind || function(context) {
+  // 保留外部参数
+  let args = Array.prototype.slice.call(arguments, 1);
+  let self = this;
+  context = context || window;
+  
+  // 使用空函数来中转过渡 继承原函数原型
+  function fNOP() {};
+
+  let fBound = function() {
+  // 保留内部参数
+    let arg = Array.prototype.slice.call(arguments);
+  // 当作为构造函数时，this 指向实例，此时结果为 true，将绑定函数的 this 指向该实例，可以让实例获得来自绑定函数的值
+    // 当作为普通函数时，this 指向 window，此时结果为 false，将绑定函数的 this 指向 context
+    return self.apply(this instanceof fNOP ? this : context, args.concat(args));
+  }
+
+  fNOP.prototype = this.prototype;
+  fBound.prototype = new fNOP();
+  return fBound;
 }
 ```
 
 
 
+## call apply 的效率问题
+
+在backbone里面 有一个triggerEvents，在三个参数以内会优先调用call方法，超过了就使用apply。
+
+**Function.prototype.apply (thisArg, argArray)**
+
+1、如果 IsCallable（Function）为false，即 Function 不可以被调用，则抛出一个 TypeError 异常。
+
+2、如果 argArray 为 null 或未定义，则返回调用 Function 的 [[Call]] 内部方法的结果，提供thisArg 和一个空数组作为参数。
+
+3、如果 Type（argArray）不是 Object，则抛出 TypeError 异常。
+
+4、获取 argArray 的长度。调用 argArray 的 [[Get]] 内部方法，找到属性 length。 赋值给 len。
+
+5、定义 n 为 ToUint32（len）。
+
+6、初始化 argList 为一个空列表。
+
+7、初始化 index 为 0。
+
+8、循环迭代取出 argArray。重复循环 while（index < n）
+
+a、将下标转换成String类型。初始化 indexName 为 ToString(index).
+b、定义 nextArg 为 使用 indexName 作为参数调用argArray的[[Get]]内部方法的结果。
+c、将 nextArg 添加到 argList 中，作为最后一个元素。
+d、设置 index ＝ index＋1
+
+9、返回调用 Function 的 [[Call]] 内部方法的结果，提供 thisArg 作为该值，argList 作为参数列表。
 
 
 
 
 
+**Function.prototype.call (thisArg [ , arg1 [ , arg2, … ] ] )**
+
+1、如果 IsCallable（Function）为 false，即 Function 不可以被调用，则抛出一个 TypeError 异常。
+
+2、定义 argList 为一个空列表。
+
+3、如果使用超过一个参数调用此方法，则以从arg1开始的从左到右的顺序将每个参数附加为 argList 的最后一个元素
+
+4、返回调用func的[[Call]]内部方法的结果，提供 thisArg 作为该值，argList 作为参数列表
 
 
 
 
 
+## 继承的多种方式和优缺点
 
+ECMAScript 中描述原型链将原型链作为实现继承的主要方法。其基本思想是利用原型让一个引用类型继承另一个引用类型的属性和方法。
 
-
-
-
-
-
-
+**每个构造函数都有一个原型对象（prototype）它包含一个指向构造函数的指针，而实例都包含一个指向原型对象的内部指针（\__proto__）**
