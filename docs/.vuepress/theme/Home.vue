@@ -36,8 +36,15 @@
 
 <script>
 import NavLink from '@default-theme/NavLink.vue'
+
 export default {
   components: { NavLink },
+
+  data() {
+    return {
+      Lists: [1, 2, 3]
+    };
+  },
   computed: {
     isCN() {
       return this.$lang === 'zh-CN'
@@ -55,10 +62,12 @@ export default {
   methods: {
     clickCoding(tag) {
       ga('send', 'click', 'e.coding', 'Action', tag)
+    },
+    deleteItem(i) {
+      this.Lists.splice(i, 1);
     }
   },
   mounted() {
-    
   }     
 }
 </script>
