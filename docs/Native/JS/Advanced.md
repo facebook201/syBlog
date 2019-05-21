@@ -526,6 +526,141 @@ d、设置 index ＝ index＋1
 
 
 
+## 创建对象
+
+虽然对象字面量或者构造函数创建单个对象是可以的，但是这些方式有个缺点，就是一个接口创建很多对象 会产生很多重复的代码。
+
+### 工厂模
+
+```javascript
+function createPerson(name, age) {
+  var o = {};
+  o.name = name;
+  o.age = age;
+  o.sayName = function() {
+    console.log(this.name);
+  }
+  return o;
+}
+```
+
+所有的对象都指向一个原型 对象无法识别
+
+
+
+### 构造函数
+
+```javascript
+function createPerson(name, age) {
+  this.name = name;
+  this.age = age;
+  this.getName = function() {
+    console.log(this.name);
+  }
+}
+let p1 = new createPerson('zhangsan'， 23);
+```
+
+实例可以识别为一个特定的类型，但是方法也要创建一遍。
+
+
+
+### 原型模式
+
+```javascript
+function Person(name) {}
+Person.prototype.name = 'keivn';
+Person.prototype.getName = function () {
+    console.log(this.name);
+};
+var person1 = new Person();
+```
+
+优点：方法不会重新创建
+
+缺点：1. 所有的属性和方法都共享 2. 不能初始化参数
+
+
+
+### 组合模式(构造函数和原型模式)
+
+```javascript
+function Person(name) {
+    this.name = name;
+}
+
+Person.prototype = {
+    constructor: Person,
+    getName: function () {
+        console.log(this.name);
+    }
+};
+
+var person1 = new Person();
+```
+
+
+
+### 动态原型模式
+
+```javascript
+function Person(name) {
+    this.name = name;
+    if (typeof this.getName != "function") {
+        Person.prototype.getName = function () {
+            console.log(this.name);
+        }
+    }
+}
+
+var person1 = new Person();
+person1.getName();
+```
+
+注意：使用动态原型模式时，不能用对象字面量重写原型
+
+```javascript
+function Person(name) {
+    this.name = name;
+    if (typeof this.getName != "function") {
+        Person.prototype = {
+            constructor: Person,
+            getName: function () {
+                console.log(this.name);
+            }
+        }
+    }
+}
+
+var person1 = new Person('kevin');
+var person2 = new Person('daisy');
+
+// 报错 并没有该方法
+person1.getName();
+
+// 注释掉上面的代码，这句是可以执行的。
+person2.getName();
+```
+
+当执行 var person1 = new Person('kevin') 的时候，person1.的原型并不是指向 Person.prototype，而是指向 Person.prototype 指向的原型对象，我们假设这个原型对象名字为 O, 然后再修改 Person.prototype 的值为一个字面量，只是将一个新的值赋值给 Person.prototype, 并没有修改 O 对象，也不会切断已经建立的 person1 和 O 的原型关系，访问 person.getName 方法，依然会从 O 上查找
+
+```javascript
+function Person() {}
+
+var p = new Person();
+
+// 在new之后 就会建立原型关系 实例的隐式原型就会指向构造函数的显示原型
+// Person.prototype 他本身指向的是一个原型对象 (protoObj)
+p.__proto__ = Person.prototype = protoObj;
+
+// 如果后面修改Person.prototype这个对象 但是p__proto__ 依然还是指向以前的 protoObj
+Person.prototype = {
+  constructor: Person,
+  getName() {
+    console.log(this.name);
+  }
+};
+```
 
 ## 继承的多种方式和优缺点
 
