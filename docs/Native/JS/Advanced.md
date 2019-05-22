@@ -667,3 +667,188 @@ Person.prototype = {
 ECMAScript 中描述原型链将原型链作为实现继承的主要方法。其基本思想是利用原型让一个引用类型继承另一个引用类型的属性和方法。
 
 **每个构造函数都有一个原型对象（prototype）它包含一个指向构造函数的指针，而实例都包含一个指向原型对象的内部指针（\__proto__）**
+
+
+
+### 原型链继承
+
+```javascript
+
+function SuperType() {
+  this.name = '张三';
+}
+SuperType.prototype.getName = function() {
+  console.log(this.name);
+};
+function SubType() {}
+
+SubType.prototype = new SuperType();
+let sub = new SubType();
+
+console.log(sub.getName());
+```
+
+引用类型的属性被所有实例共享。当被其中一个所改变 另一个实例也会改变。
+
+
+
+### 构造函数
+
+```javascript
+function Parent () {
+    this.names = ['kevin', 'daisy'];
+}
+
+function Child () {
+    Parent.call(this);
+}
+
+var child1 = new Child();
+
+child1.names.push('yayu');
+
+console.log(child1.names); // ["kevin", "daisy", "yayu"]
+
+var child2 = new Child();
+
+console.log(child2.names); // ["kevin", "daisy"]
+```
+
+优点：
+
+1.避免了引用类型的属性被所有实例共享
+
+2.可以在 Child 中向 Parent 传参
+
+缺点：
+
+方法被重复创建
+
+```javascript
+function Parent (name) {
+    this.name = name;
+}
+
+function Child (name) {
+    Parent.call(this, name);
+}
+
+var child1 = new Child('kevin');
+
+console.log(child1.name); // kevin
+
+var child2 = new Child('daisy');
+
+console.log(child2.name); // daisy
+```
+
+
+
+### 组合继承
+
+```javascript
+function Parent (name) {
+    this.name = name;
+    this.colors = ['red', 'blue', 'green'];
+}
+
+Parent.prototype.getName = function () {
+    console.log(this.name)
+}
+
+function Child (name, age) {
+
+    Parent.call(this, name);
+    
+    this.age = age;
+
+}
+
+Child.prototype = new Parent();
+Child.prototype.constructor = Child;
+
+var child1 = new Child('kevin', '18');
+
+child1.colors.push('black');
+
+console.log(child1.name); // kevin
+console.log(child1.age); // 18
+console.log(child1.colors); // ["red", "blue", "green", "black"]
+
+var child2 = new Child('daisy', '20');
+
+console.log(child2.name); // daisy
+console.log(child2.age); // 20
+console.log(child2.colors); // ["red", "blue", "green"]
+```
+
+优点：融合原型链继承和构造函数的优点，是 JavaScript 中最常用的继承模式。
+
+
+
+### 原型式继承
+
+跟Object.create 一样。
+
+```javascript
+function object(o){
+  function F(){}
+  F.prototype = o;
+  return new F();
+}
+```
+
+
+
+### 寄生式继承
+
+```javascript
+function SuperType(name){
+	this.name = name;
+	this.colors = ["red", "blue", "green"];
+}
+SuperType.prototype.sayName = function(){
+	alert(this.name);
+};
+function SubType(name, age){
+	SuperType.call(this, name); //第二次调用SuperType()
+	this.age = age;
+}
+SubType.prototype = new SuperType(); //第一次调用SuperType()
+
+SubType.prototype.constructor = SubType;
+
+SubType.prototype.sayAge = function(){
+	alert(this.age);
+};
+```
+
+
+
+### 寄生式组合继承
+
+```javascript
+function Parent (name) {
+    this.name = name;
+    this.colors = ['red', 'blue', 'green'];
+}
+
+Parent.prototype.getName = function () {
+    console.log(this.name)
+}
+
+function Child (name, age) {
+    Parent.call(this, name);
+    this.age = age;
+}
+
+// 关键的三步
+var F = function () {};
+
+F.prototype = Parent.prototype;
+
+Child.prototype = new F();
+
+var child1 = new Child('kevin', '18');
+```
+
