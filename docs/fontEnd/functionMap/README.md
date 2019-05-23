@@ -1,6 +1,4 @@
----
-pageClass: getting-started
----
+
 
 # Object
 
@@ -12,3 +10,8 @@ JS的变量类型分为值类型（基本类型）和引用类型；对值类型
 
 
 <br />
+
+
+
+
+

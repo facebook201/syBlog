@@ -83,9 +83,10 @@ module.exports = {
         items: [
           { text: '英文', link: '/Other/English/' },
           { text: '面试', link: '/Other/Interview/' },
-          { text: '知乎好文连接', link: '/Other/fontendLink/' },
+          { text: '好文连接', link: '/Other/fontendLink/' },
           { text: 'git指南', link: '/Other/Git/' },
-          { text: 'HTTP', link: '/Other/HTTP/'}
+          { text: 'HTTP', link: '/Other/HTTP/'},
+          { text: '一往而深', link: '/Other/Article/' }
         ]
       }
     ],
@@ -118,7 +119,8 @@ module.exports = {
           title: 'JS功能函数',
           collapsable: false,
           children: [
-            '/fontEnd/functionMap/'
+            '/fontEnd/functionMap/',
+            '/fontEnd/functionMap/Array.md'
           ]
         }
       ],
@@ -252,6 +254,15 @@ module.exports = {
           collapsable: false,
           children: [
             '/Other/HTTP/'
+          ]
+        }
+      ],
+      '/Other/Article/': [
+        {
+          title: '一往而深',
+          collapsable: false,
+          children: [
+            '/Other/Article/'
           ]
         }
       ]
