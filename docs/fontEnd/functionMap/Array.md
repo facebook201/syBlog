@@ -12,5 +12,41 @@
 
 ```javascript
 
+let city = [
+  {cityName: "济南市", cityId: "370100"},
+  {cityName: "济南市", cityId: "370100"},
+  {cityName: "济宁市", cityId: "370800"},
+  {cityName: "滨州市", cityId: "371600"},
+  {cityName: "青岛市", cityId: "370200"},
+  {cityName: "济宁市", cityId: "370800"}
+];
+
+function handleRepeatArr({ data, key }) {
+  const arr = [];
+  const obj = {};
+
+  data.forEach((item, index) => {
+    // 如果存在这个key 就得到对应的值 最好是唯一的id
+    const attr = key ? item[key] : item;
+    // 如果obj里面不存在这个id 就给这个id赋个值
+    if (obj[attr] === void 0) {
+      // 这里obj { 'fasdsada': 1, } 后面就根据是否有这个值判断
+      obj[attr] = index;
+      arr.push(item);
+    }
+  })
+  return arr;
+}
+
+handleRepeatArr({ data: city, key: 'cityId' });
+
 ```
+
+普通元素就是使用Set就可以了
+
+```javascript
+return [...new Set(arr)];
+```
+
+
 

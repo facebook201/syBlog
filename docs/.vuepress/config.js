@@ -60,6 +60,10 @@ module.exports = {
             link: '/computerBasics/algorithm/'
           },
           {
+            text: '设计模式',
+            link: '/computerBasics/designPattern/'
+          },
+          {
             text: 'leetcode算法',
             link: '/computerBasics/leetcode/'
           },
@@ -120,7 +124,8 @@ module.exports = {
           collapsable: false,
           children: [
             '/fontEnd/functionMap/',
-            '/fontEnd/functionMap/Array.md'
+            '/fontEnd/functionMap/Array.md',
+            '/fontEnd/functionMap/Other.md'
           ]
         }
       ],
@@ -193,6 +198,15 @@ module.exports = {
             '/Other/fontendLink/'
           ]
         }
+      ],
+      '/computerBasics/designPattern/': [
+        {
+          title: '计算机基础',
+          collapsable: false,
+          children: [
+            '/computerBasics/designPattern/'
+          ]
+        }        
       ],
       '/computerBasics/basic/': [
         {
