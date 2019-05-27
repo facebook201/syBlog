@@ -384,9 +384,68 @@ JS的变量类型分为值类型（基本类型）和引用类型；对值类型
 
 
 
+#### 数组的浅拷贝
+
+数组里面的slice、concat返回一个新数组来实现浅拷贝。但是如果数组里面有对象，那么只能拷贝引用，无论是修改新老数组还是会改变内部的对象值。
 
 
 
+#### 深拷贝
+
+JSON.parse(JSON.string(arr)) 这个方法大部分情况是可以的。但是有些是无法克隆的。
+
+* 对函数 、RegExp等特殊对象的克隆
+* 会抛弃对象的constructor,所有的构造函数会指向Object
+* 对象有循环引用,会报错
+
+```javascript
+// 构造函数
+function person(pname) {
+  this.name = pname;
+}
+
+const Messi = new person('Messi');
+
+// 函数
+function say() {
+  console.log('hi');
+};
+
+const oldObj = {
+  a: say,
+  b: new Array(1),
+  c: new RegExp('ab+c', 'i'),
+  d: Messi
+};
+
+const newObj = JSON.parse(JSON.stringify(oldObj));
+
+// 无法复制函数
+console.log(newObj.a, oldObj.a); // undefined [Function: say]
+// 稀疏数组复制错误
+console.log(newObj.b[0], oldObj.b[0]); // null undefined
+// 无法复制正则对象
+console.log(newObj.c, oldObj.c); // {} /ab+c/i
+// 构造函数指向错误
+console.log(newObj.d.constructor, oldObj.d.constructor); // [Function: Object] [Function: person]
+```
+
+
+
+### 深拷贝
+
+```javascript
+var deepCopy = function(obj) {
+  if (typeof obj !== 'object') return obj;
+  var newObj = obj instanceOf Array ? [] : {};
+  for (var k in obj) {
+    if (obj.hasOwnProperty(k)) {
+        newObj[key] = typeof obj[k] === 'object' ? deepCopy(obj[k]) : obj[k];
+    }
+  }
+  return newObject;
+}
+```
 
 
 
