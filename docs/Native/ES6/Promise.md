@@ -34,7 +34,7 @@ promise对象的内部属性：
   * 将state 设置为 "rejected"
   * 将result 设置为 error
 
-![border](https://github.com/facebook201/sy-fontend-system/blob/master/img/promise.png)
+![border](https://raw.githubusercontent.com/facebook201/sy-fontend-system/master/img/promise.png)
 
 
 

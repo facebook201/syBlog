@@ -162,7 +162,8 @@ module.exports = {
           title: 'ES6',
           collapsable: false,
           children: [
-            '/Native/ES6/Promise.md'
+            '/Native/ES6/Promise.md',
+            '/Native/ES6/Module.md'
           ]
         }
       ],
