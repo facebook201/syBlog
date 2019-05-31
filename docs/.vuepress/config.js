@@ -30,6 +30,10 @@ module.exports = {
             text: 'CSS',
             link: '/fontEnd/CSS/'
           },
+          {
+            text: 'BOM',
+            link: '/fontEnd/BOM/'
+          },
         ]
       },
       {
@@ -95,6 +99,15 @@ module.exports = {
       }
     ],
     sidebar: {
+      '/fontEnd/BOM/': [
+        {
+          title: 'BOM浏览器模型',
+          collapsable: false,
+          children: [
+            '/fontEnd/BOM/',
+          ]
+        }
+      ],
       '/Native/JS/': [
         {
           title: 'JS基础知识',
@@ -126,7 +139,9 @@ module.exports = {
           children: [
             '/Native/functionMap/',
             '/Native/functionMap/Array.md',
-            '/Native/functionMap/Other.md'
+            '/Native/functionMap/Other.md',
+            '/Native/functionMap/RegExp.md',
+            '/Native/functionMap/DOM.md'
           ]
         }
       ],
