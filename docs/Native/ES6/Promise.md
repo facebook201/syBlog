@@ -477,69 +477,34 @@ var red = document.getElementById('red');
 var green = document.getElementById('green');
 var yellow = document.getElementById('yellow');
 
-function redFun() {
-  if (red.className.indexOf('red') < 0) {
-    red.className += ' red';
-  }
-}
-
-function greenFun() {
-  if (green.className.indexOf('green') < 0) {
-    red.className = 'item';
-    green.className += ' green';
-  }
-}
-
-function yellowFun() {
-  if (yellow.className.indexOf('yellow') < 0) {
-    green.className = 'item';
-    yellow.className += ' yellow';
-  }
-}
-
-let date = +new Date();
-
-function translate(cb, time) {
+function light(color, time) {
   return new Promise((resolve, reject) => {
+    color.classList.add(color.id);
     setTimeout(_ => {
-      cb();
-      console.log(cb.name, new Date() - date);
+      color.classList.remove(color.id);
       resolve();
     }, time);
   });
 }
 
-function resetColor() {
-  return new Promise((resolve, reject) => {
-    setTimeout(_ => {
-      yellow.className = 'item';
-      resolve();
-    }, 1000);
-  });
+function start() {
+  Promise.resolve()
+    .then(() => light(red, 3000))
+    .then(() => light(green, 2000))
+    .then(() => light(yellow, 1000))
+    .then(() => start());
 }
 
-
-function def(pro) {
-  pro.then(res => translate(redFun, 4)) // 立即亮 3s
-    .then(res => translate(greenFun, 3000)) // 等待3s才亮绿色 所以红色亮三秒
-    .then(res => translate(yellowFun, 2000)) // 等待2s才亮黄色 所以绿色亮两秒
-    .then(res => resetColor())
-    .then(_ => def(pro));
-}
-
-let p = Promise.resolve();
-
-def(p);
+start();
 ```
 
 **如果使用了async 和 await 更加清晰**
 
 ```javascript
 async function start() {
-  await translate(redFun, 4);
-  await translate(greenFun, 3000);
-  await translate(yellowFun, 2000);
-  await resetColor();
+  await light(red, 3000);
+  await light(green, 2000);
+  await light(yellow, 1000);
   start();
 }
 start();

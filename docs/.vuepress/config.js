@@ -163,7 +163,8 @@ module.exports = {
           collapsable: false,
           children: [
             '/Native/ES6/Promise.md',
-            '/Native/ES6/Module.md'
+            '/Native/ES6/Module.md',
+            '/Native/ES6/Class.md'
           ]
         }
       ],
