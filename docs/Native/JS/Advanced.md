@@ -244,18 +244,17 @@ f instanceof Object; // true
 ```javascript
     function instaceLike(obj, ctr) {
       // 获取构造函数的原型
-      let proto = ctr.prototype;
+      obj = Object.getPropertypeOf(obj);
       // 等到隐式原型
-      obj = obj.__proto__;
       while(true) {
         // 如果是null 就直接返回
         if (obj === null)
           return false;
         // 如果相等就返回true
-        if (obj === proto)
+        if (obj === ctr.prototype)
           return true;
         // 否则就继续去原型链上找
-        obj = obj.__proto__;
+        obj = Object.getPropertypeOf(obj);
       }
     }
     

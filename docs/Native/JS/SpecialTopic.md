@@ -449,11 +449,55 @@ var deepCopy = function(obj) {
 
 
 
+## 柯里化函数
+
+柯里化是一种将使用多个参数的一个函数转换成一系列使用一个参数的函数的技术。
+
+```javascript
+function add(a, b) {
+  return a + b;
+}
+
+// curyy 假设是一个柯里化函数
+var curryAdd = curry(add);
+curryAdd(2)(3); // 5
+```
 
 
 
+### 用途
 
+* 参数可以复用 我们如果把多个参数 换成一个个传进去，这样就有可能说某些参数 是可以复用的 不用每次都传。
+* 
 
+```javascript
+function curry(fn, args) {
+    var length = fn.length;
+    args = args || [];
+    return function() {
+        var _args = args.slice(0),
+            arg, i;
+        for (i = 0; i < arguments.length; i++) {
+            arg = arguments[i];
+            _args.push(arg);
+        }
+      	// 根据预定的参数个数跟 实际传的参数对比
+        if (_args.length < length) {
+            return curry.call(this, fn, _args);
+        }
+        else {
+            return fn.apply(this, _args);
+        }
+    }
+}
+var fn = curry(function(a, b, c) {
+    console.log([a, b, c]);
+});
+fn("a", "b", "c") // ["a", "b", "c"]
+fn("a", "b")("c") // ["a", "b", "c"]
+fn("a")("b")("c") // ["a", "b", "c"]
+fn("a")("b", "c") // ["a", "b", "c"]
+```
 
 
 
