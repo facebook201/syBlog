@@ -12,3 +12,65 @@ BOM 简称 （浏览器对象模型），
 * BOM定义的API多个对象，函数的形式挂载在window对象下面。而DOM定义的所有API统一挂载 在 window.document下
 * DOM标准由W3C组织制定。BOM由不同的浏览器产商实现。 有不同的差异
 
+
+
+
+
+## aJax
+
+Ajax本质是使用XMLHttpRequest来想服务器发送异步请求获取数据。
+
+优点:
+
+- 无刷新更新数据 （页面内部跟服务器通信 体验好）
+- 异步通信 （异步与服务器通信 不需要打断用户的操作 处理较快）
+- 支持广泛
+- 界面与应用分离
+
+缺点
+
+- 安全性 容易暴露比较多的数据
+- 不能很好的支持移动设备
+
+### 原生 js实现 ajax
+
+```javascript
+function ajax(options = {}) {
+  options.type = (options.type || 'GET').toUpperCase();
+  options.dataType = options.dataType || 'json';
+
+  let params = formatParams(options.data);
+  // 创建 XHR
+  let xhr = new XMLHttpRequest();
+
+  xhr.onload = function() {
+    if (xhr.readyState == 4) {
+      let status = xhr.status;
+      if (status >= 200 && status < 300) {
+        options.success && options.success(xhr.responseText, xhr.responseXML);
+      } else {
+        options.fail && options.fail(status);
+      }
+    }
+  }
+
+  if (options.type === 'GET') {
+    xhr.open('GET', options.url + '?' + params, true);
+    xhr.send(null);
+  } else if (options.type === 'POST'){
+    xhr.open('POST', options.url, true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.send(params);
+  }
+}
+
+function formatParams(data) {
+  const arr = [];
+  for (let name in data) {
+    arr.push(encodeURIComponent(name) + "=" + encodeURIComponent(data[name]));
+  }
+  arr.push(('v=' + Math.random()).replace('.'));
+  return arr.join('&');
+}
+```
+
