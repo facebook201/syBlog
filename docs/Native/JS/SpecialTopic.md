@@ -501,17 +501,259 @@ fn("a")("b", "c") // ["a", "b", "c"]
 
 
 
+## 偏函数
+
+局部应用是固定一个函数的一些参数，然后产生另一个更小元的函数(**元指的是函数的参数个数 两个参数称为二元函数**)
+
+* 柯里化是将一个多参数函数转换成多个单参数函数，也就是将一个 n 元函数转换成 n 个一元函数。
+* 局部应用则是固定一个函数的一个或者多个参数，也就是将一个 n 元函数转换成一个 n - x 元函数。
+
+```javascript
+var _ = {};
+
+function partial(fn) {
+  var args = [].slice.call(arguments, 1);
+  return function() {
+    var position = 0, len = args.length;
+    for (var i = 0; i < len; i++) {
+      args[i] = args[i] === _ ? arguments[position++] : args[i];
+    }
+    while(position < arguments.length) {
+      args.push(arguments[position++]);
+    }
+    return fn.apply(this, args);
+  }
+}
+
+var subtract = function(a, b) { return a - b };
+sub = partial(subtract, _, 20); // [5, 20]
+console.log(sub(5)); // -15
+```
 
 
 
+## 惰性函数
+
+当一个函数被大量调用，且这个函数里有许多判断来检测函数，这样对于一个调用会浪费时间和浏览器资源，所有当第一次判断完成之后，直接把这个函数改写不需要再判断。
+
+```javascript
+function foo() {
+    if (foo.t) return foo.t;
+    foo.t = new Date();
+    return foo.t;
+}
+// 上面的代码 每次都要去判断foo.f 这样也是多余的步骤
+var foo = function() {
+  var t = +new Date();
+ 	// 当第一次调用foo 后 得到new Date。然后立即改写这个函数 那么后面的就会调用下面的代码
+  foo = function() {
+    return t;
+  }
+  return foo();
+}
+
+foo();
+foo();
+```
+
+**惰性函数的原理就是重写函数 就是这样简单**
+
+### 其他应用
+
+* DOM事件添加
+
+```javascript
+function addEvent(type, el, fn) {
+  if (window.addEventListener) {
+    addEvent = function(type, el, fn) {
+      el.addEventListener(type, fn, false);
+    }
+  } else if (window.attachEvent) {
+    addEvent = function(type, el, fn) {
+      el.attachEvent('on' + type, fn);
+    }
+  }
+  addEvent(type, el, fn);
+}
+```
+
+* 创建 XHR对象
+
+```javascript
+function createXHR() {
+  var xhr;
+  if (typeof XMLHttpRequest != void 0) {
+    xhr = new XMLHttpRequest();
+    createXHR = function() {
+      return new XMLHttpRequest();
+    }
+  } else {
+    xhr = new ActiveXObject("Msxml2.XMLHTTP");
+    createXHR = function(){
+    	return new ActiveXObject("Msxml2.XMLHTTP");
+    }
+  } 
+}
+```
 
 
 
+## 组合函数
+
+假设现在有一个需求，我们根据输入的数字( 1- 7) 来判断是周几。来返回周几应该吃什么？
+
+```javascript
+const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Firday', 'Saturday', 'Sunday'];
+
+const whatDay = x => weekdays[x - 1];
+const doSome = x => 'Today is ' + x;
+const greet = x => doSome(whatDay(x));
+
+console.log(greet(1)); // Today is Monday
+```
+
+我们首先获取周几，然后拼接字符串得到 Today is xxx;
+
+如果可以实现一个 compose函数。类似
+
+```javascript
+const compose = function(f,g) {
+    return function(x) {
+        return f(g(x));
+    };
+};
+```
+
+如果我们要支持多个参数的传递呢
+
+```javascript
+// 来自underscore的compose方法
+function compose() {
+    var args = arguments;
+    var start = args.length - 1;
+    return function() {
+        var i = start;
+        var result = args[start].apply(this, arguments);
+        while (i--) result = args[i].call(this, result);
+        return result;
+    };
+};
+```
 
 
 
+## 函数记忆(缓存)
+
+函数记忆是指将上次的计算结果缓存起来，下次调用的时候 如有相同的参数直接返回缓存中数据。
+
+```javascript
+function add(a, b) {
+  return a + b;
+}
+
+var memoizedAdd = memoize(add);
+
+memoizedAdd(1, 2); // 3
+memoizedAdd(1, 2); // 3
+
+function memoize(fn, hasher) {
+  const memoize = function(key) {
+    let cache = memoize.cache;
+    // 如果没有传hasher函数生成hash属性 就使用第一个参数当做属性key
+    let address = '' + (hasher ? hasher.apply(this, arguments) : key);
+    // 如果没有命中缓存 就存起来
+    if (!cache[address]) {
+      cache[address] = fn.apply(this, arguments);
+    }
+    // 命中缓存 返回命中的结果
+    return cache[address];
+  }
+  memoize.cache = Object.create(null);
+  return memoize;
+}
+```
 
 
+
+## 递归
+
+递归(recursion) 指的是**程序调用自身的一种技巧**
+
+```javascript
+function factorial(n) {
+  if (n == 1) return n;
+  return n * factorial(n - 1);
+}
+```
+
+递归的特点：
+
+* 子问题须与原始问题为同样的事，且更为简单
+* 不能无限调用自己 必须有个出口 化简为非递归状况处理
+
+
+
+### 执行上下文栈
+
+当执行一个函数的时候，就会创建一个执行上下文，并且压入执行上下文栈，当函数执行完毕的时候，就会将函数的执行上下文从栈中弹出。 那么递归调用的话就会有很大的性能开销，**尾调用可以进行优化**
+
+**尾调用是指函数内部的最后一个动作是函数调用。该函数的返回值、直接返回给函数。**
+
+
+
+### 尾递归函数
+
+普通的递归会在展开的时候产生非常大的中间缓存，每一个中间缓存都会占用我们的栈上时间，如果n很大的话 就会产生爆栈的情况。
+
+**若函数在尾位置调用自身（或是一个尾调用本身的其他函数等等），则称这种情况为**尾递归**。尾递归也是[递归](https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/%E9%80%92%E5%BD%92)的一种特殊情形。尾递归是一种特殊的尾调用，即在尾部直接调用自身的递归函数。对尾递归的优化也是关注尾调用的主要原因。尾调用不一定是递归调用，但是尾递归特别有用，也比较容易实现**
+
+1、尾部调用的是函数自身
+
+2、可以通过优化 使得计算仅占用常量栈空间
+
+
+
+### 手动优化尾递归
+
+**任何可以被定义的函数 都可以被改为迭代的程序 《javascript数据结构与算法》里面说过**
+
+那么怎么把一个递归函数优化成迭代循环：
+
+* 首先把尾递归代码先写出来
+* 将参数提取出来 成为迭代变量 原来的参数则用来初始化迭代变量
+* 创建一个迭代函数 迭代函数只用来更新迭代变量
+* 将原来函数里面所代码( 不包括我们上面的迭代函数和迭代变量初始化 ) 包在一个while(true) 迭代循环里面 加上一个 label用于标识循环
+* 递归终止的return 不变，尾递归的return 替换换成迭代函数 并且continue掉上面的迭代循环 
+
+```javascript
+function fact_iter(_n, _r) { // <= _n, _r 用作初始化变量
+  var n = _n;
+  var r = _r; // <= 将原来的 n, r 变量提出来编程迭代变量
+  function _fact(_n, _r) { // <= 迭代函数非常简单,就是更新迭代变量而已
+      n = _n;
+      r = _r;
+  }
+  _fact_loop: while (true) { // <= 生成一个迭代循环
+      if (n <= 0) {
+          return r;
+      } else {
+          _fact(n - 1, r * n); continue _fact_loop; // <= 执行迭代函数，并且进入下一次迭代
+      }
+  }
+}
+```
+
+
+
+## 乱序排序
+
+乱序就是把数组打乱。
+
+```javascript
+const values = [1, 2, 3, 4, 5];
+values.sort(_ => Math.random() - 0.5);
+console.log(values);
+```
 
 
 
