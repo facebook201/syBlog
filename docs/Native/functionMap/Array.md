@@ -4,14 +4,10 @@
 
 > 数组去重是数组里面经常会碰到的问题，一般分为普通数组和对象数组。
 
-
-
 ### 对象数组 根据对象的属性去重
 
 利用额外的内存空间来存已经存在的对象，如果额外的对象以及存在属性值，则表示已经存在这个对象。不用重复添加
-
 ```javascript
-
 let city = [
   {cityName: "济南市", cityId: "370100"},
   {cityName: "济南市", cityId: "370100"},
@@ -39,14 +35,23 @@ function handleRepeatArr({ data, key }) {
 }
 
 handleRepeatArr({ data: city, key: 'cityId' });
-
 ```
 
 普通元素就是使用Set就可以了
-
 ```javascript
 return [...new Set(arr)];
 ```
+
+## 数组平铺
+将数组元素也是数组元素的数组装成一维数组。
+```javascript
+function flatter(arr) {
+   return arr.reduce((init, el) => {
+     return init.concat(Array.isArray(el) ? flatter(el) : el);
+   }, []);
+}
+```
+
 
 
 

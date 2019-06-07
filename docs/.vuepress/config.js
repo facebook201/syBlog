@@ -19,32 +19,20 @@ module.exports = {
         text: '前端',
         items: [
           {
-            text: 'JS功能函数',
-            link: '/fontEnd/functionMap/'
-          },
-          {
             text: 'node',
             link: '/fontEnd/Node/'
-          },
-          {
-            text: 'JS提升阶段',
-            link: '/fontEnd/Improve/'
           },
           {
             text: 'ElementUI',
             link: '/fontEnd/ElementUI/'
           },
           {
-            text: 'JS的技巧',
-            link: '/fontEnd/Skills/'
-          },
-          {
-            text: '正则表达式',
-            link: '/fontEnd/RegExr/'
-          },
-          {
             text: 'CSS',
             link: '/fontEnd/CSS/'
+          },
+          {
+            text: 'BOM',
+            link: '/fontEnd/BOM/'
           },
         ]
       },
@@ -77,8 +65,24 @@ module.exports = {
             link: '/Native/JS/'
           },
           {
+            text: 'ES6',
+            link: '/Native/ES6/'
+          },
+          {
             text: '正则表达式',
             link: '/Native/RegExp/'
+          },
+          {
+            text: 'JS的技巧',
+            link: '/Native/Skills/'
+          },
+          {
+            text: 'JS提升阶段',
+            link: '/Native/Improve/'
+          },
+          {
+            text: 'JS功能函数',
+            link: '/Native/functionMap/'
           }
         ]
       },
@@ -95,6 +99,15 @@ module.exports = {
       }
     ],
     sidebar: {
+      '/fontEnd/BOM/': [
+        {
+          title: 'BOM浏览器模型',
+          collapsable: false,
+          children: [
+            '/fontEnd/BOM/',
+          ]
+        }
+      ],
       '/Native/JS/': [
         {
           title: 'JS基础知识',
@@ -119,23 +132,25 @@ module.exports = {
           ]
         }
       ],
-      '/fontEnd/functionMap/': [
+      '/Native/functionMap/': [
         {
           title: 'JS功能函数',
           collapsable: false,
           children: [
-            '/fontEnd/functionMap/',
-            '/fontEnd/functionMap/Array.md',
-            '/fontEnd/functionMap/Other.md'
+            '/Native/functionMap/',
+            '/Native/functionMap/Array.md',
+            '/Native/functionMap/Other.md',
+            '/Native/functionMap/RegExp.md',
+            '/Native/functionMap/DOM.md'
           ]
         }
       ],
-      '/fontEnd/Improve/': [
+      '/Native/Improve/': [
         {
           title: 'Js提升阶段',
           collapsable: false,
           children: [
-            '/fontEnd/Improve/'
+            '/Native/Improve/'
           ]
         }
       ],
@@ -157,20 +172,24 @@ module.exports = {
           ]
         }
       ],
-      '/fontEnd/Skills/': [
+      '/Native/ES6/': [
+        {
+          title: 'ES6',
+          collapsable: false,
+          children: [
+            '/Native/ES6/Promise.md',
+            '/Native/ES6/Module.md',
+            '/Native/ES6/Class.md'
+          ]
+        }
+      ],
+      '/Native/Skills/': [
         {
           title: 'JavaScript开发技巧',
           collapsable: false,
           children: [
-            '/fontEnd/Skills/'
+            '/Native/Skills/'
           ]
-        }
-      ],
-      '/fontEnd/RegExr/': [
-        {
-          title: '正则表达式',
-          collapsable: false,
-          link: '/fontEnd/RegExr/'
         }
       ],
       '/Other/English/': [

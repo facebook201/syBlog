@@ -244,18 +244,17 @@ f instanceof Object; // true
 ```javascript
     function instaceLike(obj, ctr) {
       // 获取构造函数的原型
-      let proto = ctr.prototype;
+      obj = Object.getPropertypeOf(obj);
       // 等到隐式原型
-      obj = obj.__proto__;
       while(true) {
         // 如果是null 就直接返回
         if (obj === null)
           return false;
         // 如果相等就返回true
-        if (obj === proto)
+        if (obj === ctr.prototype)
           return true;
         // 否则就继续去原型链上找
-        obj = obj.__proto__;
+        obj = Object.getPropertypeOf(obj);
       }
     }
     
@@ -851,4 +850,37 @@ Child.prototype = new F();
 
 var child1 = new Child('kevin', '18');
 ```
+
+
+
+## 回调函数 callback
+
+在javascript里， 函数是一等公民，当一个函数传入另一个函数作为参数，那么这个函数叫做回调函数，另一个函数就是常见的 高阶函数。并不是所有的回调函数都是异步的，例如map函数里面的回调函数。其实在本质上来说在promise之前是没有异步机制的， setTimeout 和 fs.readFile 都是JS提供的方法，JS中异步的实现严重依赖于宿主环境。**回调函数存在的两个问题**
+
+* 控制反转 ( 回调函数在一定程度上不受我们控制 )
+* 难以理解
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
