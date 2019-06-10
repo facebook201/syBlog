@@ -28,6 +28,11 @@ jQuery 的 each 方法，作为一个通用遍历方法，可用于遍历对象�
 /**
  * @param { Array | Object } target 目标对象 要遍历的
  * @param { Function } callback 遍历函数 有两个参数 一个是索引（属性名） 或者 属性
+ * [
+ *  { name: 'zhangsan' }, { name: 'lisi' }
+ * ]
+ * { lisi: 13, s: { ss: 'asd' } }
+ * 所有的this指向都保证指向元素的对象
  */
 function each(target, callback) {
   if (target === void 0) {
