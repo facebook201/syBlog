@@ -73,16 +73,12 @@ module.exports = {
             link: '/Native/RegExp/'
           },
           {
-            text: 'JS的技巧',
-            link: '/Native/Skills/'
-          },
-          {
             text: 'JS提升阶段',
             link: '/Native/Improve/'
           },
           {
             text: 'JS功能函数',
-            link: '/Native/functionMap/'
+            link: '/Native/Function/'
           }
         ]
       },
@@ -92,7 +88,7 @@ module.exports = {
           { text: '英文', link: '/Other/English/' },
           { text: '面试', link: '/Other/Interview/' },
           { text: '好文连接', link: '/Other/fontendLink/' },
-          { text: 'git指南', link: '/Other/Git/' },
+          { text: '团队规范', link: '/Other/Standard/' },
           { text: 'HTTP', link: '/Other/HTTP/'},
           { text: '一往而深', link: '/Other/Article/' }
         ]
@@ -132,16 +128,16 @@ module.exports = {
           ]
         }
       ],
-      '/Native/functionMap/': [
+      '/Native/Function/': [
         {
           title: 'JS功能函数',
           collapsable: false,
           children: [
-            '/Native/functionMap/',
-            '/Native/functionMap/Array.md',
-            '/Native/functionMap/Other.md',
-            '/Native/functionMap/RegExp.md',
-            '/Native/functionMap/DOM.md'
+            '/Native/Function/',
+            '/Native/Function/Array.md',
+            '/Native/Function/Other.md',
+            '/Native/Function/RegExp.md',
+            '/Native/Function/DOM.md'
           ]
         }
       ],
@@ -180,15 +176,6 @@ module.exports = {
             '/Native/ES6/Promise.md',
             '/Native/ES6/Module.md',
             '/Native/ES6/Class.md'
-          ]
-        }
-      ],
-      '/Native/Skills/': [
-        {
-          title: 'JavaScript开发技巧',
-          collapsable: false,
-          children: [
-            '/Native/Skills/'
           ]
         }
       ],
@@ -273,12 +260,13 @@ module.exports = {
           ]
         }
       ],
-      '/Other/Git/': [
+      '/Other/Standard/': [
         {
-          title: 'Git',
+          title: '标准',
           collapsable: false,
           children: [
-            '/Other/Git/'
+            '/Other/Standard/',
+            '/Other/Standard/ESlint.md'
           ]
         }
       ],
