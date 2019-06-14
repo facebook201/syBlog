@@ -1,4 +1,4 @@
-# Promise
+#  Promise
 
 Promise 是异步编程的一种解决方案，它简单来说就是一个对象，用来表示一个异步操作的最终状态(成功或失败)，以及该异步操作的结果值。**Promise里面保存在未来才会结束的事件的结果**。
 
@@ -350,7 +350,7 @@ class PromiseA {
 
 
 
-# Async 函数
+## Async 函数
 
 async函数是generator的语法糖，更加方便的实现异步操作。
 
@@ -378,7 +378,7 @@ async function getName() {
 
 ### Await
 
-正常情况下，await后面是一个promise对象，返回该对象的结果，如果不是promise对象，就直接返回对应的值。
+正常情况下，**await后面是一个promise对象，返回该对象的结果，如果不是promise对象，就直接返回对应的值**。
 
 ```javascript
 async function f() {
@@ -410,6 +410,27 @@ async function f() {
 f()
   .then(v => console.log(v))
   .catch(e => console.log(e)); // Error 出错了
+
+// async 函数中只要一个 await 出现 reject 状态，则后面的 await 都不会被执行。
+// 解决办法：可以添加 try/catch。
+let a;
+async function f() {
+    await Promise.reject('error');
+    a = await 1; // 这段 await 并没有执行
+}
+f().then(v => console.log(a));
+
+// 正确的写法 把 await放在 try catch里面
+let a;
+async function correct() {
+    try {
+        await Promise.reject('error')
+    } catch (error) {
+        console.log(error);
+    }
+    a = await 1;
+    return a;
+}
 ```
 
 
@@ -509,4 +530,96 @@ async function start() {
 }
 start();
 ```
+
+
+
+## 怎么拿到JS异步函数的返回值
+
+```javascript
+function getSomething(){
+    var r = 0;
+    setTimeout(function(){
+        r = 2;
+    }, 10);
+    return r;
+}
+function compute(){
+    var x = getSomething();
+    console.log(x);
+}
+compute();  // 0
+```
+
+上面的代码是一个异步问题，当getSomething函数执行返回的结果，还没有执行 r = 2；所以我们得想办法使用一些手段。
+
+
+
+### 异步回调函数
+
+可以将函数当成一个参数传进去，这样当延迟执行完 r = 2 之后在执行传进来的回调函数，并且把这个r传进去，这样就可以拿到这个值。 
+
+```javascript
+function getSomething(cb) {
+  var r = 0;
+  setTimeout(() => {
+    r = 2;
+    cb(2);
+  }, 10);
+  return r;
+}
+function compute(x) {
+  // 这里可以拿到异步的值
+  console.log(x);
+  return x;
+}
+
+getSomething(compute);
+```
+
+
+
+### Promise
+
+```javascript
+function getSome() {
+  var r = 0;
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      r = 2;
+      resolve(2);
+    }, 10);
+  });
+}
+
+getSome().then(res => {
+  console.log(2);
+});
+```
+
+
+
+### Async Await
+
+```javascript
+function getSomething() {
+	var r = 0;
+	return new Promise(function(resolve) {
+		setTimeout(function() {
+			r = 2;
+			resolve(r);
+		}, 10);
+	});
+}
+
+async function compute() {
+	var x = await getSomething();
+	alert(x * 2);
+}
+compute();
+
+```
+
+
+
+
 

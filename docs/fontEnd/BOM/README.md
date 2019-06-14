@@ -35,6 +35,13 @@ Ajax本质是使用XMLHttpRequest来想服务器发送异步请求获取数据�
 ### 原生 js实现 ajax
 
 ```javascript
+ /**
+ * 一 Ajax的核心是 XMLHttpRequest
+ * 实例化 XMLHttpRequest对象
+ * 连接服务器
+ * 发送请求
+ * 接收响应数据
+ */
 function ajax(options = {}) {
   options.type = (options.type || 'GET').toUpperCase();
   options.dataType = options.dataType || 'json';
