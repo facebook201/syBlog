@@ -211,7 +211,8 @@ module.exports = {
           title: '计算机基础',
           collapsable: false,
           children: [
-            '/computerBasics/designPattern/'
+            '/computerBasics/designPattern/',
+            '/computerBasics/designPattern/sectionTwo.md'
           ]
         }        
       ],
