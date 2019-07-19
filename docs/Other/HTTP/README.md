@@ -4,6 +4,23 @@ pageClass: getting-started
 
 # HTTP指南
 
+## HTTP处理请求Header
+有时候我们发送一个请求到服务器，服务端不能正常解析我们发送的数据，是因为没有为请求header配置合适的Content-Type，当我们传入的对象为普通对象的时候，header如果没有配置Content-type属性，需要手动配置为 application/json;charset=utf-8
+
+```javascript
+axios({
+  url: '/post/',
+  method: 'post',
+  headers: {
+    'Content-type': 'application/json;charset=utf-8'
+  },
+  data: {
+    a: 1,
+    b: 2
+  }
+});
+```
+
 ## Content-Type
 
 Http协议的消息头中，Request Header 里面有一个Content-Type的字段表示请求中的媒体类型信息
@@ -20,9 +37,9 @@ Http协议的消息头中，Request Header 里面有一个Content-Type的字段�
 * multipart/form-data 需要在表单中进行文件上传时，就需要使用该格式（例如图片上传 文本上传配和formData）
 
 ::: tip
-  application/x-www-form-urlencoded: 数据被编码为 键值对。也就是key/value 这是标准编码格式。一般POST里面会用qs.stringify转一次
-  multipart/form-data: 数据以formData的形式   
-  text/plain: 数据以纯文本形式（text/json/xml/html）编码。JSON形式的使用json.encode(text)转换
+  * application/x-www-form-urlencoded: 表单提交时的内容类型，一般POST里面会用qs.stringify转一次
+  * multipart/form-data: 表单序列化的对象，用于通过XHR传输。而且不需要配置请求头，浏览器会自己识别 配置适当的头部信息。  
+  * text/plain: 数据以纯文本形式（text/json/xml/html）编码。JSON形式的使用json.encode(text)转换
 :::
 
 ## HTTPS
