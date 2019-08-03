@@ -230,7 +230,8 @@ module.exports = {
           title: '数据结构和算法',
           collapsable: false,
           children: [
-            '/computerBasics/algorithm/'
+            '/computerBasics/algorithm/',
+            '/computerBasics/algorithm/sort.md'
           ]
         }
       ],
