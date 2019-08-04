@@ -90,7 +90,8 @@ module.exports = {
           { text: '好文连接', link: '/Other/fontendLink/' },
           { text: '团队规范', link: '/Other/Standard/' },
           { text: 'HTTP', link: '/Other/HTTP/'},
-          { text: '一往而深', link: '/Other/Article/' }
+          { text: '一往而深', link: '/Other/Article/' },
+          { text: '每日学习', link: '/Other/DailyStudy/' }
         ]
       }
     ],
@@ -175,7 +176,8 @@ module.exports = {
           children: [
             '/Native/ES6/Promise.md',
             '/Native/ES6/Module.md',
-            '/Native/ES6/Class.md'
+            '/Native/ES6/Class.md',
+            '/Native/ES6/set-map.md'
           ]
         }
       ],
@@ -287,6 +289,15 @@ module.exports = {
           collapsable: false,
           children: [
             '/Other/Article/'
+          ]
+        }
+      ],
+      '/Other/DailyStudy/': [
+        {
+          title: '每日学习',
+          collapsable: false,
+          children: [
+            '/Other/DailyStudy/'
           ]
         }
       ]
