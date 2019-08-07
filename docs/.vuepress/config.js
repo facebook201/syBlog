@@ -115,7 +115,8 @@ module.exports = {
             '/Native/JS/Object.md',
             '/Native/JS/Advanced.md',
             '/Native/JS/SpecialTopic.md',
-            '/Native/JS/JSON.md'
+            '/Native/JS/JSON.md',
+            '/Native/JS/FileAPI.md'
           ]
         }
       ],

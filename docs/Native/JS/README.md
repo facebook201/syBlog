@@ -380,7 +380,3 @@ function doSomething(action) {
 }
 ```
 
-## 新型API File
-新型的API
-
-
