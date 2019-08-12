@@ -188,4 +188,85 @@ function sendFile(option) {
 ```
 
 ## XMLHttpRequest
-**XML**
+**XMLHttpRequest 对象可以跟服务器交互。从URL获取数据，无需整个页面刷新，不影响用户操作， 一般通过 new XMLHttpRequest来创建一个xhr对象。**
+
+在这里我只会介绍一些常用的属性和方法。
+
+
+
+#### 属性
+
+* readyState 状态为4的时候表示请求完成
+* onreadystatechange 当readyState的值改变的时候 回调函数onreadystatechange 会发生
+
+ 不过现在基本上是使用onload来替代。
+
+* responseText 返回纯文本的值
+* responseType 一个枚举类型的属性，返回响应数据的类型。
+* status 状态码 200 到300之间是成功
+* timeout  请求在被自动终止前所消耗的毫秒数。默认值0.
+* withCredentials 属性是一个布尔类型值，指示了是否该使用类似cookies,authorization headers(头部授权)或者TLS客户端证书这一类资格证书来创建一个跨站点访问控制（cross-site `Access-Control`）请求。**在同一个站点下使用`withCredentials属性是无效的。`**
+
+如果在发送来自其他域的XMLHttpRequest请求之前，未设置`withCredentials` 为true，那么就不能为它自己的域设置cookie值。而通过设置`withCredentials` 为true获得的第三方cookies，将会依旧享受同源策略
+
+```javascript
+let xhr = new XMLHttpRequest();
+xhr.timeout = 2000;
+
+xhr.ontimeout = function ontimeout() {
+  // to do something when timeout
+};
+xhr.send(null);
+```
+
+
+
+### 进度事件
+
+| `onloadstart` | 获取开始                         |
+| ------------- | -------------------------------- |
+| `onprogress`  | 数据传输进行中                   |
+| `onabort`     | 获取操作终止                     |
+| `onerror`     | 获取失败                         |
+| `onload`      | 获取成功                         |
+| `ontimeout`   | 获取操作在用户规定的时间内未完成 |
+| `onloadend`   | 获取完成（不论成功与否）         |
+
+
+
+
+
+### 方法
+
+* abort 终止请求， 当一个请求被终止 它的readyState 属性将被置为0；
+* **getAllResponseHeaders** 返回所有的请求头 
+* **setRequestHeader** 设置HTTP请求头 该方法必须在 open 和 send直接。
+
+```javascript
+var request = new XMLHttpRequest();
+request.open("GET", "foo.txt", true);
+request.send();
+
+request.onreadystatechange = function() {
+  if(this.readyState == this.HEADERS_RECEIVED) {
+
+    // Get the raw header string
+    var headers = request.getAllResponseHeaders();
+
+    // Convert the header string into an array
+    // of individual headers
+    var arr = headers.trim().split(/[\r\n]+/);
+
+    // Create a map of header names to values
+    var headerMap = {};
+    arr.forEach(function (line) {
+      var parts = line.split(': ');
+      var header = parts.shift();
+      var value = parts.join(': ');
+      headerMap[header] = value;
+    });
+  }
+  // 然后我们就可以这样访问
+  var contentType = headerMap["content-type"];
+```
+
