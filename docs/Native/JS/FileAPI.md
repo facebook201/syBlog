@@ -93,9 +93,99 @@ file.onchange = function() {
       image.src = e.target.result;
     };
     reader.readAsDataURL(file); // 返回URL格式的字符串表示所读取文件的内容
+
+    // createObjectURL形式
+    let url = createObjectUrl(file);
+    image.src = url;
   }
 };
 
+// URL.createURL
+function createObjectUrl(blob) {
+  if (window.URL) {
+    return window.URL.createObjectURL(blob);
+  } else if (window.webkitURL) {
+    return window.webkitURL.createObjectURL(blob);   
+  } else {
+    return null;
+  }
+}
 
+// 拖拽的上传
+file.addEventListener('dragenter', dragenter, false);
+file.addEventListener('dragover', dragover, false);
+file.addEventListener('drop', drop, false);
+
+// 浏览器有一些默认行为 比如新开页打开图片 下载图片等 所以要禁用默认行为和
+function dragenter(e) {
+  e.stopPropagation();
+  e.preventDefault();
+}
+
+function dragover(e) {
+  e.stopPropagation();
+  e.preventDefault();
+}
+
+function drop(e) {
+  e.stopPropagation();
+  e.preventDefault();
+  let dt = e.dataTransfer;
+  let files = dt.files;
+  handleFile(files);
+}
 ```
 
+### 处理file的地方可以单独提炼出来
+```javascript
+function handleFile(files) {
+  var imageType = /^image\//;
+  for (let i = 0; i < files.length; i++) {
+    let file = files[i];
+    if (!imageType.test(file.type)) {
+      continue;
+    }
+
+    var image = document.createElement('img');
+    image.classList.add('obj-img');
+    image.file = file;
+
+    preview.appendChild(image);
+
+    let url = createObjectUrl(file);
+    image.src = url;
+  }
+}
+```
+### formdata 传参数
+```javascript
+function sendFile(option) {
+  let xhr = new XMLHttpRequest();
+  let formdata = new FormData();
+  let action = option.action;
+
+  // 增加其他参数
+  if (option.data) {
+    Object.keys(option.data).forEach(key => {
+      formdata.append(key, option.data[key]);
+    });
+  }
+
+  formdata.append(option.filename, option.file, option.file.name);
+  xhr.onload = function onload() {
+    if (xhr.status < 200 && xhr.status > 300) {
+      return Option.onError(getError(action, option, xhr));
+    }
+    return xhr.onSuccess(getBody(xhr));
+  }
+
+  xhr.open('post', action, true);
+  if (option.withCredentials && 'withCredentials' in xhr) {
+    xhr.withCredentials = true;
+  }
+  xhr.send(formdata);
+}
+```
+
+## XMLHttpRequest
+**XML**
