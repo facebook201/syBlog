@@ -189,18 +189,11 @@ function sendFile(option) {
 
 ## XMLHttpRequest
 **XMLHttpRequest 对象可以跟服务器交互。从URL获取数据，无需整个页面刷新，不影响用户操作， 一般通过 new XMLHttpRequest来创建一个xhr对象。**
-
 在这里我只会介绍一些常用的属性和方法。
 
-
-
-#### 属性
-
+### 属性
 * readyState 状态为4的时候表示请求完成
-* onreadystatechange 当readyState的值改变的时候 回调函数onreadystatechange 会发生
-
- 不过现在基本上是使用onload来替代。
-
+* onreadystatechange 当readyState的值改变的时候 回调函数onreadystatechange 会发生不过现在基本上是使用onload来替代。
 * responseText 返回纯文本的值
 * responseType 一个枚举类型的属性，返回响应数据的类型。
 * status 状态码 200 到300之间是成功
@@ -218,9 +211,6 @@ xhr.ontimeout = function ontimeout() {
 };
 xhr.send(null);
 ```
-
-
-
 ### 进度事件
 
 | `onloadstart` | 获取开始                         |
@@ -232,12 +222,7 @@ xhr.send(null);
 | `ontimeout`   | 获取操作在用户规定的时间内未完成 |
 | `onloadend`   | 获取完成（不论成功与否）         |
 
-
-
-
-
 ### 方法
-
 * abort 终止请求， 当一个请求被终止 它的readyState 属性将被置为0；
 * **getAllResponseHeaders** 返回所有的请求头 
 * **setRequestHeader** 设置HTTP请求头 该方法必须在 open 和 send直接。
