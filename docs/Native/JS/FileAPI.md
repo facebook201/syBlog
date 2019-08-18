@@ -255,3 +255,212 @@ request.onreadystatechange = function() {
   var contentType = headerMap["content-type"];
 ```
 
+## 文件夹上传
+
+```javascript
+
+// var file = document.getElementById('filename');
+var preview = document.getElementById('preview');
+
+// 拖拽事件
+// file.addEventListener('dragenter', dragenter, false);
+// file.addEventListener('dragover', dragover, false);
+// file.addEventListener('drop', drop, false);
+
+// 浏览器有一些默认行为 比如新开页打开图片 下载图片等 所以要禁用默认行为和
+function dragenter(e) {
+  e.stopPropagation();
+  e.preventDefault();
+}
+
+function dragover(e) {
+  e.stopPropagation();
+  e.preventDefault();
+}
+
+function drop(e) {
+  e.stopPropagation();
+  e.preventDefault();
+  let dt = e.dataTransfer;
+  let files = dt.files;
+  handleFile(files);
+}
+
+// 点击上传
+// file.onchange = function() {
+//   // files 是上传的对象 可以有多个
+//   var files = this.files;
+//   // 遍历文件对象
+//   handleFile(files);
+// };
+
+function handleFile(files) {
+  var imageType = /^image\//;
+  for (let i = 0; i < files.length; i++) {
+    let file = files[i];
+    if (!imageType.test(file.type)) {
+      continue;
+    }
+
+    var image = document.createElement('img');
+    image.classList.add('obj-img');
+    image.file = file;
+
+    preview.appendChild(image);
+
+    let url = createObjectUrl(file);
+    image.src = url;
+  }
+}
+
+// 1、 2、通过ObjectURL方式
+// var reader = new FileReader();
+// reader.onload = function (e) {
+//   image.src = e.target.result;
+// };
+// reader.readAsDataURL(file);
+
+function createObjectUrl(blob) {
+  if (window.URL) {
+    return window.URL.createObjectURL(blob);
+  } else if (window.webkitURL) {
+    return window.webkitURL.createObjectURL(blob);   
+  } else {
+    return null;
+  }
+}
+
+
+function sendFile(option) {
+  let xhr = new XMLHttpRequest();
+  let formdata = new FormData();
+  let action = option.action;
+
+  // 增加其他参数
+  if (option.data) {
+    Object.keys(option.data).forEach(key => {
+      formdata.append(key, option.data[key]);
+    });
+  }
+
+  formdata.append(option.filename, option.file, option.file.name);
+
+  xhr.onload = function onload() {
+    if (xhr.status < 200 && xhr.status > 300) {
+      return Option.onError(getError(action, option, xhr));
+    }
+    return xhr.onSuccess(getBody(xhr));
+  }
+
+  xhr.open('post', action, true);
+
+  if (option.withCredentials && 'withCredentials' in xhr) {
+    xhr.withCredentials = true;
+  }
+  xhr.send(formdata);
+}
+
+
+var fileLoader = document.getElementById('filenamew');
+fileLoader.addEventListener('change', uploadFolder);
+
+let root = [];
+let set = new Set();
+let isImage = /^isImage\//;
+
+function uploadFolder(e) {
+  let files = e.target.files;
+  for (let i = 0; i < files.length; i++) {
+    if (files[i].webkitRelativePath.indexOf('.DS') > -1) {
+      continue;
+    } else {
+      // 上面是苹果会有这样的返回结果
+      let path = files[i].webkitRelativePath.split('/');
+      transPath(path);
+    }
+  }
+  console.log(root);
+  console.log(set);
+  bineryTree(root);
+}
+
+
+function transPath(path = []) { 
+  // ['A', 'png']
+  for (let i = 0; i < path.length; i++) {
+    let id = buildId(path.slice(0, i + 1));
+    // 如果存在就不加到扁平数组
+    if (set.has(id)) {
+      continue;
+    } else {
+      set.add(id);
+      if (isImage.test(path[i])) {
+        root.push({
+        id: id,
+        name: path[i],
+        level: i,
+        parent: findParentId(path, i)
+        });
+      } else {
+        root.push({
+        id: id,
+        name: path[i],
+        level: i,
+        parent: findParentId(path, i),
+        children: []
+        });
+      }
+    }
+  }
+}
+  
+  function buildId(path) {
+    let id = '';
+    let n = 0;
+    let len = path.length;
+    while (n < len) {
+      id = id + '-' + path[n];
+      n++;
+    }
+    return id.slice(1);
+  }
+
+  function findParentId(path, i) {
+    let parentId = '';
+    let n = 0;
+    if (i == 0) {
+      return null;
+    }
+    
+    while (n < i) {
+      parentId += '-' + path[n];
+      n++;
+    }
+    return parentId.slice(1);
+  }
+    
+
+
+function bineryTree(nodeTree = []) {
+  let temp = {};
+  let tree = {};
+  
+  for (let i = 0; i < nodeTree.length; i++) {
+    temp[nodeTree[i].id] = nodeTree[i];
+  }
+
+  for (let i in temp) {
+    if (temp[i].parent) {
+      if (!temp[temp[i].parent].children) {
+        temp[temp[i].parent].children = {};
+      }
+      temp[temp[i].parent].children[temp[i].id] = temp[i];
+    } else {
+      tree[temp[i].id] = temp[i];
+    }
+  }
+  console.log(tree);
+  return tree;
+}
+```
+
