@@ -1,3 +1,8 @@
+/*
+ * @Author: shiyao
+ * @Description: 
+ * @Date: 2019-08-05 07:49:39
+ */
 
 module.exports = {
   title: '皮卡丘的前端体系',
@@ -55,6 +60,10 @@ module.exports = {
             text: 'leetcode算法',
             link: '/computerBasics/leetcode/'
           },
+          {
+            text: 'Nginx',
+            link: '/computerBasics/nginx/'
+          }
         ]
       },
       {
@@ -148,7 +157,8 @@ module.exports = {
           title: 'Js提升阶段',
           collapsable: false,
           children: [
-            '/Native/Improve/'
+            '/Native/Improve/',
+            '/Native/Improve/Test.md'
           ]
         }
       ],
@@ -244,6 +254,15 @@ module.exports = {
           collapsable: false,
           children: [
             '/computerBasics/leetcode/'
+          ]
+        }
+      ],
+      '/computerBasics/nginx/': [
+        {
+          title: 'nginx',
+          collapsable: false,
+          children: [
+            '/computerBasics/nginx/'
           ]
         }
       ],

@@ -1,3 +1,8 @@
+<!--
+ * @Author: shiyao
+ * @Description: 
+ * @Date: 2019-05-15 20:07:12
+ -->
 ---
 pageClass: getting-started
 ---
@@ -15,6 +20,7 @@ pageClass: getting-started
 * [javascript的迷你库](https://github.com/jsmini)
 * [阮一峰javascript教程2](https://javascript.ruanyifeng.com)
 * [JS的迷你库合集](http://microjs.com/)
+* [正则表达式](https://github.com/ziishaned/learn-regex)
 
 ## 牛人博客
 * [小胡子哥(阿里)](https://www.barretlee.com/entry/)
@@ -23,6 +29,7 @@ pageClass: getting-started
 * [前端面试图谱](https://yuchengkai.cn/docs/frontend/)
 * [好博客](https://github.com/jawil/blog)
 * [冴羽](https://github.com/mqyqingfeng/Blog)
+* [深度笔记](http://www.notedeep.com/)
 
 ## 大公司博客
 * [今日头条](https://techblog.toutiao.com/)
