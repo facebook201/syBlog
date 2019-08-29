@@ -244,16 +244,19 @@ module.exports = {
           collapsable: false,
           children: [
             '/computerBasics/algorithm/',
-            '/computerBasics/algorithm/sort.md'
+            '/computerBasics/algorithm/sort.md',
+            '/computerBasics/algorithm/hash.md',
+            '/computerBasics/algorithm/Tree.md'
           ]
         }
       ],
       '/computerBasics/leetcode/': [
         {
-          title: 'leetcode算法题',
+          title: 'leetcode刷题',
           collapsable: false,
           children: [
-            '/computerBasics/leetcode/'
+            '/computerBasics/leetcode/',
+            '/computerBasics/leetcode/binaryTree.md'
           ]
         }
       ],
@@ -271,7 +274,8 @@ module.exports = {
           title: 'CSS',
           collapsable: false,
           children: [
-            '/fontEnd/CSS/'
+            '/fontEnd/CSS/',
+            '/fontEnd/CSS/css-world.md'
           ]
         }
       ],
