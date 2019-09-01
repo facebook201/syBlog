@@ -16,7 +16,9 @@
 
 3、在栈里，新元素都靠近栈顶 旧元素都是靠近栈底
 
+4、在栈的操作特性来看 是一种操作受限的线性表，只允许在一端插入和删除数据
 
+5、不包含任何元素的栈是空栈
 
 
 
@@ -50,8 +52,19 @@ class Stack {
   peek() {
     return this.stack[this.getSize() - 1];
   }
+  getMin() {
+    return Math.min.apply(null, this.stack);
+  }
+  getMax() {
+    return Math.max.apply(null, this.stack);
+    // return Math.max(...this.stack); // E6
+  }
 }
 ```
+
+上面就是一个基本的栈。
+
+LeetCode上第20题就有相关的栈的应用。
 
 
 
