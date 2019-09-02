@@ -1,3 +1,8 @@
+/*
+ * @Author: shiyao
+ * @Description: 
+ * @Date: 2019-08-05 07:49:39
+ */
 
 module.exports = {
   title: '皮卡丘的前端体系',
@@ -52,12 +57,12 @@ module.exports = {
             link: '/computerBasics/designPattern/'
           },
           {
-            text: 'leetcode算法',
+            text: 'leetcode',
             link: '/computerBasics/leetcode/'
           },
           {
-            text: '深入Http协议',
-            link: '/computerBasics/protocol/'
+            text: 'Nginx',
+            link: '/computerBasics/nginx/'
           }
         ]
       },
@@ -118,7 +123,8 @@ module.exports = {
             '/Native/JS/Object.md',
             '/Native/JS/Advanced.md',
             '/Native/JS/SpecialTopic.md',
-            '/Native/JS/JSON.md'
+            '/Native/JS/JSON.md',
+            '/Native/JS/FileAPI.md'
           ]
         }
       ],
@@ -150,7 +156,8 @@ module.exports = {
           title: 'Js提升阶段',
           collapsable: false,
           children: [
-            '/Native/Improve/'
+            '/Native/Improve/',
+            '/Native/Improve/Test.md'
           ]
         }
       ],
@@ -236,16 +243,29 @@ module.exports = {
           collapsable: false,
           children: [
             '/computerBasics/algorithm/',
-            '/computerBasics/algorithm/sort.md'
+            '/computerBasics/algorithm/sort.md',
+            '/computerBasics/algorithm/Hash.md',
+            '/computerBasics/algorithm/List.md',
+            '/computerBasics/algorithm/Tree.md'
           ]
         }
       ],
       '/computerBasics/leetcode/': [
         {
-          title: 'leetcode算法题',
+          title: 'leetcode刷题',
           collapsable: false,
           children: [
-            '/computerBasics/leetcode/'
+            '/computerBasics/leetcode/',
+            '/computerBasics/leetcode/binaryTree.md'
+          ]
+        }
+      ],
+      '/computerBasics/nginx/': [
+        {
+          title: 'nginx',
+          collapsable: false,
+          children: [
+            '/computerBasics/nginx/'
           ]
         }
       ],
@@ -263,7 +283,8 @@ module.exports = {
           title: 'CSS',
           collapsable: false,
           children: [
-            '/fontEnd/CSS/'
+            '/fontEnd/CSS/',
+            '/fontEnd/CSS/css-world.md'
           ]
         }
       ],

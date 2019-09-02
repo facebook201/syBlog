@@ -5,6 +5,94 @@
 
 
 
+**Set 是有序列表，含有相互独立的非重复值。Set是没有key的**
+
+创建一个Set集合，
+
+```javascript
+let set = new Set();
+// set
+Set(0){}
+  size: (...)
+  __proto__: Set
+  [[Entries]]: Array(0)       
+  length: 0       
+
+// 看起来像个对象 那么现在看看对象
+let obj = new Object();
+
+Object {}
+  __proto__:
+```
+
+
+
+测试一下Set。
+
+```javascript
+let set = new Set();
+
+set.add('haha');
+set.add(Symbol('haha'));
+
+// set 不是对象 这样没有用
+for (let i in set) {
+  console.log(i);
+}
+
+for (let key of set) {
+  console.log(key);
+}
+
+//如果你需要key，则使用下面这种方法
+for(let [key, value] of sets.entries()) {
+  console.log(value, key);
+} 
+//"haha" "haha"
+//Symbol(haha) Symbol(haha)
+
+sets.forEach((value, key) => {
+      console.log(value, key);
+    });
+    //"haha" "haha"
+    //Symbol(haha) Symbol(haha)
+    
+    sets.forEach((value, key) => {
+      console.log(Object.is(value, key));
+    }); 
+    //true true
+```
+
+Set有entries和forEach方法 所以是可以迭代的。但是不能使用for in 来迭代。要使用for of 遍历。
+
+
+
+### Set 和 Array的转换
+
+Set和数组太像了，Set集合的特点是没有key，没有下标。只有size和原型以及一个可以迭代的不重复元素的类数组。Set集合和数组是可以相互装换的
+
+```javascript
+    //数组转换成Set
+    const arr = [1, 2, 2, '3', '3']
+    let set = new Set(arr);
+    console.log(set) // Set(3) {1, 2, "3"}
+
+    //Set转换成数组
+    let set = new Set();
+    set.add(1);
+    set.add('2');
+    console.log(Array.from(set)) // (2) [1, "2"]
+```
+
+
+
+## Weak Set 集合
+
+* weakset 只能存放对象值。不能放原始值，set对象都可以。
+* weakset 对象中存储的对象都是被弱引用的，如果没有其他的对象或属性引用这个对象值，这个对象会被当成垃圾回收掉
+
+
+
 ### 数组和set
 
 数组是一个索引集合，数组中的数据值是按索引排序。
@@ -95,4 +183,39 @@ const findSum = (arr, val) => {
 ```
 
 
+
+### Map
+
+Map对象保存键值对的有序列表，任何值都可以作为一个键或一个值。**对象的key只支持字符串，Map支持所有数据类型**
+
+```javascript
+let map = new Map();
+console.log(map);
+```
+
+Map比Set 多了 set和 get方法。map没有add方法 是使用set添加key value。在Set集合中使用add添加value 没有key。
+
+Map 传的参数也是一个可迭代对象，其元素位键值对。
+
+Obejct和Map的比较。
+
+* 键值obejct只能是字符串或symbols Map可以是任意值 包含函数、对象、基本类型
+* Map中的键值对有序的 而添加到对象的键不是 遍历的时候 map对象按照插入的顺序返回键值
+* size可以直接得到键值对的个数 对象要手动操作
+* Map可以直接迭代 Object对象迭代要先得到键的数组 再迭代
+* Map在涉及频繁增删键值对的场景下会有性能优势
+
+
+
+## 总结
+
+Set集合可以用来过滤数组中重复的元素，只能通过has方法检测指定的值是否存在，或者是通过forEach处理每个值。
+
+Weak Set集合存放对象的弱引用，当该对象的其他强引用被清除时，集合中的弱引用也会自动被垃圾回收机制回收，追踪成组的对象是该集合最好的使用方式。
+
+Map集合通过set()添加键值对，通过get()获取键值，各种方法的使用查看文章教程，你可以把它看成是比Object更加强大的对象。
+
+Weak Map集合只支持对象类型的key，所有key都是弱引用，当该对象的其他强引用被清除时，集合中的弱引用也会自动被垃圾回收机制回收，为那些实际使用与生命周期管理分离的对象添加额外信息是非常适合的使用方式。
+
+记得刚开始学习JavaScript的时候，不知道各种数据类型有什么用，如果你现在刚学习Map和Set也是这种不知道能用来干什么的想法，那么，恭喜，他们已经开始走入你的编程生涯，慢慢的你就会熟悉他们。
 
