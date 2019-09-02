@@ -55,6 +55,10 @@ module.exports = {
             text: 'leetcode算法',
             link: '/computerBasics/leetcode/'
           },
+          {
+            text: '深入Http协议',
+            link: '/computerBasics/protocol/'
+          }
         ]
       },
       {
@@ -89,7 +93,6 @@ module.exports = {
           { text: '面试', link: '/Other/Interview/' },
           { text: '好文连接', link: '/Other/fontendLink/' },
           { text: '团队规范', link: '/Other/Standard/' },
-          { text: 'HTTP', link: '/Other/HTTP/'},
           { text: '一往而深', link: '/Other/Article/' },
           { text: '每日学习', link: '/Other/DailyStudy/' }
         ]
@@ -243,6 +246,15 @@ module.exports = {
           collapsable: false,
           children: [
             '/computerBasics/leetcode/'
+          ]
+        }
+      ],
+      '/computerBasics/protocol/': [
+        {
+          title: '深入Http协议',
+          collapsable: false,
+          children: [
+            '/computerBasics/protocol/'
           ]
         }
       ],

@@ -35,10 +35,7 @@ pageClass: getting-started
 
 ## workflow
 
-![img](https://pic1.zhimg.com/v2-86810fd98b9f40c9d098b4b65aceef0f_1200x500.jpg)
-
-
-
+![border](https://pic1.zhimg.com/v2-86810fd98b9f40c9d098b4b65aceef0f_1200x500)
 
 
 * master 分支。主干分支 任何项目都必须要有这个分支，对项目进行tag或发布版本等操作。

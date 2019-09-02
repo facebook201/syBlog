@@ -755,9 +755,26 @@ values.sort(_ => Math.random() - 0.5);
 console.log(values);
 ```
 
+Math.random() - 0.5 随机得到一个正数，负数 或者0。如果是正数降序排列，负数升序。0不变。但是这个方法是概率不均等的。
 
+```javascript
+let test = new Array(10).fill(0);
+let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+let i = 0;
 
+const shuffle = nums => nums.sort(_ => Math.random() - 0.5);
 
+for (; i < 10000; i++) {
+  let ret = shuffle(arr.slice(0));
+  ret.forEach((el, i) => {
+    test[i] += el;
+  });
+}
 
+test = test.map(el => el / 10000);
+console.log(test);
+// [3.8579, 3.8811, 4.569, 4.6564, 4.7021, 4.3306, 4.3895, 4.7192, 4.8053, 5.0889]
+```
 
+结果发现**越大的数字出现在越后面的概率越大**。因为 **V8 在处理sort方法的时候当数据长度小于10的时候 使用插入排序 否则就是快速排序和插入排序的混合排序**
 
