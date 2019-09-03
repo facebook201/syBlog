@@ -136,7 +136,10 @@ function drop(e) {
 }
 ```
 
-### 处理file的地方可以单独提炼出来
+
+
+### 处理file的地方可以单独提出来
+
 ```javascript
 function handleFile(files) {
   var imageType = /^image\//;
@@ -157,7 +160,32 @@ function handleFile(files) {
   }
 }
 ```
+
+
+#### 处理图片的大小
+
+首先通过FileReader 来读取图片文件，然后reader.readAsDataURL(file);
+
+```javascript
+var reader = new FileReader();
+reader.onload = function (e) {
+  let image = new Image();
+  image.onload() {
+    let width = this.width; // 图片宽度
+    let height = this.height; // 图片高度
+    // 这里就可以对高度和宽度限制一下
+  }
+	image.src = e.target.result;
+};
+reader.readAsDataURL(file); // 返回URL格式的字符串表示所读取文件的内容
+```
+
+
+
+
+
 ### formdata 传参数
+
 ```javascript
 function sendFile(option) {
   let xhr = new XMLHttpRequest();
