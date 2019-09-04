@@ -110,6 +110,16 @@ LeetCode上第20题就有相关的栈的应用。
 * 循环链表
 * 非循环链表
 
+
+
+#### 特点
+
+* **链表是通过指针将零散的内存块串连起来** 所以链表不支持随机访问，如果要找特定的项，只能从开头开始遍历 直到找到，所以访问的时间复杂度是 O(n)
+
+* **高效的插入和删除** 链表中插入或删除一个数据  我们并不需要为了保护连续性来搬移节点。因为链表的存储空间本身就是不连续的。只需要考虑相邻节点的指针改变，所以速度很快 时间复杂度 O（1）
+
+  
+
 #### 数组和链表的区别
 
 数组和链表都是线性表，所有的数据都排列在一个维度上。
@@ -151,36 +161,215 @@ function Node(value) {
 
 ![border](https://aliyun-lc-upload.oss-cn-hangzhou.aliyuncs.com/aliyun-lc-upload/uploads/2018/04/26/screen-shot-2018-04-25-at-163243.png)
 
+
+
+### 设计链表
+
+单链表中的节点应该有两个属性：val和next。val是当前节点的值，next是指向下一个节点的指针/引用。
+
+如果要使用双向链表，则还需要一个属性prev以指示链表中的上一个节点。假设链表中的所有节点都是 0-index 的。
+
+
+
+### 单向链表
+
+因为链表的头部增加节点有点麻烦 所以初始化都会建好头节点。head。表示链表的头部。
+
+
+
+#### 实现
+
+* Node类表示节点
+* LinkedList 类提供插入节点、删除的一些操作
+
+单向链表的常用操作：
+
+* append(element)：尾部添加元素
+
+* insert(position, element)：特定位置插入一个新的项
+
+* removeAt（position）：特定位置移除一项
+
+* remove(element)：移除一项
+
+* indexOf(element): 返回元素在链表中的索引。如果链表中没有该元素 则返回-1
+
+* isEmpty() 如果链表中没有元素就返回true，如果长度大于0 返回false
+
+* size（）返回链表包含的元素个数
+
+* getHead（）返回链表的第一个元素
+
+* toString（）输出元素的值
+
+  
+
 ```javascript
 /**
- * head节点的next属性初始化是null 只有新元素插入才会指向新的元素
- */
-class LinkList {
-  constructor() {
-    this.head = new Node('head');
+ * 单向链表
+ * */
+function LinkedList() {
+  // 节点
+  function Node(element) {
+    this.element = element;
+    this.next = null;
   }
-  // 遍历链表查找给定数据 返回找到的数据节点
-  find(item) {
-    let currentNode = this.head;
-    while(currentNode.value != item) {
+
+  this.length = 0; // 链表的长度
+  var head = null; // 链表的头部
+
+  // 向链表尾部添加一个元素
+  this.append = function(element) {
+    var node = new Node(element);
+    var currentNode = head;
+
+    if (head === null) {
+      head = node;
+    } else {
+      // 如果当前节点不为空 就一直找下去
+      while (currentNode.next) {
+        currentNode = currentNode.next;
+      }
+      // 把当前节点的next指针指向 node
+      currentNode.next = node;
+    }
+    this.length++;
+  }
+
+  // 从链表的特定位置移除一项
+  this.insert = function(position, element) {
+    // 越界就不考虑
+    if (position < 0 || position > length) return false;
+
+    var node = new Node(element); // 要新增的节点
+    var index = 0;
+    var currentNode = head;
+    var previousNode;
+
+    if (position === 0) {
+      // 如果是第一个那么就把node的next指向head 同时把初始化的head改成node
+      node.next = currentNode;
+      head = node;
+    } else {
+      while (index < position) {
+        index++;
+        previousNode = currentNode;
+        currentNode = currentNode.next;
+      }
+      previousNode.next = node;
+      node.next = currentNode;
+    }
+    this.length++;
+    return true;
+  }
+  
+  // 删除指定位置的元素
+  this.removeAt = function(position) {
+    if (length === 0) return false; 
+    if (position < 0 && position >= length) return false;
+
+    var currentNode = head;
+    var index = 0;
+    var previousNode;
+
+    if (position === 0) {
+      head = currentNode.next;
+    } else {
+      while(index < position) {
+        index++;
+        previousNode = currentNode;
+        currentNode = currentNode.next;
+      }
+      // 这里就相当于 把第 n 节点的next指向 n+1的下一个节点 就是 n+2 这样 n+1的节点就给删除了
+      previousNode.next = currentNode.next;
+      // 删除之后就长度减去1
+      this.length--;
+      return true;
+    }
+  };
+
+  // 删除指定的元素
+  this.remove = function(element) {
+    var index = this.indexOf(element);
+    if (index > -1) {
+      return this.removeAt(index);
+    }
+  };
+
+  // 返回元素在链表的索引，如果链表没有该元素就返回-1
+  this.indexOf = function(element) {
+    if (length === 0) return -1;
+    var currentNode = head;
+    var index = 0;
+    
+    // 注意理解一下 判断Node的元素是否相等来判断这个
+    while (currentNode) {
+      if (currentNode.element === element) {
+        return index;
+      }
+      index++;
       currentNode = currentNode.next;
     }
-    // 找到了就返回 找不到就返回null
-    return currentNode;
-  }
-  insert(newValue, item) {
-    let newNode = new Node(newValue);
-    let currentNode = this.find(item);
-    
-    newNode.next = currentNode.next;
-    currentNode.next = newNode;
+    return -1;
+  };
+
+  // 是否包含元素
+  this.isEmpty = function() {
+    return this.length === 0;
+  };
+
+  // 返回链表包含的元素个数
+  this.size = function() {
+    return this.length;
+  };
+
+  // 获取链表头部元素
+  this.getHead = function() {
+    return head.element;
+  };
+
+  this.toString = function() {
+    var currentNode = head;
+    var string = '';
+
+    while (currentNode) {
+      string += ',' + currentNode.element;
+      currentNode = currentNode.next;
+    }
+    // 去掉第一个,
+    return string.slice(1);
+  };
+
+  this.list = function() {
+    console.log('head', head);
+    return head;
   }
 }
+
+var linklist = new LinkedList();
+
+
+linklist.append('Tom');
+linklist.append('Peter');
+
+linklist.list();
+// Node { element: 'Tom', next: Node { element: 'Peter', next: null } 
 ```
 
+单链表的数据类似对象。实际上是Node类生成的实例。
 
 
 
+### 双向链表
+
+双向链表有两个方向，每个节点不止有一个后继指针next指向后面的节点，还有一个前驱指针prev指向前面的节点。
+
+
+
+#### 单向链表和双向链表的比较
+
+* 双向链表需要额外的两个空间来存储前驱和后继节点的地址。所以要占用更多的内存空间
+* 双向链表提供了两种
 
 
 
