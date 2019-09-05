@@ -65,39 +65,25 @@ class Stack {
 上面就是一个基本的栈。
 LeetCode上第20题就有相关的栈的应用。
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## 队列
-
 ![队列](https://pic2.zhimg.com/v2-c7a81170a96c852e1f28a5b2c4905d2d_b.jpg)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -369,11 +355,119 @@ linklist.list();
 #### 单向链表和双向链表的比较
 
 * 双向链表需要额外的两个空间来存储前驱和后继节点的地址。所以要占用更多的内存空间
-* 双向链表提供了两种
+* 双向链表提供了两种迭代列表的方法：从头到尾，或者从尾到头。我们可以访问一个特定节点的下一个或前一个元素
+* 单向链表中 如果迭代链表时错过了要找的元素 就要回到起点 重新开始迭代。
+* 双向链表中 可以从任一节点 向前或者向后迭代 这是双向链表的优点
+* 双向链表可以支持O(1)时间复杂度情况找到前驱节点。
 
 
 
+### 循环列表
+循环列表跟单链表很相似，只不过唯一的区别是 循环链表的尾部指向头节点。
+![border](https://camo.githubusercontent.com/659c8cc5af2c116e00158320119bd39b3852f537/68747470733a2f2f75706c6f61642d696d616765732e6a69616e7368752e696f2f75706c6f61645f696d616765732f31323839303831392d396563356532386238376430643134342e706e673f696d6167654d6f6772322f6175746f2d6f7269656e742f7374726970253743696d61676556696577322f322f772f31323430)
 
+环形链表从任意一个节点开始 都可以循环整个链表。
+
+```javascript
+
+function CircleLinkedList() {
+  function Node(elemnent) {
+    this.elemnent = elemnent;
+    this.next = null;
+  }
+
+  this.length = 0;
+  var head = null;
+
+  this.append = function(elemnent) {
+    var node = new Node(elemnent);
+    var currentNode;
+
+    if (head === null) {
+      head = node;
+      // 循环链表 开始会把头的指针指向自己
+      node.next = head;
+    } else {
+      currentNode = head;
+      // 如果不等于自己
+      while (currentNode.next !== head) {
+        currentNode = currentNode.next;
+      }
+      // 直到找到最后一个然后添加 node 再把node的next指向head
+      currentNode.next = node;
+      node.next = head;
+    }
+    this.length++;
+    return true;
+  };
+
+  this.insert = function(position, element) {
+    if (position > -1 && position < this.length) {
+      var node = new Node(element);
+
+      var index = 0;
+      var currentNode = head;
+      var previous;
+
+      if (position === 0) {
+        node.next = head;
+        // 因为插入的开头 所以 head要替换成node
+        head = node;
+      } else {
+        while (index < position) {
+          previous = currentNode;
+          currentNode = currentNode.next;
+        }
+        previous.next = node;
+        node.next = currentNode;
+        this.length++;
+        return true;
+      }
+    } else {
+      return false;
+    }
+  };
+
+  this.removeAt = function(position, element) {
+
+  };
+
+  this.remove = function(element) {
+    var current = head;
+  };
+
+  this.indexOf = function() {
+
+  };
+
+  this.toString = function() {
+    
+  };
+
+  this.getHead = function() {
+    return head.element;
+  };
+
+  this.list = function() {
+    console.log(head);
+  }
+}
+
+var list = new CircleLinkedList();
+
+list.append('TOM');
+list.append('Peter');
+list.append('2');
+list.append('4');
+list.insert(0, 'Insert');
+
+list.list();
+
+```
+
+
+* 链表的代码到处都是指针的操作，边界条件的处理。所以要很小心
+* 链表代码可以看出一个人的代码功底。是否细心 是否考虑问题全面 是否思维缜密
 
 
 
