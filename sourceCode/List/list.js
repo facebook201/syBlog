@@ -1,4 +1,46 @@
 /**
+ * 队列
+ */
+class Queue {
+  constructor() {
+    this.items = [];
+  }
+
+  // 队列的尾部加一个元素
+  enqueue(element) {
+    this.items.push(element);
+  }
+
+  // 移除队列的第一项并返回一个元素
+  dequeue() {
+    return this.items.shift();
+  }
+
+  // 返回数组的第一项 不改变数组
+  front() {
+    return this.items[0];
+  }
+
+  // 队列是否为空
+  isEmpty() {
+    return this.size() === 0;
+  }
+
+  // 队列的大小
+  size() {
+    return this.items.length;
+  }
+
+  // 清空队列
+  clear() {
+    return this.items = [];
+  }
+}
+
+
+
+
+/**
  * 单向链表
  * */
 function LinkedList() {
@@ -142,7 +184,7 @@ function LinkedList() {
 var linklist = new LinkedList();
 linklist.append('Tom');
 linklist.append('Peter');
-linklist.list();
+// linklist.list();
 // Node { element: 'Tom', next: Node { element: 'Peter', next: null } 
 
 

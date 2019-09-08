@@ -111,18 +111,83 @@ console.log(BTree);
 
 
 ## DFS 深度优先搜索
-深度优先的步骤
-**以深度为基准，先一条路走到底 直到达到目标，这里称之为递归下去。否则没有达到目标又无路可走 那么退回到上一步状态，走其他路。这便是回溯上来**
-
-* 递归下去
-* 回溯上来
+DFS 是一种用于遍历或搜索树或图的算法。 沿着树的深度遍历树的节点。尽可能的搜索树的分支。当节点V的所在变都已被探寻过。搜索将回溯到发现节点V的那条边的起始节点。
 
 
+
+* 首先将根节点放到栈里
+* 从栈中取出最后一个节点 检验是否是当前分支最远叶子节点。
+* 如果找到目标 结束搜索并回传结果
+* 否则将它所有尚未检验过的直接子节点添加到栈中
+* 若栈为空 表示整个图都检查过
+
+```javascript
+const maxDepth = function (root) {
+  if (!root) return 0;
+
+  let depth = 0;
+  const stack = [];
+  stack.push({ depth, root});
+
+  while (stack.length > 0) {
+    const item = stack.pop();
+    let currentDepth = item.depth;
+
+    root = item.root;
+    depth = Math.max(depth, currentDepth);
+
+    if (root) {
+      stack.push({ depth: currentDepth + 1, root: root.left });
+      stack.push({ depth: currentDepth + 1, root: root.right });
+    }
+  }
+  return depth;
+}
+```
+
+
+
+- DFS 递归形式 用到了栈先进后出
+
+- BFS 队列 先进先出s
+
+  
 
 ## BFS 广度优先搜索
-深度优先不管多少条路，先一条路走到底，不成功在回到上一个路口就选择下一条路，而广度优先旨在面临一个路口时 把所有的岔路都记下来，然后选择其中一个进入，然后将它的分路情况记录下来 然后再返回来进入另一个，重复这样操作。 把所有的路径求出来。所以广度优先是逐步求解的，反复的进入与退出，DFS是递归和回溯。
 
+(Breadth-First-Search，缩写为BFS). BFS是从根节点开始，沿着树的宽度遍历树的节点。如果所有节点均被访问，算法终止。广度优先旨在面临一个路口时 把所有的岔路都记下来，然后选择其中一个进入，然后将它的分路情况记录下来 然后再返回来进入另一个，重复这样操作。 把所有的路径求出来。所以广度优先是逐步求解的，反复的进入与退出，DFS是递归和回溯。
 
+实现方法：
 
-* DFS 递归形式 用到了栈 先进后出
-* BFS 队列 先进先出
+- 首先将根节点放入队列
+- 从队列中取出第一个节点 检验它是否已经是当前分支最远的叶子节点。
+- 如果找到目标 则结束搜索并返回结果
+- 否则将它所有尚未检验过的直接子节点加入到队列中
+- 若队列为空 表示整张图都检查过了
+
+![border](https://github.com/facebook201/sy-fontend-system/blob/master/img/BFS.jpeg)
+
+```javascript
+const maxDepth = function(root) {
+  if (!root) return 0;
+
+  let depth = 0;
+  const queue = [];
+  queue.push({ depth, root });
+
+  while (queue.length > 0) {
+    const item = queue.shift();
+    const currentDepth = item.depth;
+
+    root = item.root;
+    depth = Math.max(depth, currentDepth);
+
+    if (root) {
+      queue.push({ depth: currentDepth + 1, root: root.left });
+      queue.push({ depth: currentDepth + 1, root: root.right });
+    }
+  }
+  return depth;
+};
+```
+

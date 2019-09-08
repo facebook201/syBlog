@@ -65,22 +65,79 @@ class Stack {
 上面就是一个基本的栈。
 LeetCode上第20题就有相关的栈的应用。
 
+
+
 ## 队列
 ![队列](https://pic2.zhimg.com/v2-c7a81170a96c852e1f28a5b2c4905d2d_b.jpg)
 
 
 
+### 普通队列
+
+* 队列是遵循 FIFO （先进先出）原则的一组有序的项
+* 队列在尾部添加新元素 并从顶部移除元素
+* 最新添加的元素必须排在队列的末尾
+* 队列只有入队push() 和出队 pop()
 
 
 
+#### 辅助方法
+
+* enqueue(element) 向队列尾部添加新项
+* dequeue() 移除队列的第一项 并返回被移除的元素
+* front() 返回队列中第一个元素，队列不做任何变动
+* isEmpty() 如果队列中不包含任何元素 返回true，否则返回false
+* size() 队列的元素个数
+* clear() 清空整个队列
+
+```javascript
+/**
+ * 队列
+ */
+class Queue {
+  constructor() {
+    this.items = [];
+  }
+
+  // 队列的尾部加一个元素
+  enqueue(element) {
+    this.items.push(element);
+  }
+
+  // 移除队列的第一项并返回一个元素
+  dequeue() {
+    return this.items.shift();
+  }
+
+  // 返回数组的第一项 不改变数组
+  front() {
+    return this.items[0];
+  }
+
+  // 队列是否为空
+  isEmpty() {
+    return this.size() === 0;
+  }
+
+  // 队列的大小
+  size() {
+    return this.items.length;
+  }
+
+  // 清空队列
+  clear() {
+    return this.items = [];
+  }
+}
+```
 
 
 
+### 循环队列
 
+**确定好队空和队满的判断条件**
 
-
-
-
+循环队列的一个例子就是击鼓传花游戏。
 
 
 
