@@ -96,6 +96,7 @@ module.exports = {
         items: [
           { text: '英文', link: '/Other/English/' },
           { text: '面试', link: '/Other/Interview/' },
+          { text: '移动端问题', link: '/Other/mobileQS/' },
           { text: '好文连接', link: '/Other/fontendLink/' },
           { text: '团队规范', link: '/Other/Standard/' },
           { text: '一往而深', link: '/Other/Article/' },
@@ -206,6 +207,15 @@ module.exports = {
           collapsable: false,
           children: [
             '/Other/Interview/'
+          ]
+        }
+      ],
+      '/Other/mobileQS/': [
+        {
+          title: '移动端问题',
+          collapsable: false,
+          children: [
+            '/Other/mobileQS/'
           ]
         }
       ],

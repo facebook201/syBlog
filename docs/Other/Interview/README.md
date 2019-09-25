@@ -1,8 +1,6 @@
----
-pageClass: getting-started
----
 
 # 面试
+
 **这里有自己总结的面试题 也有自己想的面试 主要是夯实基础的**
 
 ## for in 、Object.create 、hasOwnProperty之间的联系
