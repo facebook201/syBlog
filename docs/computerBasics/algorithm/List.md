@@ -131,17 +131,67 @@ class Queue {
 }
 ```
 
+### 优先队列
+优先队列的主要思想是 通过一个属性值来循环对比，
+如果是最小优先队列 就把值小的放在前面，最大优先队列就把大的值后放后面。
+
+```javascript
+// 最小优先队列
+append(element, code) {
+    let node = {
+      element: element,
+      code: code
+    };
+    // 空栈先入栈
+    if (this.queue.length == 0) {
+      this.queue.push(node);
+    } else {
+      let isAdd = true; // 是否在循环中就入队
+      // 依次比较小的插入队
+      for (let i = 0; i < this.queue.length; ++i) {
+        if (node.code < this.queue[i].code) {
+          this.queue.splice(i, 0, node);
+          isAdd = true;
+          break;
+        }
+      }
+      // 如果循环下来没有入队 就直接加到队尾
+      if (!isAdd) {
+        this.queue.push(node);
+      }
+    }
+  }
+
+// 最大优先队列
+  maxAppend(element, code) {
+    let node = {
+      element: element,
+      code: code
+    };
+     
+    if (this.queue.length == 0) {
+      this.queue.push(node);
+    } else {
+      let isAdd = false;
+      for (let i = 0; i < this.queue.length; ++i) {
+        if (node.code > this.queue[i].code) {
+          this.queue.splice(i, 0, node);
+          isAdd = true;
+          break;      
+        }
+      }
+      if (!isAdd) {
+        this.queue.push(node);
+      }
+    }
+  }
+```
 
 
 ### 循环队列
 
 **确定好队空和队满的判断条件**
-
 循环队列的一个例子就是击鼓传花游戏。
-
-
-
-
 
 
 ## 链表

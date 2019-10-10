@@ -49,16 +49,20 @@ module.exports = {
             link: '/computerBasics/basic/'
           },
           {
-            text: '数据结构和算法',
+            text: '数据结构与算法之美',
+            link: '/computerBasics/dataAndAlg/'
+          },
+          {
+            text: '常见的算法',
+            link: '/computerBasics/algoritms/'
+          },
+          {
+            text: '常见算法和数据结构',
             link: '/computerBasics/algorithm/'
           },
           {
             text: '设计模式',
             link: '/computerBasics/designPattern/'
-          },
-          {
-            text: 'leetcode',
-            link: '/computerBasics/leetcode/'
           },
           {
             text: 'Nginx',
@@ -238,6 +242,15 @@ module.exports = {
           ]
         }        
       ],
+      '/computerBasics/algoritms/': [
+        {
+          title: '常见的算法',
+          collapsable: false,
+          children: [
+            '/computerBasics/algoritms/'
+          ]
+        }        
+      ],
       '/computerBasics/basic/': [
         {
           title: '计算机基础',
@@ -247,9 +260,18 @@ module.exports = {
           ]
         }
       ],
+      '/computerBasics/dataAndAlg/': [
+        {
+          title: '数据结构和算法之美',
+          collapsable: false,
+          children: [
+            '/computerBasics/dataAndAlg/',
+          ]
+       }
+      ],
       '/computerBasics/algorithm/': [
         {
-          title: '数据结构和算法',
+          title: '常见算法和数据结构',
           collapsable: false,
           children: [
             '/computerBasics/algorithm/',
@@ -258,16 +280,6 @@ module.exports = {
             '/computerBasics/algorithm/List.md',
             '/computerBasics/algorithm/Tree.md',
             '/computerBasics/algorithm/recursion.md'
-          ]
-        }
-      ],
-      '/computerBasics/leetcode/': [
-        {
-          title: 'leetcode刷题',
-          collapsable: false,
-          children: [
-            '/computerBasics/leetcode/',
-            '/computerBasics/leetcode/binaryTree.md'
           ]
         }
       ],
