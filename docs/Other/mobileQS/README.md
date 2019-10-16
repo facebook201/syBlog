@@ -71,4 +71,79 @@ $(window).resize(function() {
 });
 ```
 
-## 微信 H5 获取用户头像
+<!-- ## 微信 H5 获取用户头像 -->
+
+
+
+## 实现CSS音乐播放动效
+
+```html
+// HTML部分
+<div class="bgn-btn">
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+</div>
+
+```
+```css
+// CSS 部分
+.bgn-btn {
+  position: fixed;
+  z-index: 2;
+  right: 0;
+  top: 0;
+  width: 80px;
+  height: 70px;
+}
+.bgn-btn span {
+  position: absolute;
+  display: inline-block;
+  width: 4px;
+  bottom: 30px;
+  background: #fff;
+  border-radius: 5px;
+  animation: playing alternate linear infinite;
+}
+.bgn-btn span:first-child {
+  left: 30px;
+  animation-duration: 0.4s;
+}
+.bgn-btn span:nth-child(2) {
+  left: 36px;
+  animation-duration: 0.6s;
+}
+.bgn-btn span:nth-child(3) {
+  left: 42px;
+  animation-duration: 0.4s;
+  animation-delay: 0.6s;
+}
+.bgn-btn span:nth-child(4) {
+  left: 48px;
+  animation-duration: 0.3s;
+}
+.bgn-btn span:nth-child(5) {
+  left: 54px;
+  animation-duration: 0.5s;
+}
+.bgn-btn span:nth-child(6) {
+  left: 60px;
+  animation-duration: 0.6s;
+  animation-delay: 0.6s;
+}
+.bgn-btn span:last-child {
+  left: 66px;
+  animation-duration: 0.6s;
+  animation-delay: 0.6s;
+}
+@keyframes playing {
+  0% { height: 1px; }
+  100% { height: 30px; }
+}
+```
+
+
+

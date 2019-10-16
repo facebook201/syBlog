@@ -279,7 +279,8 @@ module.exports = {
             '/computerBasics/algorithm/Hash.md',
             '/computerBasics/algorithm/List.md',
             '/computerBasics/algorithm/Tree.md',
-            '/computerBasics/algorithm/recursion.md'
+            '/computerBasics/algorithm/recursion.md',
+            '/computerBasics/algorithm/higherAlg.md'
           ]
         }
       ],
