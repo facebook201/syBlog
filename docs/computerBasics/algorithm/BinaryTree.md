@@ -162,5 +162,47 @@ const maxDepth = function(root) {
 
 ## 前序、中序、后序遍历
 
-![border](https://facebook201.github.io/sy-fontend-system/binarytree.png)
+![border](https://gitee.com/syomm/blog-img/raw/master/img/binarytree.png)
 
+
+* 前序遍历 A-B-D-F-G-H-I-E-C
+* 中序遍历 F-D-H-G-I-B-E-A-C
+* 后序遍历 F-H-I-G-D-E-B-C-A
+
+### 前序遍历
+
+给定一个二叉树，返回它的前序遍历
+
+```javascript
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val) {
+ *     this.val = val;
+ *     this.left = this.right = null;
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {number[]}
+ */
+var preorderTraversal = function(root) {
+  // 函数本身也是一个特殊的对象 所以可以在内部定义局部变量和函数
+  let stack = [];
+  function pushRoot(node) {
+    if (node !== null) {
+      stack.push(node.val);
+      
+      if (node.left !== null) {
+        pushRoot(node.left);
+      }
+      
+      if (node.right !== null) {
+        pushRoot(node.right);
+      }
+    }
+  }
+
+  pushRoot(root);
+  return stack;  
+};
+```
