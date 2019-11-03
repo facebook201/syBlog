@@ -164,7 +164,6 @@ const maxDepth = function(root) {
 
 ![border](https://gitee.com/syomm/blog-img/raw/master/img/binarytree.png)
 
-
 * 前序遍历 A-B-D-F-G-H-I-E-C
 * 中序遍历 F-D-H-G-I-B-E-A-C
 * 后序遍历 F-H-I-G-D-E-B-C-A
