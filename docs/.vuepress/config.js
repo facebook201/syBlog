@@ -39,6 +39,10 @@ module.exports = {
             text: 'BOM',
             link: '/fontEnd/BOM/'
           },
+          {
+            text: '简历篇幅',
+            link: '/fontEnd/BOM/resume.md'
+          }
         ]
       },
       {
@@ -279,6 +283,7 @@ module.exports = {
             '/computerBasics/algorithm/Hash.md',
             '/computerBasics/algorithm/List.md',
             '/computerBasics/algorithm/Tree.md',
+            '/computerBasics/algorithm/BinaryTree.md',
             '/computerBasics/algorithm/recursion.md',
             '/computerBasics/algorithm/higherAlg.md'
           ]
@@ -345,7 +350,8 @@ module.exports = {
           title: '一往而深',
           collapsable: false,
           children: [
-            '/Other/Article/'
+            '/Other/Article/',
+            '/Other/Article/keep.md'
           ]
         }
       ],
