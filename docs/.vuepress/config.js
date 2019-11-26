@@ -24,10 +24,6 @@ module.exports = {
         text: '前端',
         items: [
           {
-            text: 'node',
-            link: '/fontEnd/Node/'
-          },
-          {
             text: 'ElementUI',
             link: '/fontEnd/ElementUI/'
           },
@@ -42,6 +38,10 @@ module.exports = {
           {
             text: '简历篇幅',
             link: '/fontEnd/BOM/resume.md'
+          },
+          {
+            text: 'Node',
+            link: '/fontEnd/Node/'
           }
         ]
       },
@@ -119,6 +119,16 @@ module.exports = {
           collapsable: false,
           children: [
             '/fontEnd/BOM/',
+          ]
+        }
+      ],
+      '/fontEnd/Node/': [
+        {
+          title: 'Node',
+          collapsable: false,
+          children: [
+            '/fontEnd/Node/',
+            '/fontEnd/Node/repo.md'
           ]
         }
       ],

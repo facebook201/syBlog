@@ -45,13 +45,20 @@ return [...new Set(arr)];
 ## 数组平铺
 将数组元素也是数组元素的数组装成一维数组。
 ```javascript
-function flatter(arr) {
+function flatten(arr) {
    return arr.reduce((init, el) => {
      return init.concat(Array.isArray(el) ? flatter(el) : el);
    }, []);
 }
+
+// ES6 扩展运算符
+
+function flatten(arr) {
+  if (arr.length == 0) return [];
+  // 如果有元素是数组 说明要平铺 直到所有的元素都不是数组为止
+  while (arr.some(el => Array.isArray(el))) {
+    arr = [].concat(...arr);
+  }
+  return arr;
+}
 ```
-
-
-
-
