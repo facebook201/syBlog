@@ -31,7 +31,9 @@
 
 
 
-## Vue Class by Evan
+## 单词
+
+
 
 | 词汇      | 词性 | 词义                  |
 | --------- | ---- | --------------------- |
@@ -39,6 +41,9 @@
 | reactivity | n | 响应式 |
 | notify | adv | 通知     |
 | computation | adv | 计算 |
+| cumbersome | adj | 繁琐的 |
+| certain types |  | 某些类型 |
+| explicitly | adv | 显示地 |
 
 
 
