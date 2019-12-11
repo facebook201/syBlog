@@ -102,6 +102,7 @@ module.exports = {
       {
         text: '其他',
         items: [
+          { text: '好的问题', link: '/Other/GoodQS/' },
           { text: '英文', link: '/Other/English/' },
           { text: '面试', link: '/Other/Interview/' },
           { text: '移动端问题', link: '/Other/mobileQS/' },
@@ -143,7 +144,8 @@ module.exports = {
             '/Native/JS/Advanced.md',
             '/Native/JS/SpecialTopic.md',
             '/Native/JS/JSON.md',
-            '/Native/JS/FileAPI.md'
+            '/Native/JS/FileAPI.md',
+            '/Native/JS/FunctionalLibrary.md'
           ]
         }
       ],
@@ -371,6 +373,15 @@ module.exports = {
           collapsable: false,
           children: [
             '/Other/DailyStudy/'
+          ]
+        }
+      ],
+      '/Other/GoodQS/': [
+        {
+          titile: '高质量问题',
+          collapsable: false,
+          children: [
+            '/Other/GoodQS/'
           ]
         }
       ]
