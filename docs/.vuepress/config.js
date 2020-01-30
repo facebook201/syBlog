@@ -24,10 +24,6 @@ module.exports = {
         text: '前端',
         items: [
           {
-            text: 'node',
-            link: '/fontEnd/Node/'
-          },
-          {
             text: 'ElementUI',
             link: '/fontEnd/ElementUI/'
           },
@@ -39,6 +35,14 @@ module.exports = {
             text: 'BOM',
             link: '/fontEnd/BOM/'
           },
+          {
+            text: '简历篇幅',
+            link: '/fontEnd/BOM/resume.md'
+          },
+          {
+            text: 'Node',
+            link: '/fontEnd/Node/'
+          }
         ]
       },
       {
@@ -94,6 +98,7 @@ module.exports = {
       {
         text: '其他',
         items: [
+          { text: '好的问题', link: '/Other/GoodQS/' },
           { text: '英文', link: '/Other/English/' },
           { text: '面试', link: '/Other/Interview/' },
           { text: '移动端问题', link: '/Other/mobileQS/' },
@@ -114,6 +119,16 @@ module.exports = {
           ]
         }
       ],
+      '/fontEnd/Node/': [
+        {
+          title: 'Node',
+          collapsable: false,
+          children: [
+            '/fontEnd/Node/',
+            '/fontEnd/Node/repo.md'
+          ]
+        }
+      ],
       '/Native/JS/': [
         {
           title: 'JS基础知识',
@@ -125,7 +140,8 @@ module.exports = {
             '/Native/JS/Advanced.md',
             '/Native/JS/SpecialTopic.md',
             '/Native/JS/JSON.md',
-            '/Native/JS/FileAPI.md'
+            '/Native/JS/FileAPI.md',
+            '/Native/JS/FunctionalLibrary.md'
           ]
         }
       ],
@@ -275,6 +291,7 @@ module.exports = {
             '/computerBasics/algorithm/Hash.md',
             '/computerBasics/algorithm/List.md',
             '/computerBasics/algorithm/Tree.md',
+            '/computerBasics/algorithm/BinaryTree.md',
             '/computerBasics/algorithm/recursion.md',
             '/computerBasics/algorithm/higherAlg.md'
           ]
@@ -341,7 +358,8 @@ module.exports = {
           title: '一往而深',
           collapsable: false,
           children: [
-            '/Other/Article/'
+            '/Other/Article/',
+            '/Other/Article/keep.md'
           ]
         }
       ],
@@ -351,6 +369,15 @@ module.exports = {
           collapsable: false,
           children: [
             '/Other/DailyStudy/'
+          ]
+        }
+      ],
+      '/Other/GoodQS/': [
+        {
+          titile: '高质量问题',
+          collapsable: false,
+          children: [
+            '/Other/GoodQS/'
           ]
         }
       ]

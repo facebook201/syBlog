@@ -841,7 +841,8 @@ function Child (name, age) {
     this.age = age;
 }
 
-// 关键的三步
+// 关键的三步 这样做的好处是通过new F() 不需要调用两次Parent
+// 如果是 Child.prototype = new Parent(); 这调一次 Child 内部调用一次 就会有两次 下面的方式只会有一次调用
 var F = function () {};
 
 F.prototype = Parent.prototype;
