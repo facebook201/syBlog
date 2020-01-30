@@ -53,10 +53,6 @@ module.exports = {
             link: '/computerBasics/dataAndAlg/'
           },
           {
-            text: '常见的算法',
-            link: '/computerBasics/algoritms/'
-          },
-          {
             text: '常见算法和数据结构',
             link: '/computerBasics/algorithm/'
           },
