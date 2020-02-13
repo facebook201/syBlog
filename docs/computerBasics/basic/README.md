@@ -1,6 +1,4 @@
----
-pageClass: getting-started
----
+
 
 # HTTP
 
@@ -11,8 +9,6 @@ HTTP（超文本传输协议）是应用层上的一种客户端/服务端模型
   规定了通信双方必须遵循的数据传输格式，这样通信双方按照约定的格式才能准确的通信。
 * 无状态
   两次连接通信之间是没有任何关系的，每次都是一个新的连接，服务端不会记录前后的请求信息。
-
-五层网络模型
 
 **URL的构成**
 http://www.xx.com/index.html?name=zhangsan
@@ -72,14 +68,11 @@ HTTP最早是被用作浏览器和服务器之间交互HTML和表单的通讯协
 
 
 #### GET
-
 读取一个资源， 比如get到一个html文件，反复读取不应该对访问的数据有副作用。比如 get一下，用户就下单了，返回订单受理。没有副作用称为 **幂等** 因为GET因为是读取，就可以对GET请求的数据做缓存，这个缓存可以做到浏览器本身上 也可以做到代理上，或者做到server端（用Etag，至少可以减少带宽消耗）。
-
-
 
 #### POST
 
-在页面里 <form> 标签会定义一个表单，点击其中的submit元素会发出一个POST请求让服务器做一件事。这件事往往是有副作用的 不幂等的。
+在页面里form 标签会定义一个表单，点击其中的submit元素会发出一个POST请求让服务器做一件事。这件事往往是有副作用的 不幂等的。
 
 
 
@@ -91,7 +84,7 @@ GET 和POST携带的数据格式也有区别。当浏览器发出一个GET请求
 
 
 
-一般说 GET请求没有body，只有url，请求数据放在url的queryString中，POST请求的数据在body中。但是这种的情况仅限于浏览器发请求的场景。
+一般说 GET请求没有body，只有url，请求数据放在url的queryString中，POST请求的数据在body中。但是这种的情况仅限于浏览器发请求的场景
 
 
 
@@ -118,8 +111,6 @@ GET 和POST携带的数据格式也有区别。当浏览器发出一个GET请求
 
 
 
-
-
 ###  REST里面的GET 和 POST
 
 GET 在 资源定位符被用于获取资源或者资源列表。
@@ -131,8 +122,8 @@ GET http://foo.com/books/:bookId
 
 
 
->REST 的 POST 和 PUT的区别，PUT的语法实际上是替换 replace。 REST规范里提到PUT的请求体应该是完整的资源，包括id在内。这样服务器就可以根据id去查找，如果存在对应的id元素，就用请求中的数据整体替换已经存在的资源，如果没有就用 把这个id对应的资源从空替换为请求数据，这个看起来就像是 创建。
-
+> REST 的 POST 和 PUT的区别，PUT的语法实际上是替换 replace。 REST规范里提到PUT的请求体应该是完整的资源，包括id在内。这样服务器就可以根据id去查找，如果存在对应的id元素，就用请求中的数据整体替换已经存在的资源，如果没有就用 把这个id对应的资源从空替换为请求数据，这个看起来就像是 创建。
+ 
 
 
 > 至于到底用PUT还是POST，完全看是不是可以提前知道资源所有的数据，尤其是id。对于那些id是自动生成的场景 POST更加合适。如果提前知道某个id是什么，PUT更加合适。
@@ -184,17 +175,85 @@ encodeURIComponent('mail@example.com');
 
 encodeURI('mail@example.com');
 // main@example.com
+``` 
+
+## HTTP 之 Content-Type
+Content—Type 是用来指定请求或响应的内容类型，告诉浏览器或者相关设备如何显示或处理加载的数据，此属性的值可以查看MIME的类型。
+
+* text/html 是请求的media-type，他分为两个部分type和subtype，以"/" 进行分割; 常见的type有：
+
+  ```css
+  Text：用于标准化地表示的文本信息，文本消息可以是多种字符集和或者多种格式的；
+  Multipart：用于连接消息体的多个部分构成一个消息，这些部分可以是不同类型的数据；
+  Application：用于传输应用程序数据或者二进制数据；
+  Message：用于包装一个E-mail消息；
+  Image：用于传输静态图片数据；
+  Audio：用于传输音频或者音声数据；
+  Video：用于传输动态影像数据，可以是与音频编辑在一起的视频数据格式。
+  ```
+
+* 常见的 media-type 有：
+
+  ```css
+  text/html
+  application/x-www-form-urlencoded
+  application/json
+  multipart/form-data
+  application/xml
+  text/plain
+  text/css
+  text/javascript
+  ```
+
+  boundary：多用于上传文件时使用，用于分割数据；
+
+### 常见的Content-Type
+
+* **application/x-www-form-urlencoded**
+
+  主要用于表单形式的 POST请求，普通的表单提交，js发包 默认都是这种方式。
+
+
+* multipart / form-data 是使用 POST请求上传文件，如果上传照片，文件等。
+
+
+## POST 几种提交数据的方式
+
+HTTP请求方法有 OPTIONS、GET、HEAD、POST、PUT、DELETE、TRACE、CONNECT 这几种。**HTTP协议是 以ASCII码传输，建立在 TCP/IP 协议之上的应用层规范。** 规范把HTTP请求分为三部分: 状态行、请求头、消息主体。
+
+
+
+协议规定 POST提交数据必须放在消息主体（entity-body）中, 但是协议并没有规定数据必须使用什么编码方式。只要发送过去的数据能够被服务端解析成功才有意义，服务端会根据请求头 (headers)中的 Content-Type 字段来获知请求中的消息主体是何种方式编码的，在对主体进行解析。所以 POST提交数据方案，包含了Content-Type 和消息主体编码方式两部分。
+
+
+
+* application/x-www-form-urlencoded
+这应该是最常见的 POST 提交数据的方式了。Content-Type 被指定为 application/x-www-form-urlencoded；其次，提交的数据按照 key1=val1&key2=val2 的方式进行编码，key 和 val 都进行了 URL 转码。
+
+* multipart/form-data
+表单上传文件时，必须让 form 表单的enctype 等于 multipart/form-data。
+
+body内容如下
+```
+------WebKitFormBoundary18bktajg65CSIx4j
+Content-Disposition: form-data; name="files"; filename="test1.txt"
+Content-Type: text/plain
+
+this is file1;
+------WebKitFormBoundary18bktajg65CSIx4j
+Content-Disposition: form-data; name="files"; filename="test2.txt"
+Content-Type: text/plain
+
+this is file2;
+------WebKitFormBoundary18bktajg65CSIx4j--
 ```
 
+* application/json
+application/json是POST请求以JSON的格式向服务请求发起请求或者请求返回JSON格式的响应内容，服务端接受到数据后对JSON进行解析拿到所需要的参数，
 
-
-
-
-
-
-
-
-
+```
+{"comboId":" ","goodsList":[{"goodsId":1372308,"skuId":"1372308-228f0bba1bd1b7241353429cebd7c88b","isHuanGou":0,"selected":1,"count":2,"cartGoodsType":0,"activitySchemeId":111873,"goodsActivityGiftListTemp":[]}]}
+```
 
 
 
