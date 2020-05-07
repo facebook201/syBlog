@@ -201,6 +201,7 @@ module.exports = {
           title: 'ES6',
           collapsable: false,
           children: [
+            '/Native/ES6/',
             '/Native/ES6/Promise.md',
             '/Native/ES6/Module.md',
             '/Native/ES6/Class.md',
@@ -268,7 +269,8 @@ module.exports = {
           title: '计算机基础',
           collapsable: false,
           children: [
-            '/computerBasics/basic/'
+            '/computerBasics/basic/',
+            '/computerBasics/basic/XHR.md'
           ]
         }
       ],

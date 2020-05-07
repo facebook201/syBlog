@@ -6,6 +6,33 @@
 
 # 深入理解ES6
 
+## Let + Const
+
+const 定义的是 **不可重新赋值**的值，与不可变的值不同，const 定义的 Object，在定义之后仍可以修改其属性。其实他的使用场景很广，包括常量、配置项以及引用的组件、定义的 “大部分” 中间变量等，都应该以const做定义。反之就 let 而言，他的使用场景应该是相对较少的，我们只会在 loop(for，while 循环)及少量必须重定义的变量上用到他。
+
+> 猜想：就执行效率而言，const 由于不可以重新赋值的特性，所以可以做更多语法静态分析方面的优化，从而有更高的执行效率。
+
+## Template Strings （字符串模板）
+
+``` javascript
+// 1 与引号混用
+const wantToSay = `I'am a "boy"`;
+
+// 2支持多行文本
+const slogan =
+`
+I have a pen!
+`;
+
+// 比较适合写 html
+const resultTpl = 
+`
+  <section>
+    <div>...</div>
+  </section>
+`;
+```
+
 ## 解构赋值
 
 ```javascript
@@ -33,7 +60,28 @@ let {a: newName, b: newNameB} = obj;
 
 let newName = obj.a;
 let newNameB = obj.b;
+
+const bookSet = ['UED', 'TB fed', 'Not find'];
+const bookCollection = () => {
+  return {book1: 'UED', book2: 'TB fed'};
+};
+  
+// 1. 解构也可以设置默认值
+const {book1, book3 = 'Not find'} = bookCollection();
+  
+// 2. 解构数组时候是可以跳过其中某几项的
+const [book1,,book3] = bookSet;  // book1 = 'UED', book3 = 'Not find'
+  
+// 3. 解构可以取到指定对象的任何属性，包括它包含的方法
+const {length: setLength} = bookSet;  // setLength = 3
 ```
+
+
+## Symbol
+
+
+## 集合 Set Map WeakMap WeakSet
+
 
 ### 默认值
 
