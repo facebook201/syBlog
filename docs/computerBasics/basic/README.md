@@ -256,12 +256,84 @@ application/json是POST请求以JSON的格式向服务请求发起请求或者�
 ```
 
 
+## WebSocket
+
+首先 WebSocket 是 HTML5的东西（协议），HTTP协议不支持长连接，是无状态的。在HTTP1.1中增加了一个 keep-alive，
+是把多个请求合并为一个，但是WebScoket其实是一个新协议，跟 HTTP没有什么关系，只不过兼容了握手规范。
 
 
+#### 协议内容
+
+* HTTP协议是一个请求对应一个相应，及时是1.1 的 keep-alive，依然是一个请求对应一个响应。
+* 所谓的轮询，long poll 都是被动的，都是客户端不断的建立 HTTP连接，等待服务端处理。
+
+```
+// 客户端请求
+GET /chat HTTP/1.1
+Host: server.example.com
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Key: x3JJHMbDL1EzLkh9GBhXDw==
+Sec-WebSocket-Protocol: chat, superchat
+Sec-WebSocket-Version: 13
+Origin: http://shiya.com
+```
+
+* Sec-WebSocket-Key 是一个Base64 encode的值，这个是浏览器随机生成的，告诉服务器验证身份。
+* Sec_WebSocket-Protocol 是一个用户定义的字符串，用来区分同URL下，不同的服务所需要的协议
+* Sec-WebSocket-Version 是告诉服务器所使用的Websocket Draft（协议版本）
+
+```
+// 服务端响应
+HTTP/1.1 101 Switching Protocols
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Accept: HSmrc0sMlYUkAGmm5OPpG2HaGWk=
+Sec-WebSocket-Protocol: chat // 最终协议
+```
+
+服务端返回之后，告诉客户端即将升级 WebScoket协议，
 
 
+### 作用
+
+WebScoket 在第一次建立连接确认之后，就升级为WebScoket协议，后面一旦服务端有消息 就会自动推送。
+Websocket只需要一次HTTP握手，所以说整个通讯过程是建立在一次连接/状态中，也就避免了HTTP的非状态性，服务端会一直知道你的信息，直到你关闭请求，这样就解决了接线员要反复解析HTTP协议，还要查看identity info的信息。同时由客户主动询问，转换为服务器（推送）有信息的时候就发送（当然客户端还是等主动发送信息过来的。。），没有信息的时候就交给接线员（Nginx），不需要占用本身速度就慢的客服（Handler）了。
 
 
+### 示例
 
+WebSocket.OPENING (0)：正在建立连接。
+WebSocket.OPEN (1)：已经建立连接。
+WebSocket.CLOSING (2)：正在关闭连接。
+WebSocket.CLOSE (3)：已经关闭连接。
 
+```js
+  const WSURL = 'wss://echo.websocket.org/';
+  const dom = document.querySelector('output');
 
+  function testWebSocket() {
+    const websocket = new WebSocket(WSURL);
+    /**
+     * 
+     */
+
+    websocket.onopen = function(evt) {
+      // 建立连接
+      console.log('onopen');
+      websocket.send('this is webscoket message');
+    }
+
+    websocket.onclose = function(ev) {
+      console.log('close');
+    }
+
+    websocket.onmessage = function(ev) {
+      console.log(ev);
+    };
+  }
+
+  window.addEventListener('load', function(){
+    testWebSocket();
+  }, false);
+```
