@@ -20,6 +20,23 @@ module.exports = {
   themeConfig: {
     editLinkText: '在 GitHub 上编辑此页',
     nav: [
+      {
+        text: '刷题系列',
+        items: [
+          {
+            text: '剑指Offer',
+            link: '/Leetcode/Offer/'
+          },
+          {
+            text: '面试金典',
+            link: '/Leetcode/Dict/'
+          },
+          {
+            text: 'Leetcode',
+            link: '/Leetcode/lcode/'
+          }
+        ]
+      },
       { 
         text: '前端',
         items: [
@@ -110,6 +127,16 @@ module.exports = {
       }
     ],
     sidebar: {
+      '/Leetcode/Offer/': [
+        {
+          title: '剑指Offer',
+          collapsable: false,
+          children: [
+            '/Leetcode/Offer/',
+            '/Leetcode/Offer/array.md'
+          ]
+        }
+      ],
       '/fontEnd/BOM/': [
         {
           title: 'BOM浏览器模型',
@@ -280,7 +307,7 @@ module.exports = {
           collapsable: false,
           children: [
             '/computerBasics/dataAndAlg/',
-            '/computerBasics/dataAndAlg/wiseinfo.md',
+            '/computerBasics/dataAndAlg/linked.md',
           ]
        }
       ],
