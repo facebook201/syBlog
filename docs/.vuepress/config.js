@@ -280,6 +280,7 @@ module.exports = {
           collapsable: false,
           children: [
             '/computerBasics/dataAndAlg/',
+            '/computerBasics/dataAndAlg/wiseinfo.md',
           ]
        }
       ],

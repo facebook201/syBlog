@@ -118,9 +118,9 @@ if (isFormData(requestData)) {
 
 
 
+#### 上传进度事件
 
-
-
+XHR2 给出 HTTP请求上传的事件，在实现这些特性的浏览器中。有一个upload 属性。upload 属性值是一个对象，它定义了 addEventListener（）方法和整个 progress事件集合，设置 onprogress 和 x.upload.onprogress 以监控请求的上传进度。
 
 
 
