@@ -278,7 +278,8 @@ module.exports = {
           collapsable: false,
           children: [
             '/computerBasics/designPattern/',
-            '/computerBasics/designPattern/sectionTwo.md'
+            '/computerBasics/designPattern/sectionTwo.md',
+            '/computerBasics/designPattern/BehavioralPatterns.md'
           ]
         }        
       ],
