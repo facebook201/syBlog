@@ -59,6 +59,10 @@ module.exports = {
           {
             text: 'Node',
             link: '/fontEnd/Node/'
+          },
+          {
+            text: '深入场景',
+            link: '/fontEnd/deepKnow/'
           }
         ]
       },
@@ -119,10 +123,7 @@ module.exports = {
           { text: '英文', link: '/Other/English/' },
           { text: '面试', link: '/Other/Interview/' },
           { text: '移动端问题', link: '/Other/mobileQS/' },
-          { text: '好文连接', link: '/Other/fontendLink/' },
-          { text: '团队规范', link: '/Other/Standard/' },
-          { text: '一往而深', link: '/Other/Article/' },
-          { text: '每日学习', link: '/Other/DailyStudy/' }
+          { text: '好文连接', link: '/Other/fontendLink/' }
         ]
       }
     ],
@@ -153,6 +154,15 @@ module.exports = {
           children: [
             '/fontEnd/Node/',
             '/fontEnd/Node/repo.md'
+          ]
+        }
+      ],
+      '/fontEnd/deepKnow/': [
+        {
+          title: '深入场景',
+          collapsable: false,
+          children: [
+            '/fontEnd/deepKnow/',
           ]
         }
       ],
@@ -365,41 +375,12 @@ module.exports = {
           ]
         }
       ],
-      '/Other/Standard/': [
-        {
-          title: '标准',
-          collapsable: false,
-          children: [
-            '/Other/Standard/',
-            '/Other/Standard/ESlint.md'
-          ]
-        }
-      ],
       '/Other/HTTP/': [
         {
           title: 'HTTP',
           collapsable: false,
           children: [
             '/Other/HTTP/'
-          ]
-        }
-      ],
-      '/Other/Article/': [
-        {
-          title: '一往而深',
-          collapsable: false,
-          children: [
-            '/Other/Article/',
-            '/Other/Article/keep.md'
-          ]
-        }
-      ],
-      '/Other/DailyStudy/': [
-        {
-          title: '每日学习',
-          collapsable: false,
-          children: [
-            '/Other/DailyStudy/'
           ]
         }
       ],
