@@ -289,7 +289,11 @@ module.exports = {
           children: [
             '/computerBasics/designPattern/',
             '/computerBasics/designPattern/sectionTwo.md',
-            '/computerBasics/designPattern/BehavioralPatterns.md'
+            '/computerBasics/designPattern/CreationalPatterns.md',
+            '/computerBasics/designPattern/StructuralPatterns.md',
+            '/computerBasics/designPattern/BehavioralPatterns.md',
+            '/computerBasics/designPattern/DesignPrinciples.md',
+            '/computerBasics/designPattern/DesignCase.md'
           ]
         }        
       ],
