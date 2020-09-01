@@ -160,6 +160,38 @@ promise
   });
 ```
 
+
+
+## Promise 错误处理
+
+
+
+### 隐式的 try...catch
+
+Promise的执行者（executor）和 Promise 的处理程序（handler）周围有一个 "隐式的 try...catch "，如果发生异常，它就会被捕获，并视为 rejection 处理。
+
+```js
+new Promise((resolve, reject) => {
+  throw new Error("Whoops!");
+}).catch(alert); // Error: Whoops!
+
+// 两个代码是相同的
+new Promise((resolve, reject) => {
+  reject(new Error("Whoops!"));
+}).catch(alert); // Error: Whoops!
+```
+
+在 executor 周围的“隐式 `try..catch`”自动捕获了 error，并将其变为 rejected promise。
+
+这不仅仅发生在 executor 函数中，同样也发生在其 handler 中。如果我们在 `.then` 处理程序（handler）中 `throw`，这意味着 promise 被 rejected，因此控制权移交至最近的 error 处理程序（handler）。
+
+* catch 处理 promise 中的各种 error：在reject() 调用中，或者在处理程序（handler）中抛出的 error
+* 我们应该将 `.catch` 准确地放到我们想要处理 error，并知道如何处理这些 error 的地方。处理程序应该分析 error（可以自定义 error 类来帮助分析）并再次抛出未知的 error（可能它们是编程错误）。
+* 如果没有办法从 error 中恢复的话，不使用 `.catch` 也可以。
+* 在任何情况下我们都应该有 `unhandledrejection` 事件处理程序（用于浏览器，以及其他环境的模拟），以跟踪未处理的 error 并告知用户（可能还有我们的服务器）有关信息，以使我们的应用程序永远不会“死掉”。
+
+
+
 ## Promise.resolve(value)
 
 根据给定的value值返回resolved promise。
@@ -169,8 +201,6 @@ let promise = Promise.resolve(value);
 // 等价于
 let promise = new Promise(resolve => resolve(value));
 ```
-
-
 
 ## Promise.reject(value)
 
@@ -233,8 +263,6 @@ Promise.all(requests)
   // all JSON answers are parsed: "users" is the array of them
   .then(users => users.forEach(user => alert(user.name)));
 ```
-
-
 
 
 
@@ -343,10 +371,6 @@ class PromiseA {
 4. `Promise.race(promises)` —— 等待第一个 promise 被解决，其结果/错误即为结果。
 
 这四个方法中，`Promise.all` 在实战中使用的最多。
-
-
-
-
 
 
 
@@ -461,7 +485,37 @@ let [foo, bar] = await Promise.all([getFoo(), getBar()]);
 // 写法二
 let foo = await getFoo();
 let bar = await getBar();
+
+// 
+(async () => {
+  let response = await fetch(url);
+  let user = await response.json();
+  // ...
+})();
 ```
+
+
+
+### 代码Async await 装换
+
+* 将 函数变成 async
+* 函数中的 then都替换成 await
+* 抛出的异常通过函数.catch来处理
+
+```javascript
+async function loadUrl(url) {
+  let response = await fetch(url);
+  if (response.status == 200) {
+    let json = await response.json();
+    return json;
+  }
+  throw new Error(response.status);
+}
+
+loadUrl('../data.json').catch(err);
+```
+
+
 
 
 
