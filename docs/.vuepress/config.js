@@ -41,8 +41,8 @@ module.exports = {
         text: '前端',
         items: [
           {
-            text: 'ElementUI',
-            link: '/fontEnd/ElementUI/'
+            text: '浏览器',
+            link: '/fontEnd/Browser/'
           },
           {
             text: 'CSS',
@@ -51,10 +51,6 @@ module.exports = {
           {
             text: 'BOM',
             link: '/fontEnd/BOM/'
-          },
-          {
-            text: '简历篇幅',
-            link: '/fontEnd/BOM/resume.md'
           },
           {
             text: 'Node',
@@ -224,12 +220,12 @@ module.exports = {
           ]
         }
       ],
-      '/fontEnd/ElementUI/': [
+      '/fontEnd/Browser/': [
         {
-          title: 'ElementUI的使用',
+          title: '浏览器',
           collapsable: false,
           children: [
-            '/fontEnd/ElementUI/'
+            '/fontEnd/Browser/'
           ]
         }
       ],
