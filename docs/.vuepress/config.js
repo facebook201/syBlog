@@ -308,7 +308,8 @@ module.exports = {
           collapsable: false,
           children: [
             '/computerBasics/basic/',
-            '/computerBasics/basic/XHR.md'
+            '/computerBasics/basic/XHR.md',
+            '/computerBasics/basic/TCP.md'
           ]
         }
       ],
