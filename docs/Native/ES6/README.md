@@ -1,9 +1,3 @@
-<!--
- * @Author: shiyao
- * @Description: 
- * @Date: 2019-08-05 07:49:39
- -->
-
 # 深入理解ES6
 
 ## Let + Const
@@ -91,6 +85,76 @@ function f({a, b = 0} = {a: ''}): void {}
 f();
 f({a: ''});
 ```
+
+
+
+## Proxy Reflect
+
+* **Proxy 对象用于定义基本操作的自定义行为（如属性查找、赋值、枚举、函数调用等）。**
+
+* **Reflect 内置对象 拦截 JavaScript 操作的方法**
+
+```js
+// Reflect 会返回一个结果 表示设置是否成功
+const res = Reflect.set(target, key, value);
+// 两个的意思是一样的
+target[key] = value;
+```
+
+
+
+```js
+const get = createGetter();
+const set = createSetter();
+
+function createGetter () {
+  return function get(target, prop, receiver) {
+    const res = Reflect.get(target, prop, receiver);
+    console.log('响应式获取');
+    return res;
+  };
+}
+
+function createSetter () {
+  return function set(target, prop, value, receiver) {
+    const res = Reflect.set(target, prop, value, receiver);
+    console.log('响应式设置');
+    return res;
+  };
+}
+
+const mutableHandler = {
+  get,
+  set
+};
+
+function reactive (target) {
+  return createReactiveObject(target, mutableHandler);
+}
+
+function createReactiveObject (target, baseHandler) {
+  const observer = new Proxy(target, baseHandler);
+  return observer;
+}
+
+/**
+ * shared 工具 方法
+ */
+function isObject (value) {
+  return typeof value === 'object' && value !== null;
+}
+
+let obj = { name: '李四' };
+
+const state = reactive(obj);
+
+state.name;
+state.name = '李四啊';
+```
+
+
+
+
 
 
 
