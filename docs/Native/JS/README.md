@@ -26,15 +26,20 @@ null 和 undefined 都是js的关键字。 null表示一个空值，typeof 运�
 
 
 
-> undefined
->
-> 变量未定义 是undefined
->
-> 函数没有返回值 返回undefined
->
-> 对象没有赋值的属性
+:::tip 为什么 void 0 替代 undefined
 
+因为 JavaScript 的代码 undefined 是一个变量，而不是一个关键字，这是JavaScript的设计失误之一。所以避免无意篡改，建议使用 void 0 替代。而 null是一个关键字 可以放心使用。
 
+```js
+(function(root, undefined){
+  // 可以被篡改
+  undefined = 's';
+  console.log(undefined === 's');
+})(this, undefined);
+
+```
+
+:::
 
 ### 数值
 
@@ -154,6 +159,18 @@ var obj = { p: 1 };
 ```
 
 `in`运算符的一个问题是，它不能识别哪些属性是对象自身的，哪些属性是继承的。就像上面代码中，对象`obj`本身并没有`toString`属性，但是`in`运算符会返回`true`，因为这个属性是继承的。
+
+## Symbol
+
+
+
+
+
+
+
+```
+1.try-files 如果不写上 $uri/，当直接访问一个目录路径时，并不会去匹配目录下的索引页  即 访问127.0.0.1/images/ 不会去访问  127.0.0.1/images/index.html 
+```
 
 
 
@@ -405,10 +422,6 @@ function doSomething(action) {
 
 
 
-
-
-
-
 ## JS 对象属性遍历
 
 在ECMA-262 5.1 版本之后，所有的文档里面，对于JS对象属性遍历来说，并不是按照构建顺序来遍历的。
@@ -440,20 +453,6 @@ console.log(Object.keys(obj));
 V8 里的对象其实维护两个属性，会把数字放入线性的 elements 属性中，并按照顺序存放。会把非数字的属性放入 properties 中，不会排序，顺便说一句它可能是线性结构，取决于属性数量的多少。遍历属性时先 elements 而后在 properties。
 
 :::
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

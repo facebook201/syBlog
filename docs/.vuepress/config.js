@@ -63,6 +63,10 @@ module.exports = {
           {
             text: '深入场景',
             link: '/fontEnd/deepKnow/'
+          },
+          {
+            text: '前端工程化',
+            link: '/fontEnd/RollupTools/'
           }
         ]
       },
@@ -166,6 +170,15 @@ module.exports = {
           ]
         }
       ],
+      '/fontEnd/RollupTools/': [
+        {
+          title: '前端工程化',
+          collapsable: false,
+          children: [
+            '/fontEnd/RollupTools/',
+          ]
+        }
+      ],
       '/Native/JS/': [
         {
           title: 'JS基础知识',
@@ -260,7 +273,12 @@ module.exports = {
           title: '面试',
           collapsable: false,
           children: [
-            '/Other/Interview/'
+            '/Other/Interview/',
+            '/Other/Interview/Vue.md',
+            '/Other/Interview/React.md',
+            '/Other/Interview/code.md',
+            '/Other/Interview/Browser.md',
+            '/Other/Interview/Performance.md'
           ]
         }
       ],
