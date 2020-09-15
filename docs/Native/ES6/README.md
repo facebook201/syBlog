@@ -1,9 +1,3 @@
-<!--
- * @Author: shiyao
- * @Description: 
- * @Date: 2019-08-05 07:49:39
- -->
-
 # 深入理解ES6
 
 ## Let + Const
@@ -76,21 +70,127 @@ const [book1,,book3] = bookSet;  // book1 = 'UED', book3 = 'Not find'
 const {length: setLength} = bookSet;  // setLength = 3
 ```
 
-
 ## Symbol
+
+symbol 是一种基本数据类型，Symbol() 函数 会返回 symbol类型的值。**一个symbol 值一般作为对象属性的标识符，这是该数据类型仅有的目的**
+
+```js
+let id = Symbol('id'); // 参数是一个描述符 也叫 Symbol名
+
+```
+
+Symbol 保证是唯一的，即使我们创建了许多具有相同描述的Symbol，但是值不同。
+
+
+
+### 隐藏的属性
+
+Symbol 允许我们创建对象的“隐藏”属性，代码的任何其他部分都不能意外访问或重写这些属性。
+
+例如，如果我们使用的是属于第三方代码的 `user` 对象，我们想要给它们添加一些标识符。
+
+```js
+let user = { // 属于另一个代码
+  name: "John"
+};
+
+let id = Symbol("id");
+user[id] = 1;
+alert( user[id] ); // 我们可以使用 Symbol 作为键来访问数据
+
+//
+let id = Symbol("id");
+
+let user = {
+  name: "John",
+  [id]: 123 // 而不是 "id"：123
+};
+```
+
+> 使用symbol比字符串来做键值有什么好处呢？
+
+* 第三方代码看不到 不会被意外访问
+
+* 每个symbol 不一样，所以不会被篡改
+
+* ### Symbol 在 for…in 中会被跳过
+
 
 
 ## 集合 Set Map WeakMap WeakSet
 
+### Map
 
-### 默认值
+是一个带键的数据项的集合，允许任何类型的键。
 
-```javascript
-function f({a, b = 0} = {a: ''}): void {}
+应该使用Map 提供的 get set方法来添加和删除值。
 
-f();
-f({a: ''});
+
+
+### Map 迭代
+
+- `map.keys()` —— 遍历并返回所有的键（returns an iterable for keys），
+- `map.values()` —— 遍历并返回所有的值（returns an iterable for values），
+- `map.entries()` —— 遍历并返回所有的实体（returns an iterable for entries）`[key, value]`，`for..of` 在默认情况下使用的就是这个。
+
+
+
+### Set
+
+`Set` 是一个特殊的类型集合 —— “值的集合”（没有键），它的每一个值只能出现一次。
+
+
+
+### WeakMap
+
+WeakMap 和 Map的第一个区别是 WeakMap 键必须是对象，不能是原始值。
+
+weakMap 中使用一个对象作为键，并且没有其他对这个对象的引用 —— 该对象将会被从内存（和map）中自动清除。
+
+```js
+let john = { name: "John" };
+
+let weakMap = new WeakMap();
+weakMap.set(john, "...");
+
+john = null; // 覆盖引用
+// john 被从内存中删除了！
 ```
+
+`WeakMap` 不支持迭代以及 `keys()`，`values()` 和 `entries()` 方法。所以没有办法获取 `WeakMap` 的所有键或值。
+
+`WeakMap` 只有以下的方法：
+
+- `weakMap.get(key)`
+- `weakMap.set(key, value)`
+- `weakMap.delete(key)`
+- `weakMap.has(key)`
+
+
+
+### 哪里会用到
+
+`WeakMap` 的主要应用场景是 **额外数据的存储**。
+
+
+
+### weakSet
+
+- 与 `Set` 类似，但是我们只能向 `WeakSet` 添加对象（而不能是原始值）。
+- 对象只有在其它某个（些）地方能被访问的时候，才能留在 set 中。
+- 跟 `Set` 一样，`WeakSet` 支持 `add`，`has` 和 `delete` 方法，但不支持 `size` 和 `keys()`，并且不可迭代。
+
+变“弱（weak）”的同时，它也可以作为额外的存储空间。但并非针对任意数据，而是针对“是/否”的事实。`WeakSet` 的元素可能代表着有关该对象的某些信息。
+
+
+
+`WeakMap` 是类似于 `Map` 的集合，它仅允许对象作为键，并且一旦通过其他方式无法访问它们，便会将它们与其关联值一同删除。
+
+`WeakSet` 是类似于 `Set` 的集合，它仅存储对象，并且一旦通过其他方式无法访问它们，便会将其删除。
+
+它们都不支持引用所有键或其计数的方法和属性。仅允许单个操作。
+
+`WeakMap` 和 `WeakSet` 被用作“主要”对象存储之外的“辅助”数据结构。一旦将对象从主存储器中删除，如果该对象仅被用作 `WeakMap` 或 `WeakSet` 的键，那么它将被自动清除。
 
 
 
