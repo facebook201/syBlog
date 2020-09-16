@@ -23,13 +23,9 @@
 
 ## 性能
 
-
-
 ### 网络相关
 
 * DNS域解析
-
-
 
 ### 强缓存
 
@@ -183,3 +179,104 @@ XSS 通过修改 HTML 节点或者执行 JS 代码来攻击网站。**把常用�
 ### 做存储
 
 生成一段不重复的加密字符串token作为key,然后存放在服务端(通常是用redis,服务端重启也不会丢失用户的登录状态)使用key-value形式,value是用户信息,然后将token(key)发给客户端
+
+
+
+## 跨域
+
+**默认情况下，使用 API 的 Web 应用程序只能从加载应用程序的同一个域请求 HTTP 资源。如果域名、协议、端口号有一个不一致 这个请求就是跨域请求。**
+
+目前来看，同源策略会让三种行为受限：
+
+- Cookie、LocalStorage 和 IndexDB 访问受限
+- 无法操作跨域 DOM（常见于 iframe）
+- Javascript 发起的 XHR 和 Fetch 请求受限
+
+
+
+### 为什么存在跨域？
+
+如果你能让其他域跨域访问你的网站，甚至是操作你的DOM 是非常不安全的，所以为了不让我们自己在网站里面的内容随便被访问，这个策略保证我们只能访问同一站点的资源。
+
+
+
+### 服务端 CORS
+
+HTTP 响应添加一些响应字段 Access-Control-* 来表明是否允许跨域请求，根据这些 CORS 响应字段，浏览器可以允许一些被同源策略限制的跨源响应。
+
+* 一个字段是**必加**的，那就是 `Access-Control-Allow-Origin`。这个头字段的值指定了哪些站点被允许跨域访问资源。
+* 另一个常见的响应头字段是 `Access-Control-Allow-Methods`。其指明了跨域请求所允许使用的 HTTP 方法。
+
+
+
+### withCredentials
+
+CORS请求默认不发送Cookie和HTTP认证信息。如果要把Cookie发到服务器，一方面要服务器同意，指定`Access-Control-Allow-Credentials`字段。开发者必须在AJAX请求中打开`withCredentials`属性。
+
+如果要发送Cookie，`Access-Control-Allow-Origin`就不能设为星号，必须指定明确的、与请求网页一致的域名。同时，Cookie依然遵循同源政策，只有用服务器域名设置的Cookie才会上传，其他域名的Cookie并不会上传，且（跨源）原网页代码中的`document.cookie`也无法读取服务器域名下的Cookie。
+
+
+
+
+
+### 跨域预检请求
+
+CORS 有两种类型的请求：简单请求和 预检请求。
+
+**如果满足下面两个大条件就是简单请求**
+
+（1) 请求方法是以下三种方法之一：
+
+- HEAD
+- GET
+- POST
+
+（2）HTTP的头信息不超出以下几种字段：
+
+- Accept
+- Accept-Language
+- Content-Language
+- Last-Event-ID
+- Content-Type：只限于三个值`application/x-www-form-urlencoded`、`multipart/form-data`、`text/plain`
+
+
+
+> **非简单请求的 CORS请求，会在正式通信之前，增加一次 域检请求 请求方法是 OPTIONS**
+>
+> * 浏览器会先询问服务器，当前网页所在的域名是否在服务器的许可名单中，以及可以使用哪些HTTP头信息字段，只有得到答复 才会正式开始请求。
+> * 服务器收到"预检"请求以后，检查了`Origin`、`Access-Control-Request-Method`和`Access-Control-Request-Headers`字段以后，确认允许跨源请求，就可以做出回应。
+> * 如果预检响应没有检验通过，CORS 会阻止跨域访问，实际的请求永远不会被发送。预检请求是一种很好的方式，可以防止我们访问或修改那些没有启用 CORS 策略的服务器上的资源。
+
+
+
+### 认证
+
+一般而言，对于跨域 XHR 或 Fetch 请求，浏览器**不会**发送身份凭证信息。尽管 CORS 默认情况下不发送身份凭证，但我们可以通过添加 `Access-Control-Allow-Credentials` CORS 响应头来更改它。
+
+
+
+如果要在跨域请求中包含 cookie 和其他授权信息，我们需要做以下操作：
+
+- XHR 请求中将 `withCredentials` 字段设置为 `true`
+- Fetch 请求中将 `credentials` 设为 `include`
+- 服务器把 `Access-Control-Allow-Credentials: true` 添加到响应头中
+
+
+
+```js
+// fetch 请求
+fetch('https://api.mywebsite.com/users', {
+  credentials: 'include'
+});
+
+// 浏览器 XHR 请求
+let xhr = new XMLHttpRequest();
+xhr.withCredentials = true;
+
+// 服务器添加认证字段
+HTTP/1.1 200 OK
+Access-Control-Allow-Credentials: true
+```
+
+
+
