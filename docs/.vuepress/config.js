@@ -238,7 +238,8 @@ module.exports = {
           title: '浏览器',
           collapsable: false,
           children: [
-            '/fontEnd/Browser/'
+            '/fontEnd/Browser/',
+            '/fontEnd/Browser/browser.md'
           ]
         }
       ],

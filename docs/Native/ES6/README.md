@@ -309,3 +309,57 @@ next方法的对象：
   * 如果迭代器可以产生序列中的下一个值，则为false。
 
 next 方法必须要返回一一个对象，该对象有两个必要的属性： done和value，如果返回一个非对象值（比如false和undefined) 会展示一个 [`TypeError`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/TypeError) ("iterator.next() returned a non-object value") 的错误
+
+
+
+
+
+## Class 继承的原理
+
+**首先注意几个点**
+
+* ES6 class 内部定义的方法都是不可枚举的 通过 Object.keys 是获取不到 内部方法的
+
+* super 关键字表示父类的构造函数，相当于 ES5 的 Parent.call(this)
+
+* 子类必须在 constructor 里面 调用 super方法，否则新建实例会报错。**子类没有自己的this对象，是继承父类的this对象，然后加工处理，如果不调用super，子类就得不到this对象**
+
+* ES6中 父类的静态方法 可以被子类继承 **Class作为构造函数的语法糖，同时有 prototype 和 __.proto.__ 两个属性，存在两条继承链。**
+
+  * **子类的 proto 属性 表示构造函数的继承，总是指向父类**
+  * **子类 prototype 属性的 proto 属性 表示方法的继承，总是指向父类的 prototype 属性**
+
+  
+
+```js
+function Parent(name) {
+  this.name = name;
+};
+
+Parent.prototype.getName = function () {
+  return this.name;
+};
+
+function Child(name, age) {
+  Parent.call(this, name);
+  this.age = age;
+};
+
+Child.prototype = Object.create(Parent.prototype);
+```
+
+
+
+```js
+class Parent {
+}
+
+class Child extends Parent {
+}
+
+console.log(Child.__proto__ === Parent); // true
+console.log(Child.prototype.__proto__ === Parent.prototype); // true
+```
+
+
+
