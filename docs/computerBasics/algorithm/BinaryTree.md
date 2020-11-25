@@ -171,9 +171,15 @@ const maxDepth = function(root) {
 
 
 
+## 红黑树
+
+红黑树保证了最坏情形下在 **O(logn)** 时间复杂度内完成查找、插入及删除操作；因此红黑树可用于很多场景，比如在 Java 的集合框架 (HashMap、TreeMap、TreeSet)、Nginx 的 Timer 管理、Linux 虚拟内存管理以及 C++ 的 STL 等等都能看到它的应用。
 
 
 
+
+
+​	
 
 
 
