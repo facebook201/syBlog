@@ -134,7 +134,8 @@ module.exports = {
           collapsable: false,
           children: [
             '/Leetcode/Offer/',
-            '/Leetcode/Offer/array.md'
+            '/Leetcode/Offer/array.md',
+            '/Leetcode/Offer/LinkedList.md',
           ]
         }
       ],
