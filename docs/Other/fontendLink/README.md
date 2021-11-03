@@ -84,3 +84,11 @@
 * [携程UED](http://ued.ctrip.com/) 
 * [美团前端](https://tech.meituan.com/) 
 
+
+
+
+
+## 每周学习
+
+* 2020—11—27 WebScoket、ArrayBuffer、TypeArray、
+* 2020—11—28 Web Workers

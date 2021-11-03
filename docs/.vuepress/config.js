@@ -5,9 +5,9 @@
  */
 
 module.exports = {
-  title: '皮卡丘的前端体系',
+  title: '皮卡丘的Web生态',
   base: '/sy-fontend-system/', // 设置站点根目录
-  description: '飘飘乎如遗世独立 羽化而登仙',
+  description: '追求自由的心不死 你就是自由的 —— 巴比龙',
   head: [
     [
       'link',
@@ -117,6 +117,12 @@ module.exports = {
         ]
       },
       {
+        text: 'Java',
+        items: [
+          { text: 'JavaSE', link: '/Java/JavaSE/' },
+        ]
+      },
+      {
         text: '其他',
         items: [
           { text: '好的问题', link: '/Other/GoodQS/' },
@@ -153,7 +159,8 @@ module.exports = {
           collapsable: false,
           children: [
             '/fontEnd/Node/',
-            '/fontEnd/Node/repo.md'
+            '/fontEnd/Node/system.md',
+            '/fontEnd/Node/repo.md',
           ]
         }
       ],
@@ -262,6 +269,16 @@ module.exports = {
           collapsable: false,
           children: [
             '/Other/English/'
+          ]
+        }
+      ],
+      '/Java/JavaSE/': [
+        {
+          title: 'JavaSE',
+          collapsable: false,
+          children: [
+            '/Java/JavaSE/',
+            '/Java/JavaSE/reflect.md',
           ]
         }
       ],
