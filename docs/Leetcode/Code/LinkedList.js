@@ -4,8 +4,6 @@ function Node(val) {
     this.prev = null;
     this.value = val;
 }
-
-
 function LinkedList() {
     this.head = null;
     this.length = 0;
