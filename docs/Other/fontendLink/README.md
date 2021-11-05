@@ -11,6 +11,7 @@
 * [前端大牛学什么](https://www.zhihu.com/question/22146521/answer/20462433)
 * [前端面试手册](https://github.com/yangshun/front-end-interview-handbook/blob/master/Translations/Chinese/README.md)
 * [前端面试题有哪些](https://www.zhihu.com/question/41466747/answer/580294247)
+* [前端权限认证](https://zhuanlan.zhihu.com/p/159032290)
 
 ## javascript基础教程
 
@@ -19,6 +20,7 @@
 * [阮一峰javascript教程2](https://javascript.ruanyifeng.com)
 * [JS的迷你库合集](http://microjs.com/)
 * [正则表达式](https://github.com/ziishaned/learn-regex)
+* [XMLHTTPRequest详解](https://segmentfault.com/a/1190000004322487)
 
 ## 牛人博客
 * [小胡子哥(阿里)](https://www.barretlee.com/entry/)

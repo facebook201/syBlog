@@ -111,7 +111,28 @@ function FindFirstCommonNode(pHead1, pHead2) {
 	return l1.value;
 }
 
-
+// 判断链表是否有环 而且找出入口的节点
 function EntryNodeOfLoop(pHead) {
+	// 快慢指针来确定相遇的节点
+	let fast = pHead;
+	let slow = pHead;
 
+	// 快慢指针相等
+	while (fast && slow.next) {
+		fast = fast.next.next;
+		slow = slow.next;
+		// 比较两者的值
+		if (fast.value === slow.value) {
+			break;
+		}
+	}
+
+	// 然后重置快指针 到头节点 然后同时向前移动 相遇的地方就是环的入口节点
+	fast = pHead;
+	// 依次移动一位
+	while (fast.value !== slow.value) {
+		fast = fast.next;
+		slow = slow.next;
+	}
+	return slow;
 }

@@ -329,7 +329,8 @@ module.exports = {
           children: [
             '/computerBasics/basic/',
             '/computerBasics/basic/XHR.md',
-            '/computerBasics/basic/TCP.md'
+            '/computerBasics/basic/TCP.md',
+            '/computerBasics/basic/Memory.md',
           ]
         }
       ],

@@ -82,6 +82,7 @@ A + B = B + A;
 ![border](https://uploadfiles.nowcoder.com/files/20210621/908787715_1624289962297/36.gif)
 
 
+
 ```javascript
 // 快慢指针
 function FindFirstCommonNode(pHead1, pHead2) {
@@ -99,5 +100,44 @@ function FindFirstCommonNode(pHead1, pHead2) {
 ```
 
 > 5、给一个长度为n链表，若其中包含环，请找出该链表的环的入口结点，否则，返回null。
+
+* 初始化：快指针fast指向头结点， 慢指针slow指向头结点
+* 让fast一次走两步， slow一次走一步，第一次相遇在C处，停止
+* 然后让fast指向头结点，slow原地不动，让后fast，slow每次走一步
+
+![border](https://uploadfiles.nowcoder.com/images/20200422/284295_1587553517754_3DCB951FEBF0807DCA2148EC373574F2)
+
+```javascript
+// 判断链表是否有环 而且找出入口的节点
+function EntryNodeOfLoop(pHead) {
+	// 快慢指针来确定相遇的节点
+	let fast = pHead;
+	let slow = pHead;
+
+	// 快慢指针相等
+	while (fast && slow.next) {
+		fast = fast.next.next;
+		slow = slow.next;
+		// 比较两者的值
+		if (fast.value === slow.value) {
+			break;
+		}
+	}
+
+	// 然后重置快指针 到头节点 然后同时向前移动 相遇的地方就是环的入口节点
+	fast = pHead;
+	// 依次移动一位
+	while (fast.value !== slow.value) {
+		fast = fast.next;
+		slow = slow.next;
+	}
+	return slow;
+}
+```
+
+
+> 6、输入一个长度为 n 的链表，设链表中的元素的值为 ai ，返回该链表中倒数第k个节点。如果该链表长度小于k，请返回一个长度为 0 的链表。
+
+
 
 
