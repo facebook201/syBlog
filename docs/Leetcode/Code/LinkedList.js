@@ -113,5 +113,46 @@ function FindFirstCommonNode(pHead1, pHead2) {
 
 
 function EntryNodeOfLoop(pHead) {
+	// 快慢指针来确定相遇的节点
+	let fast = pHead;
+	let slow = pHead;
 
+	// 快慢指针相等
+	while (fast && slow.next) {
+		fast = fast.next.next;
+		slow = slow.next;
+		// 比较两者的值
+		if (fast.value === slow.value) {
+			break;
+		}
+	}
+
+	// 然后重置快指针 到头节点 然后同时向前移动 相遇的地方就是环的入口节点
+	fast = pHead;
+	// 依次移动一位
+	while (fast.value !== slow.value) {
+		fast = fast.next;
+		slow = slow.next;
+	}
+	return slow;
+}
+
+// 链表中倒数最后k个结点
+function FindKthToTail(pHead, k) {
+	let fast = pHead;
+	let slow = pHead;
+	let i = 0;
+
+	while (fast) {
+		fast = fast.next;
+		i++;
+		if (i == k) break;
+	}
+
+	while (fast) {
+		fast = fast.next;
+		slow = slow.next;
+	}
+
+	return slow;
 }

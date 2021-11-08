@@ -100,4 +100,59 @@ function FindFirstCommonNode(pHead1, pHead2) {
 
 > 5、给一个长度为n链表，若其中包含环，请找出该链表的环的入口结点，否则，返回null。
 
+```javascript
+	// 快慢指针来确定相遇的节点
+	let fast = pHead;
+	let slow = pHead;
+
+	// 快慢指针相等
+	while (fast && slow.next) {
+		fast = fast.next.next;
+		slow = slow.next;
+		// 比较两者的值
+		if (fast.value === slow.value) {
+			break;
+		}
+	}
+
+	// 然后重置快指针 到头节点 然后同时向前移动 相遇的地方就是环的入口节点
+	fast = pHead;
+	// 依次移动一位
+	while (fast.value !== slow.value) {
+		fast = fast.next;
+		slow = slow.next;
+	}
+	return slow;
+```
+
+> 6、链表中倒数最后k个结点
+
+第一个指针先移动k步，然后第二个指针再从头开始，这个时候这两个指针同时移动，当第一个指针到链表的末尾的时候，返回第二个指针即可
+
+```javascript
+function FindKthToTail(pHead, k) {
+  let fast = pHead;
+	let slow = pHead;
+	let i = 0;
+
+	while (fast) {
+		// k == 0 全部返回
+		if (i == k) break;
+		fast = fast.next;
+		i++;
+	}
+	// 超过边界
+  if (i < k) {
+    return fast;
+  }
+
+	while (fast) {
+		fast = fast.next;
+		slow = slow.next;
+	}
+
+	return slow;
+}
+```
+
 
