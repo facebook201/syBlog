@@ -111,7 +111,7 @@ function FindFirstCommonNode(pHead1, pHead2) {
 	return l1.value;
 }
 
-
+// 判断链表是否有环 而且找出入口的节点
 function EntryNodeOfLoop(pHead) {
 	// 快慢指针来确定相遇的节点
 	let fast = pHead;
@@ -134,25 +134,5 @@ function EntryNodeOfLoop(pHead) {
 		fast = fast.next;
 		slow = slow.next;
 	}
-	return slow;
-}
-
-// 链表中倒数最后k个结点
-function FindKthToTail(pHead, k) {
-	let fast = pHead;
-	let slow = pHead;
-	let i = 0;
-
-	while (fast) {
-		fast = fast.next;
-		i++;
-		if (i == k) break;
-	}
-
-	while (fast) {
-		fast = fast.next;
-		slow = slow.next;
-	}
-
 	return slow;
 }
