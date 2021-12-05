@@ -162,6 +162,7 @@ module.exports = {
             '/fontEnd/Node/',
             '/fontEnd/Node/system.md',
             '/fontEnd/Node/repo.md',
+            '/fontEnd/Node/dev.md',
           ]
         }
       ],

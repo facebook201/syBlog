@@ -14,9 +14,6 @@ Node 给我们的印象的几个关键字 **事件驱动、非阻塞I/O、高效
 > * node的事件驱动是怎么实现的？
 
 
-
-
-
 ### Node架构
 
 ![border](https://yjhjstz.gitbooks.io/deep-into-node/content/chapter1/a9e67142615f49863438cc0086b594e48984d1c9.jpeg)

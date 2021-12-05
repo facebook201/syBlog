@@ -863,6 +863,9 @@ var child1 = new Child('kevin', '18');
 
 
 
+## JavaScript 优雅代码的写法
+
+
 
 
 

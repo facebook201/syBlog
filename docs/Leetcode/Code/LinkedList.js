@@ -23,7 +23,7 @@ LinkedList.prototype.append = function(ele) {
     }    
     this.length++;
 };
-
+cfd
 LinkedList.prototype.find = function(n) {}
 
 LinkedList.prototype.insertNode = function(n, index) {
@@ -136,3 +136,33 @@ function EntryNodeOfLoop(pHead) {
 	}
 	return slow;
 }
+
+//
+function deleteDuplication(pHead) {
+    // write code here
+    let cur = pHead;
+    let finalLink = new LinkedList();
+    let hasEqual = false;
+
+    while (cur && cur.next) {
+        if (cur.value === cur.next.value) {
+            cur.next = cur.next.next;
+            hasEqual = true;
+        } else {
+            // 真表示
+            if (hasEqual) {
+                cur = cur.next;
+                hasEqual = false;
+            } else {
+                finalLink.append(cur.value);
+                if (!cur.next.next) {
+                    finalLink.append(cur.next.value);
+                }
+                cur = cur.next;
+            }
+        }
+    }
+    return finalLink;
+}
+
+deleteDuplication(linkedNode.head);
