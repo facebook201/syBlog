@@ -117,19 +117,14 @@ module.exports = {
         ]
       },
       {
-        text: 'Java',
-        items: [
-          { text: 'JavaSE', link: '/Java/JavaSE/' },
-        ]
-      },
-      {
         text: '其他',
         items: [
           { text: '好的问题', link: '/Other/GoodQS/' },
           { text: '英文', link: '/Other/English/' },
           { text: '面试', link: '/Other/Interview/' },
           { text: '移动端问题', link: '/Other/mobileQS/' },
-          { text: '好文连接', link: '/Other/fontendLink/' }
+          { text: '好文连接', link: '/Other/fontendLink/' },
+          { text: '工时', link: '/Other/workTime/' },
         ]
       }
     ],
@@ -313,6 +308,15 @@ module.exports = {
           collapsable: false,
           children: [
             '/Other/fontendLink/'
+          ]
+        }
+      ],
+      '/Other/workTime/': [
+        {
+          title: '工时',
+          collapsable: false,
+          children: [
+            '/Other/workTime/'
           ]
         }
       ],
