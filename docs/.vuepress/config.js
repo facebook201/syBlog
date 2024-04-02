@@ -5,9 +5,9 @@
  */
 
 module.exports = {
-  title: '皮卡丘的Web生态',
+  title: '皮卡丘博客',
   base: '/sy-fontend-system/', // 设置站点根目录
-  description: '追求自由的心不死 你就是自由的 —— 巴比龙',
+  description: '操千曲而后晓声 观千剑而后识器 ——《文心雕龙》',
   head: [
     [
       'link',
@@ -21,43 +21,51 @@ module.exports = {
     editLinkText: '在 GitHub 上编辑此页',
     nav: [
       {
-        text: '刷题系列',
+        text: '软基',
         items: [
           {
-            text: '剑指Offer',
-            link: '/Leetcode/Offer/'
+            text: '数据结构',
+            link: '/computerBasics/dataAndAlg/'
           },
           {
-            text: '面试金典',
-            link: '/Leetcode/Dict/'
+            text: '算法',
+            link: '/computerBasics/algorithm/'
           },
           {
-            text: 'Leetcode',
-            link: '/Leetcode/lcode/'
-          }
+            text: '模式和原则',
+            link: '/computerBasics/designPattern/'
+          },
+          {
+            text: '网络协议',
+            link: '/computerBasics/basic/'
+          },
         ]
       },
       { 
-        text: '前端',
+        text: '前端体系',
         items: [
-          {
-            text: '浏览器',
-            link: '/fontEnd/Browser/'
-          },
           {
             text: 'CSS',
             link: '/fontEnd/CSS/'
           },
           {
-            text: 'BOM',
-            link: '/fontEnd/BOM/'
+            text: 'JS',
+            link: '/fontEnd/JS'
+          },
+          {
+            text: '浏览器',
+            link: '/fontEnd/Browser/'
+          },
+          {
+            text: 'API',
+            link: '/fontEnd/API/'
           },
           {
             text: 'Node',
             link: '/fontEnd/Node/'
           },
           {
-            text: '深入场景',
+            text: '场景深入',
             link: '/fontEnd/deepKnow/'
           },
           {
@@ -67,66 +75,23 @@ module.exports = {
         ]
       },
       {
-        text: '计算机基础',
+        text: 'OTHER',
         items: [
-          {
-            text: '计算机基础',
-            link: '/computerBasics/basic/'
-          },
-          {
-            text: '数据结构与算法之美',
-            link: '/computerBasics/dataAndAlg/'
-          },
-          {
-            text: '常见算法和数据结构',
-            link: '/computerBasics/algorithm/'
-          },
-          {
-            text: '设计模式',
-            link: '/computerBasics/designPattern/'
-          },
-          {
-            text: 'Nginx',
-            link: '/computerBasics/nginx/'
-          }
-        ]
-      },
-      {
-        text: 'JavaScript',
-        items: [
-          {
-            text: 'javascript',
-            link: '/Native/JS/'
-          },
-          {
-            text: 'ES6',
-            link: '/Native/ES6/'
-          },
-          {
-            text: '正则表达式',
-            link: '/Native/RegExp/'
-          },
-          {
-            text: 'JS提升阶段',
-            link: '/Native/Improve/'
-          },
-          {
-            text: 'JS功能函数',
-            link: '/Native/Function/'
-          }
-        ]
-      },
-      {
-        text: '其他',
-        items: [
-          { text: '好的问题', link: '/Other/GoodQS/' },
+          { text: '好问题', link: '/Other/GoodQS/' },
           { text: '英文', link: '/Other/English/' },
-          { text: '面试', link: '/Other/Interview/' },
           { text: '移动端问题', link: '/Other/mobileQS/' },
           { text: '好文连接', link: '/Other/fontendLink/' },
-          { text: '工时', link: '/Other/workTime/' },
         ]
-      }
+      },
+      {
+        text: 'LeetCode',
+        items: [
+          {
+            text: '链表',
+            link: '/Leetcode/LinkedList/'
+          },
+        ]
+      },
     ],
     sidebar: {
       '/Leetcode/Offer/': [
@@ -155,9 +120,6 @@ module.exports = {
           collapsable: false,
           children: [
             '/fontEnd/Node/',
-            '/fontEnd/Node/system.md',
-            '/fontEnd/Node/repo.md',
-            '/fontEnd/Node/dev.md',
           ]
         }
       ],
@@ -179,62 +141,13 @@ module.exports = {
           ]
         }
       ],
-      '/Native/JS/': [
-        {
-          title: 'JS基础知识',
-          collapsable: false,
-          children: [
-            '/Native/JS/',
-            '/Native/JS/Error.md',
-            '/Native/JS/Object.md',
-            '/Native/JS/Advanced.md',
-            '/Native/JS/SpecialTopic.md',
-            '/Native/JS/JSON.md',
-            '/Native/JS/FileAPI.md',
-            '/Native/JS/FunctionalLibrary.md'
-          ]
-        }
-      ],
-      '/Native/RegExp/': [
-        {
-          title: '正则表达式',
-          collapsable: false,
-          children: [
-            '/Native/RegExp/',
-            '/Native/RegExp/Concept.md'
-          ]
-        }
-      ],
-      '/Native/Function/': [
-        {
-          title: 'JS功能函数',
-          collapsable: false,
-          children: [
-            '/Native/Function/',
-            '/Native/Function/Array.md',
-            '/Native/Function/Other.md',
-            '/Native/Function/RegExp.md',
-            '/Native/Function/DOM.md'
-          ]
-        }
-      ],
-      '/Native/Improve/': [
-        {
-          title: 'Js提升阶段',
-          collapsable: false,
-          children: [
-            '/Native/Improve/',
-            '/Native/Improve/Test.md'
-          ]
-        }
-      ],
-      '/Native/Object/': [
-        {
-          title: 'Object',
-          collapsable: false,
-          children: [
-            '/Native/Object/'
-          ]
+      'fontEnd/JS': [
+          {
+            title: 'JS',
+            collapsable: false,
+            children: [
+          
+            ]
         }
       ],
       '/fontEnd/Browser/': [
@@ -247,35 +160,12 @@ module.exports = {
           ]
         }
       ],
-      '/Native/ES6/': [
-        {
-          title: 'ES6',
-          collapsable: false,
-          children: [
-            '/Native/ES6/',
-            '/Native/ES6/Promise.md',
-            '/Native/ES6/Module.md',
-            '/Native/ES6/Class.md',
-            '/Native/ES6/set-map.md'
-          ]
-        }
-      ],
       '/Other/English/': [
         {
           title: '英文',
           collapsable: false,
           children: [
             '/Other/English/'
-          ]
-        }
-      ],
-      '/Java/JavaSE/': [
-        {
-          title: 'JavaSE',
-          collapsable: false,
-          children: [
-            '/Java/JavaSE/',
-            '/Java/JavaSE/reflect.md',
           ]
         }
       ],
@@ -308,15 +198,6 @@ module.exports = {
           collapsable: false,
           children: [
             '/Other/fontendLink/'
-          ]
-        }
-      ],
-      '/Other/workTime/': [
-        {
-          title: '工时',
-          collapsable: false,
-          children: [
-            '/Other/workTime/'
           ]
         }
       ],
@@ -407,15 +288,6 @@ module.exports = {
           children: [
             '/fontEnd/CSS/',
             '/fontEnd/CSS/css-world.md'
-          ]
-        }
-      ],
-      '/Native/JSON/': [
-        {
-          title: 'JSON',
-          collapsable: false,
-          children: [
-            '/Native/JSON/'
           ]
         }
       ],
