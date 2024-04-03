@@ -2,9 +2,9 @@
 home: true
 heroImage: /arly.jpeg
 title: a
-actionText: Get Started →
+actionText: 元亨利贞 ⇨
 actionLink: /fontEnd/
-footer: MIT Licensed | Copyright © 2018-present facebook201
+footer: MIT Licensed | Copyright © 2018-present sy
 ---
 
 <!-- ::: tip 提醒

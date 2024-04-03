@@ -6,8 +6,8 @@
 
 module.exports = {
   title: '皮卡丘博客',
-  base: '/sy-fontend-system/', // 设置站点根目录
-  description: '操千曲而后晓声 观千剑而后识器 ——《文心雕龙》',
+  base: '/syBlog/', // 设置站点根目录
+  description: '操千曲而后晓声 观千剑而后识器',
   head: [
     [
       'link',
@@ -50,7 +50,7 @@ module.exports = {
           },
           {
             text: 'JS',
-            link: '/fontEnd/JS'
+            link: '/fontEnd/JS/'
           },
           {
             text: '浏览器',
@@ -94,113 +94,7 @@ module.exports = {
       },
     ],
     sidebar: {
-      '/Leetcode/Offer/': [
-        {
-          title: '剑指Offer',
-          collapsable: false,
-          children: [
-            '/Leetcode/Offer/',
-            '/Leetcode/Offer/array.md',
-            '/Leetcode/Offer/LinkedList.md',
-          ]
-        }
-      ],
-      '/fontEnd/BOM/': [
-        {
-          title: 'BOM浏览器模型',
-          collapsable: false,
-          children: [
-            '/fontEnd/BOM/',
-          ]
-        }
-      ],
-      '/fontEnd/Node/': [
-        {
-          title: 'Node',
-          collapsable: false,
-          children: [
-            '/fontEnd/Node/',
-          ]
-        }
-      ],
-      '/fontEnd/deepKnow/': [
-        {
-          title: '深入场景',
-          collapsable: false,
-          children: [
-            '/fontEnd/deepKnow/',
-          ]
-        }
-      ],
-      '/fontEnd/RollupTools/': [
-        {
-          title: '前端工程化',
-          collapsable: false,
-          children: [
-            '/fontEnd/RollupTools/',
-          ]
-        }
-      ],
-      'fontEnd/JS': [
-          {
-            title: 'JS',
-            collapsable: false,
-            children: [
-          
-            ]
-        }
-      ],
-      '/fontEnd/Browser/': [
-        {
-          title: '浏览器',
-          collapsable: false,
-          children: [
-            '/fontEnd/Browser/',
-            '/fontEnd/Browser/browser.md'
-          ]
-        }
-      ],
-      '/Other/English/': [
-        {
-          title: '英文',
-          collapsable: false,
-          children: [
-            '/Other/English/'
-          ]
-        }
-      ],
-      '/Other/Interview/': [
-        {
-          title: '面试',
-          collapsable: false,
-          children: [
-            '/Other/Interview/',
-            '/Other/Interview/Vue.md',
-            '/Other/Interview/React.md',
-            '/Other/Interview/code.md',
-            '/Other/Interview/Browser.md',
-            '/Other/Interview/Performance.md'
-          ]
-        }
-      ],
-      '/Other/mobileQS/': [
-        {
-          title: '移动端问题',
-          collapsable: false,
-          children: [
-            '/Other/mobileQS/'
-          ]
-        }
-      ],
-      '/Other/fontendLink/': [
-        {
-          title: '前端知乎好文链接',
-          collapsable: false,
-          children: [
-            '/Other/fontendLink/'
-          ]
-        }
-      ],
+      /* ----------------------------------------- 软件基础 -----------------------------------------  */
       '/computerBasics/designPattern/': [
         {
           title: '计算机基础',
@@ -263,24 +157,7 @@ module.exports = {
           ]
         }
       ],
-      '/computerBasics/nginx/': [
-        {
-          title: 'nginx',
-          collapsable: false,
-          children: [
-            '/computerBasics/nginx/'
-          ]
-        }
-      ],
-      '/computerBasics/protocol/': [
-        {
-          title: '深入Http协议',
-          collapsable: false,
-          children: [
-            '/computerBasics/protocol/'
-          ]
-        }
-      ],
+      /* ----------------------------------------- 前端体系模块 -----------------------------------------  */
       '/fontEnd/CSS/': [
         {
           title: 'CSS',
@@ -291,24 +168,128 @@ module.exports = {
           ]
         }
       ],
-      '/Other/HTTP/': [
+      '/fontEnd/JS/': [
         {
-          title: 'HTTP',
+          title: 'JS',
           collapsable: false,
           children: [
-            '/Other/HTTP/'
+            '/fontEnd/JS/',
+            '/fontEnd/JS/RegExp/Concept.md',
+            '/fontEnd/JS/RegExp/Egg.md',
+          ]
+        }
+      ],
+      '/fontEnd/API/': [
+        {
+          title: 'API',
+          collapsable: false,
+          children: [
+            '/fontEnd/API/',
+          ]
+        }
+      ],
+      '/fontEnd/Node/': [
+        {
+          title: 'Node',
+          collapsable: false,
+          children: [
+            '/fontEnd/Node/',
+          ]
+        }
+      ],
+      '/fontEnd/deepKnow/': [
+        {
+          title: '深入场景',
+          collapsable: false,
+          children: [
+            '/fontEnd/deepKnow/',
+          ]
+        }
+      ],
+      '/fontEnd/RollupTools/': [
+        {
+          title: '前端工程化',
+          collapsable: false,
+          children: [
+            '/fontEnd/RollupTools/',
+            '/fontEnd/RollupTools/cmd.md',
+          ]
+        }
+      ],
+      '/fontEnd/Browser/': [
+        {
+          title: '浏览器',
+          collapsable: false,
+          children: [
+            '/fontEnd/Browser/',
+            '/fontEnd/Browser/browser.md'
+          ]
+        }
+      ],
+
+      /* ----------------------------------------- Others -----------------------------------------  */
+      '/Other/English/': [
+        {
+          title: '英文',
+          collapsable: false,
+          children: [
+            '/Other/English/'
+          ]
+        }
+      ],
+      '/Other/Interview/': [
+        {
+          title: '面试',
+          collapsable: false,
+          children: [
+            '/Other/Interview/',
+            '/Other/Interview/Vue.md',
+            '/Other/Interview/React.md',
+            '/Other/Interview/code.md',
+            '/Other/Interview/Browser.md',
+            '/Other/Interview/Performance.md'
+          ]
+        }
+      ],
+      '/Other/mobileQS/': [
+        {
+          title: '移动端问题',
+          collapsable: false,
+          children: [
+            '/Other/mobileQS/'
+          ]
+        }
+      ],
+      '/Other/fontendLink/': [
+        {
+          title: '前端知乎好文链接',
+          collapsable: false,
+          children: [
+            '/Other/fontendLink/'
           ]
         }
       ],
       '/Other/GoodQS/': [
         {
-          titile: '高质量问题',
+          titile: '好问题',
           collapsable: false,
           children: [
             '/Other/GoodQS/'
           ]
         }
-      ]
+      ],
+      /* ----------------------------------------- Leetcode -----------------------------------------  */
+      '/Leetcode/Offer/': [
+        {
+          title: '剑指Offer',
+          collapsable: false,
+          children: [
+            '/Leetcode/Offer/',
+            '/Leetcode/Offer/array.md',
+            '/Leetcode/Offer/LinkedList.md',
+          ]
+        }
+      ],
     },
     repo: 'facebook201/sy-fontend-system', // github 地址
     docsRepo: 'facebook201/sy-fontend-system',
