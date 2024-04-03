@@ -1,6 +1,6 @@
 git add -A
 
-git commit -m 'javascript基'
+git commit -m 'javascript KN'
 
 git push origin master
 
