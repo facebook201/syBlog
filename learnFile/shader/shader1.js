@@ -1,6 +1,8 @@
-import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+// import * as THREE from 'three';
+// import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 // import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+
+const THREE = require('three');
 
 let scene, camera, renderer, controls, gui, material, plane, geometry, mesh, time = 0;
 let w = window.innerWidth;
@@ -20,7 +22,7 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setClearColor("#e6fcf5", 1);
 document.getElementById("webgl").appendChild(renderer.domElement);
 
-controls = new OrbitControls(camera, renderer.domElement);
+// controls = new OrbitControls(camera, renderer.domElement);
 
 // 着色器
 const vertex = `

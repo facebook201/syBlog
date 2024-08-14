@@ -1,9 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-const spector = new SPECTOR.Spector();
-spector.displayUI();
-
 let w = window.innerWidth;
 let h = window.innerHeight;
 
