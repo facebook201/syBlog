@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: #FFF;
+    }
+  </style>
+</head>
+<body>
+  <div id="webgl"></div>
+</body>
+<script type="importmap">
+  {
+    "imports": {
+      "three": "../build/three.module.js",
+      "three/addons/": "../examples/jsm/"
+    }
+  }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+
+
+// 场景 相机 渲染器 模型 gui
+let scene, camera, renderer, cube, gui, light, model, controls;
+
+function init() {
+  initCreate();
+  importModel();
+}
+
+function initCreate() {
+  scene = new THREE.Scene();
+  camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+  let width = window.innerWidth || 0;
+  let height = window.innerHeight || 0;
+  let aspect = width / height;
+  let frustrum = 10;
+  let pixelRatio = Math.min(window.devicePixelRatio, 3);
+  camera.left = (-aspect * frustrum) / 2;
+  camera.right = (aspect * frustrum) / 2;
+  camera.top = frustrum / 2;
+  camera.bottom = -frustrum / 2;
+  camera.position.set(0, 5, 20);
+
+  renderer = new THREE.WebGLRenderer({
+    antialias: true,
+  });
+  renderer.setClearAlpha(0.3);
+  renderer.setPixelRatio(pixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
+
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.addEventListener('change', () => {
+    renderer.render(scene, camera);
+  });
+}
+
+function importModel() {
+  const panel = new THREE.Mesh(
+    new THREE.PlaneGeometry(window.innerWidth, window.innerHeight),
+    new THREE.MeshBasicMaterial({ color: 0xffffff })
+  );
+
+  panel.position.set(0, -10, 0);
+  panel.rotation.x = -Math.PI / 2;
+
+  const axesHelper = new THREE.AxesHelper(100);
+  scene.add(axesHelper);
+
+  const gird = new THREE.GridHelper(100, 10, 0x0000ff, 0x808080);
+  gird.rotateX(Math.PI );
+  scene.add(gird);
+
+  // 灯光
+  light = new THREE.DirectionalLight(0xffffff, 1);
+  light.position.set(10, 10, 10);
+  scene.add(light);
+
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+  scene.add(ambientLight);
+
+  const loader = new GLTFLoader();
+  const group = new THREE.Group();
+  loader.load('../examples/models/gltf/Xbot.glb', function(gltf) {
+		model = gltf.scene;
+
+		model.scale.set(3, 3, 3);
+    model.position.set(0, 1, 0);
+
+    const skeletonHelper = new THREE.SkeletonHelper(gltf.scene);
+    model.add(skeletonHelper);
+    // gui.open();
+
+    scene.add(model);
+    render();
+  });
+}
+
+
+
+function testBone(model) {
+  bone1.rotation.x = Math.PI / 6;
+  // bone2.rotation.x = Math.PI / 2;
+
+  gui.add(bone1.rotation, 'x', 0, Math.PI).name('关节1');
+
+  gui.open();
+}
+
+const clock = new THREE.Clock();
+const v = new THREE.Vector3(0, 0, 0);
+const a = 10;
+
+function render() {
+  const mixer = new THREE.AnimationMixer(model);
+  // const axis = new THREE.Vector3(0, 2, 2);
+
+  // // 旋转轴标出来
+  // const O = new THREE.Vector3(0, 0, 0);
+  // const arrow = new THREE.ArrowHelper(axis.clone().normalize(), O, axis.length(), 0xfff000);
+  // scene.add(arrow);
+
+  // // 四元数旋转
+  // const qInitial = new THREE.Quaternion().setFromAxisAngle(axis, 0.01);
+  // model?.applyQuaternion(qInitial);
+
+  // 欧拉角
+  // const eInitial = new THREE.Euler();
+  // eInitial.x = 0.01;
+  // eInitial.y = 0.01;
+  // eInitial.z = 0.01;
+
+  // model?.rotateOnWorldAxis(axis, 0.01);
+
+
+  const deltaTime = clock.getDelta();
+
+  if (keyState['W']) {
+    const front = new THREE.Vector3(0,0,1);
+    v.add(front.multiplyScalar(a*deltaTime));
+    console.log(v.length())
+    // model.position.z -= deltaTime * 2;
+    const deltaPos = v.clone().multiplyScalar(deltaTime);
+    model.position.add(deltaPos);
+    console.log(deltaPos)
+  }
+
+  mixer.update(deltaTime);
+
+  renderer.render(scene, camera);
+  requestAnimationFrame(render);
+}
+
+init();
+
+const keyState = {
+  W: false,
+  A: false,
+  S: false,
+  D: false,
+  Space: false
+};
+
+document.addEventListener('keydown', (e) => {
+  keyState[e.key.toUpperCase()] = true;
+});
+
+document.addEventListener('keyup', (e) => {
+  keyState[e.key.toUpperCase()] = false;
+});
+
+
+
+
+function createSphereMesh(color, r) {
+  return new THREE.Mesh(
+    new THREE.SphereGeometry(r, 32, 32),
+    new THREE.MeshBasicMaterial({ color: color })
+  )
+}
+
+</script>
+</html>

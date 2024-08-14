@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  <title>three.js css2d - label</title>
+  <style>
+    .label {
+      color: #FFF;
+      font-family: sans-serif;
+      padding: 2px;
+      background: rgba(0, 0, 0, .6);
+    }
+  </style>
+</head>
+
+<body>
+  <div id="webgl"></div>
+</body>
+<script type="importmap">
+  {
+    "imports": {
+      "three": "../build/three.module.js",
+      "three/addons/": "../examples/jsm/"
+    }
+  }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+
+let scene, cube, camera, ambient, light, renderer, gui;
+
+const obj = {
+  height: 800,
+  width: 1200,
+};
+
+const params = {
+  x: 100,
+  y: 100,
+  z: 100,
+  color: 0x00ff00,
+};
+
+function init() {
+  // 创建一个三维场景
+  scene = new THREE.Scene();
+  // 创建一个透视相机
+  camera = new THREE.PerspectiveCamera(45, obj.width / obj.height, 0.1, 1000);
+  // 相机位置
+  camera.position.set(0, 100, 0);
+  // 相机观察目标
+  // camera.lookAt(0, 0, 0);
+  const geometry = new THREE.PlaneGeometry(600, 600);
+  const texture = new THREE.TextureLoader().load('./image/mm.jpg');
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(10, 10);
+  // 创建一个材质对象
+  const material = new THREE.MeshLambertMaterial({
+    // color: 0x00ffff,
+    map: texture,
+    transparent: true,
+  });
+
+  // 创建一个网格对象
+  const gird = new THREE.GridHelper(1000, 10, 0x0000ff, 0x808080);
+  scene.add(gird);
+
+  cube = new THREE.Mesh(geometry, material);
+
+  const group = new THREE.Group();
+  group.add(cube);
+
+  group.rotateX(-Math.PI / 2);
+  scene.add(group);
+
+  initLight();
+  initRenderer();
+}
+
+
+function initLight() {
+  // 坐标轴
+  const axesHelper = new THREE.AxesHelper(200);
+  scene.add(axesHelper);
+
+  // 光源
+  light = new THREE.DirectionalLight(0xffffff, 1.0);
+  light.decay = 0.0;
+  light.position.set(200, 100, 60);
+  scene.add(light);
+
+  // 环境光没有特定的方向
+  ambient = new THREE.AmbientLight(0xffffff, 0.5);
+  scene.add(ambient);
+}
+
+
+function initRenderer() {
+  // 渲染器
+  renderer = new THREE.WebGLRenderer({
+    antialias: true
+  });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(obj.width, obj.height);
+  renderer.render(scene, camera);
+  document.getElementById("webgl").appendChild(renderer.domElement);
+
+  // 控制器
+  const controls = new OrbitControls(camera, renderer.domElement);
+
+  controls.addEventListener('change', () => {
+    renderer.render(scene, camera);
+  });
+}
+
+
+window.onresize = function() {
+  render.setSize(window.innerWidth, window.innerHeight);
+  camera.aspect = window.innerWidth / window.innerHeight;
+  // 更新相机投影矩阵
+  camera.updateProjectionMatrix();
+}
+
+function initGUI() {
+  // GUI调试
+  gui = new GUI();
+  // 光照强度
+  gui.add(ambient, 'intensity', 0, 2).name('环境光');
+  gui.add(light, 'intensity', 0, 2).name('平行光');
+
+  // 物体的位置
+  gui.add(cube.position, 'x', 0, 180);
+  gui.add(cube.position, 'y', 0, 180);
+  gui.add(cube.position, 'z', 0, 180);
+
+  // 改变物体颜色
+  gui.addColor(params, 'color').onChange(v => {
+    cube.material.color.set(v);
+  });
+  gui.open();
+}
+
+function createTexture() {
+  return texture;
+}
+
+let y = 0;
+function render() {
+  cube.rotateY(0.01);
+  // 周期性执行渲染
+  renderer.render(scene, camera);
+  requestAnimationFrame(render);
+}
+init();
+// render();
+initGUI();
+</script>
+</html>

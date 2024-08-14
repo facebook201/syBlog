@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  <title>three.js css2d - label</title>
+  <style>
+    #webgl {
+      background-color: #FFF;
+    }
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="webgl"></div>
+</body>
+<script type="importmap">
+  {
+    "imports": {
+      "three": "../build/three.module.js",
+      "three/addons/": "../examples/jsm/"
+    }
+  }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import {SMAAPass} from 'three/addons/postprocessing/SMAAPass.js';
+import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+
+let scene, cube, camera, ambient, light, renderer, gui, plane;
+
+const obj = {
+  height: 1000,
+  width: 1600,
+};
+
+const params = {
+  x: 100,
+  y: 100,
+  z: 100,
+  color: 0x00ff00,
+};
+
+function init() {
+  // 创建一个三维场景
+  scene = new THREE.Scene();
+  // 创建一个透视相机
+  camera = new THREE.PerspectiveCamera(45, obj.width / obj.height, 0.1, 1000);
+  // 相机位置
+  camera.position.set(0, 200, 0);
+  // 相机观察目标
+  camera.lookAt(0, 0, 0);
+  // const texture = new THREE.TextureLoader().load('./image/mm.jpg');
+  // texture.wrapS = THREE.RepeatWrapping;
+  // texture.wrapT = THREE.RepeatWrapping;
+  // texture.repeat.set(6, 6);
+
+  // 创建一个材质对象
+  const material = new THREE.MeshStandardMaterial({
+    color: 0xffff00,
+    roughness: 0, //粗糙度
+  });
+
+  const material1 = new THREE.MeshPhongMaterial( { color: 0xffffff, depthWrite: false } )
+
+  // 球体
+  const sphere = new THREE.Mesh(
+    new THREE.SphereGeometry(30, 50, 50),
+    material
+  );
+  // 1 产生阴影的模型
+  sphere.castShadow = true;
+  sphere.position.set(0, 40, 0);
+
+  // 创建一个接收阴影的模型
+  const planeGeometry = new THREE.PlaneGeometry(800, 800);
+  plane = new THREE.Mesh(planeGeometry, material1);
+  plane.rotation.x = - Math.PI / 2;
+  // 3 接收阴影
+  plane.receiveShadow = true;
+  // 创建一个网格对象
+  // const gird = new THREE.GridHelper(800, 40, 0x0000ff, 0x808080);
+  // scene.add(gird);
+  const group = new THREE.Group();
+  group.add(sphere, plane);
+
+  // group.rotateX(-Math.PI / 2);
+  scene.add(group);
+
+  initLight();
+  initRenderer();
+}
+
+function initLight() {
+  // 坐标轴
+  const axesHelper = new THREE.AxesHelper(200);
+  scene.add(axesHelper);
+  // 光源
+  light = new THREE.DirectionalLight(0xffffff, 1);
+  light.castShadow = true;
+  light.decay = 0.0;
+  light.position.set(100, 100, 100);
+  // 渲染质量
+  light.shadow.mapSize.set(1024, 1024);
+  light.shadow.radius = 4;
+  console.log(light.shadow.radius);
+  // console.log(light.shadow.mapSize);
+  scene.add(light);
+
+  // 设置三维场景计算阴影的范围
+  light.shadow.camera.top = 200;
+  light.shadow.camera.bottom = -200;
+  light.shadow.camera.left = -200;
+  light.shadow.camera.right = 200;
+  light.shadow.camera.near = 0.5;
+  light.shadow.camera.far = 500;
+
+  const lightHelper = new THREE.DirectionalLightHelper(light, 1);
+  scene.add(lightHelper);
+
+  // 环境光没有特定的方向
+  ambient = new THREE.AmbientLight(0xffffff, 1);
+  scene.add(ambient);
+}
+
+function initRenderer() {
+  // 渲染器
+  renderer = new THREE.WebGLRenderer({
+    // antialias: true
+  });
+  const composer = new EffectComposer(renderer);
+  const pixelRatio = renderer.getPixelRatio();
+  console.log(pixelRatio)
+  const smaaPass = new SMAAPass(obj.width * pixelRatio, obj.height * pixelRatio);
+  composer.addPass(smaaPass);
+  // 4 允许阴影渲染
+  renderer.shadowMap.enabled = true;
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(obj.width, obj.height);
+  renderer.render(scene, camera);
+  document.getElementById("webgl").appendChild(renderer.domElement);
+
+  // 控制器
+  const controls = new OrbitControls(camera, renderer.domElement);
+
+  controls.addEventListener('change', () => {
+    renderer.render(scene, camera);
+  });
+}
+
+window.onresize = function() {
+  render.setSize(window.innerWidth, window.innerHeight);
+  camera.aspect = window.innerWidth / window.innerHeight;
+  // 更新相机投影矩阵
+  camera.updateProjectionMatrix();
+}
+
+function initGUI() {
+  // GUI调试
+  gui = new GUI();
+  // 光照强度
+  gui.add(ambient, 'intensity', 0, 2).name('环境光');
+  gui.add(light, 'intensity', 0, 2).name('平行光');
+
+  // 物体的位置
+  // gui.add(cube.position, 'x', 0, 180);
+  // gui.add(cube.position, 'y', 0, 180);
+  // gui.add(cube.position, 'z', 0, 180);
+
+  // 改变物体颜色
+  gui.addColor(params, 'color').onChange(v => {
+    plane.material.color.set(v);
+  });
+
+  const shadowFolder = gui.addFolder('阴影');
+  const cam = light.shadow.camera;
+  shadowFolder.add(light.shadow, 'radius', 0, 10).name('阴影模糊度');
+  shadowFolder.add(light.shadow.camera, 'near', 0, 400).name('阴影相机near');
+  shadowFolder.add(light.shadow.camera, 'far', 0, 400).name('阴影相机far');
+  shadowFolder.add(light.shadow.camera, 'top', 0, 400).name('阴影相机top');
+
+  shadowFolder.add(cam, 'bottom', 0, 400).onChange(v => {
+    cam.updateProjectionMatrix();
+  });
+
+
+  gui.open();
+}
+
+function createTexture() {
+  return texture;
+}
+
+let y = 0;
+function render() {
+  // cube.rotateY(0.01);
+  // 周期性执行渲染
+  renderer.render(scene, camera);
+  requestAnimationFrame(render);
+}
+init();
+render();
+initGUI();
+</script>
+</html>
