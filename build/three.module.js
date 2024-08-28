@@ -9632,7 +9632,6 @@ class Material extends EventDispatcher {
 class MeshBasicMaterial extends Material {
 
 	constructor( parameters ) {
-
 		super();
 
 		this.isMeshBasicMaterial = true;
@@ -11580,7 +11579,6 @@ const _intersectionPointWorld = /*@__PURE__*/ new Vector3();
 class Mesh extends Object3D {
 
 	constructor( geometry = new BufferGeometry(), material = new MeshBasicMaterial() ) {
-
 		super();
 
 		this.isMesh = true;

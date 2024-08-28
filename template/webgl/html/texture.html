@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>webgl</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background-color: #000;
+    }
+    html {
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+</body>
+<script type="module">
+import { initShader } from "../utils.js";
+
+// 顶点
+const VertexShader = `
+  attribute vec4 a_position;
+  attribute vec2 a_TexCoord;
+  varying vec2 v_TexCoord;
+  void main() {
+    gl_Position = a_position;
+    v_TexCoord = a_TexCoord;
+  }
+`;
+
+const FragmentShader = `
+  precision mediump float;
+  uniform sampler2D u_Sampler;
+  varying vec2 v_TexCoord;
+  void main() {
+    gl_FragColor = texture2D(u_Sampler, v_TexCoord);
+  }
+`;
+
+const canvas = document.getElementById('canvas');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+const gl = canvas.getContext('webgl');
+
+const program = initShader(gl, VertexShader, FragmentShader);
+
+
+function main() {
+  const n = initVertexBuffers(gl);
+
+  gl.clearColor(0.4, 0.6, 0.7, 1.0);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  initTextures(gl, n);
+}
+
+main();
+
+// 创建缓冲区对象
+function initVertexBuffers(gl) {
+  // 纹理坐标和顶点坐标
+  const vertices = new Float32Array([
+    -0.5, 0.5, 0.0, 1.0,
+    -0.5, -0.5, 0.0, 0.0,
+    0.5, 0.5, 1.0, 1.0,
+    0.5, -0.5, 1.0, 0.0,
+  ]);
+
+  // 创建缓冲区对象
+  const vertexBuffer = gl.createBuffer();
+  // 绑定目标
+  gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+  // 写入输入到缓冲区
+  gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+
+  // 字节数
+  const FSIZE = vertices.BYTES_PER_ELEMENT;
+  // 访问位置
+  const a_Position = gl.getAttribLocation(program, 'a_position');
+  // 将缓冲区对象分配给 position 变量
+  // 顶点坐标从0开始 相隔5个点
+  gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, FSIZE * 4, 0);
+
+  const color = gl.getAttribLocation(program, 'a_TexCoord');
+  // 从第三个参数开始 隔五个点
+  gl.vertexAttribPointer(color, 2, gl.FLOAT, false, FSIZE * 4, FSIZE * 2);
+
+  // 开启 attribute 变量
+  gl.enableVertexAttribArray(a_Position);
+  gl.enableVertexAttribArray(color);
+  return 4;
+}
+
+
+// 创建纹理对象
+function initTextures(gl, n) {
+  const texture = gl.createTexture();
+  if (!texture) {
+    console.log('创建纹理对象失败');
+    return false;
+  }
+
+  const u_Sampler = gl.getUniformLocation(program, 'u_Sampler');
+  const image = new Image();
+  image.onload = function () {
+    loadTexture(gl, n, texture, u_Sampler, image);
+  }
+  image.src = './mm.jpg';
+  return true;
+}
+
+function loadTexture(gl, n, texture, u_Sampler, image) {
+  // 对纹理图像进行y轴反转
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
+  gl.activeTexture(gl.TEXTURE0);
+  // 绑定纹理对象
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  // 设置纹理参数
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  // 设置纹理图像
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
+  // 将 0 号纹理传递给着色器
+  gl.uniform1i(u_Sampler, 0);
+  gl.drawArrays(gl.TRIANGLE_STRIP, 0, n);
+}
+</script>
+</html>

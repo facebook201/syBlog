@@ -157,8 +157,8 @@ void main() {
 }
 `;
 
-geometry = new THREE.SphereGeometry(1, 256, 256);
-// geometry = new THREE.BoxGeometry(1, 1);
+// geometry = new THREE.SphereGeometry(1, 256, 256);
+geometry = new THREE.BoxGeometry(1, 1);
 // geometry = new THREE.PlaneGeometry(1, 1);
 
 material = new THREE.ShaderMaterial({

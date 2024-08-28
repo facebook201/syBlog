@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Shader</title>
+		<style>
+			body {
+				margin: 0;
+				padding: 0;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="webgl"></div>
+	</body>
+	<script type="importmap">
+		{
+			"imports": {
+				"three": "../../../build/three.module.js",
+				"three/addons/": "../../../examples/jsm/"
+			}
+		}
+	</script>
+	<script type="module">
+		import * as THREE from "three";
+		import {
+			initRenderer,
+			initCamera,
+			initStats,
+			addHouseAndTree,
+		} from "./utils.js";
+		import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+		import { GUI } from "three/addons/libs/lil-gui.module.min.js";
+
+		let w = window.innerWidth;
+		let h = window.innerHeight;
+
+		let renderer, camera, scene, group, A, quaternion;
+
+		function init() {
+			renderer = initRenderer({ antialias: true });
+			renderer.setClearColor(0xe6ffff, 1);
+			camera = initCamera();
+			scene = new THREE.Scene();
+
+			const light = new THREE.PointLight(0xffffff, 2.5, 0, 0);
+			scene.add(light);
+
+			const axes = new THREE.AxesHelper(100);
+			scene.add(axes);
+			group = new THREE.Group();
+			scene.add(group);
+      const controls = new OrbitControls(camera, renderer.domElement);
+
+			loadFly();
+		}
+		init();
+
+		// 加载飞机
+		function loadFly() {
+			const texLoader = new THREE.TextureLoader();
+			// .load()方法加载图像，返回一个纹理对象Texture
+			const texture = texLoader.load("./img/aircraft.png");
+			const geometry = new THREE.SphereGeometry(1, 32, 32);
+      const material = new THREE.MeshLambertMaterial({ map: texture });
+      const fly = new THREE.Mesh(geometry, material);
+
+			fly.position.set(10, 10, 0);
+			const axesHelper = new THREE.AxesHelper(10);
+			fly.add(axesHelper);
+			group.add(fly);
+
+			const a = new THREE.Vector3(0, 0, -1);//飞机初始姿态飞行方向
+			// 飞机姿态绕自身坐标原点旋转到b指向的方向
+			const b = new THREE.Vector3(-1, -1, -1).normalize();
+
+			const O = fly.position.clone();
+			group.add(new THREE.ArrowHelper(a, O, 30, 0xff0000))
+			group.add(new THREE.ArrowHelper(b, O, 30, 0x00ff00));
+
+			const q = new THREE.Quaternion();
+
+			q.setFromUnitVectors(a, b);
+			fly.quaternion.multiply(q);
+
+			console.log(fly)
+		}
+
+
+    function render() {
+      requestAnimationFrame(render);
+      renderer.render(scene, camera);
+    }
+
+    render();
+	</script>
+</html>

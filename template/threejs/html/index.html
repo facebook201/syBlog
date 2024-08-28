@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shader</title>
+  <style>
+    body{
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <div id="webgl"></div>
+</body>
+<!-- <script type="text/javascript" src="../learnFile/shader/spector.bundle.js"></script> -->
+<script type="importmap">
+  {
+    "imports": {
+      "three": "../../../build/three.module.js",
+      "three/addons/": "../../../examples/jsm/"
+    }
+  }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { OutlinePass } from 'three/addons/postprocessing/OutlinePass.js';
+import { SMAAPass } from 'three/addons/postprocessing/SMAAPass.js';
+
+let w = window.innerWidth;
+let h = window.innerHeight;
+
+let camera, scene, renderer, group, light, mesh, mesh1, composer;
+
+const uniforms = {
+  resolution: {
+    value: new THREE.Vector2(w, h)
+  },
+  iTime: {
+    type: "f",
+    value: 1.0
+  },
+  iResolution: {
+    value: new THREE.Vector2(w, h)
+  },
+  iMouse: {
+    type: "v2",
+    value: new THREE.Vector2()
+  }
+};
+
+// shader
+const vertexShader = `
+  varying vec2 vUv;
+  void main() {
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+`;
+
+const fragmentShader = `
+  uniform float iTime;
+  uniform vec2 iResolution;
+  varying vec2 vUv;
+
+  void main() {
+    float t = iTime;
+    vec2 r = iResolution.xy;
+    vec3 c;
+    float l, z = t;
+    for(int i = 0; i < 3; i++) {
+      vec2 uv, p = gl_FragCoord.xy / r;
+      uv = p;
+      p -= 0.5;
+      p.x *= r.x / r.y;
+      z += 0.07;
+      l = length(p);
+      uv += p / l *(sin(z) + 1.0) *abs(sin(l*9.0 - z*2.0));
+      c[i] = 0.01 / length(abs(mod(uv,1.) - 0.5));
+    }
+    gl_FragColor = vec4(c/l, t);
+  }
+`;
+
+
+function init() {
+  camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 1000);
+  camera.position.set(0, 8, 40);
+  camera.lookAt(0, 0, 0);
+
+  scene = new THREE.Scene();
+  renderer = new THREE.WebGLRenderer({
+    antialias: true,
+  });
+  renderer.setSize(w, h);
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.shadowMap.enabled = true;
+
+  const renderPass = new RenderPass(scene, camera);
+  composer = new EffectComposer(renderer);
+  composer.addPass(renderPass);
+
+  const pixelRatio = renderer.getPixelRatio();
+  const smaaPass = new SMAAPass(w * pixelRatio, h * pixelRatio);
+  composer.addPass(smaaPass);
+
+
+  document.getElementById('webgl').appendChild(renderer.domElement);
+  const controls = new OrbitControls(camera, renderer.domElement);
+  setPlane();
+  initLight();
+}
+
+function initLight() {
+ // 坐标辅助线
+//  const axes = new THREE.AxesHelper(200);
+
+  light = new THREE.DirectionalLight(0xffffff, 1);
+	light.position.set(10, 6, -4);
+  light.shadow.mapSize.set(1024, 1024);
+  light.shadow.radius = 4;
+  light.castShadow = true;
+
+  scene.add(light);
+
+  light.shadow.camera.top = 20;
+  light.shadow.camera.bottom = -20;
+  light.shadow.camera.left = -20;
+  light.shadow.camera.right = 20;
+  light.shadow.camera.near = 0.5;
+  light.shadow.camera.far = 40;
+
+  // 灯光阴影显示范围
+  // scene.add(new THREE.CameraHelper(light.shadow.camera));
+
+  // 灯光辅助
+  // const lightHelper = new THREE.DirectionalLightHelper(light, 10)
+  // scene.add(lightHelper);
+
+  const ambient = new THREE.AmbientLight(0xffffff, 1);
+  scene.add(ambient);
+}
+
+
+function setPlane() {
+  const v2 = new THREE.Vector2(w, h);
+  const outlinePass = new OutlinePass(v2, scene, camera);
+  // 地板
+  const planeMaterial = new THREE.MeshPhongMaterial( { color: 0xffffff, depthWrite: false } )
+
+  group = new THREE.Group();
+  const planeGeometry = new THREE.PlaneGeometry(60, 30);
+  const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+  plane.rotation.x = -0.5 * Math.PI;
+  plane.position.set(0, -1, 0);
+  plane.receiveShadow = true;
+
+  scene.add(plane);
+
+  const geometry = new THREE.SphereGeometry(2, 20, 20);
+  const geometry1 = new THREE.BoxGeometry(3, 3, 3);
+
+  const material = new THREE.MeshNormalMaterial({
+    color: 0xffff00,
+    roughness: 0, //粗糙度
+  });
+
+  // MeshStandardMaterial MeshBasicMaterial MeshNormalMaterial MeshPhongMaterial
+  const material1 = new THREE.MeshNormalMaterial({
+    color: 0xffff00,
+    // roughness: 0, //粗糙度
+  });
+
+  mesh = new THREE.Mesh(geometry, material);
+  mesh1 = new THREE.Mesh(geometry1, material1);
+
+  mesh.castShadow = true;
+  mesh1.castShadow = true;
+
+  group.add(mesh, mesh1);
+  // outlinePass.selectedObjects = [group];
+
+  composer.addPass(outlinePass);
+
+  mesh.position.set(-4, 1, 0);
+  mesh1.position.set(4, 1, 0);
+
+  scene.add(group);
+}
+
+let step = 0;
+function render() {
+  step += 0.04;
+  group.position.x = 1 + (10 * Math.cos(step));
+  group.position.y = -1 + (10 * Math.abs(Math.sin(step)));
+  composer.render();
+  requestAnimationFrame(render);
+}
+
+init();
+render();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+</html>

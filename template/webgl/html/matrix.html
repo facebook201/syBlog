@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>webgl</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background-color: #000;
+    }
+    html {
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+</body>
+<!-- <script src="https://webgl2fundamentals.org/webgl/resources/webgl-utils.js"></script> -->
+<script type="module">
+import { initShader } from "../utils.js";
+
+// 顶点
+const VertexShader = `
+  attribute vec4 a_position;
+  uniform mat4 u_Matrix;
+  void main() {
+    gl_Position = u_Matrix * a_position;
+  }
+`;
+
+const FragmentShader = `
+  precision mediump float;
+  void main() {
+    gl_FragColor = vec4(0.1, 0.5, 0.9, 1.0);
+  }
+`;
+
+const canvas = document.getElementById('canvas');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+const gl = canvas.getContext('webgl');
+
+const program = initShader(gl, VertexShader, FragmentShader);
+
+function main() {
+  const n = initVertexBuffers(gl);
+
+  // 90°
+  const radian = Math.PI / 2;
+  const conB = Math.cos(radian), sinB = Math.sin(radian);
+  const matrix = new Float32Array([
+    conB, sinB, 0.0, 0.0,
+    -sinB, conB, 0.0, 0.0,
+    0.0, 0.0, 1.0, 0.0,
+    0.0, 0.0, 0.0, 1.0,
+  ]);
+
+  const u_Matrix = gl.getUniformLocation(program, 'u_Matrix');
+  gl.uniformMatrix4fv(u_Matrix, false, matrix);
+
+  gl.clearColor(0.4, 0.6, 0.7, 1.0);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+}
+
+main();
+
+// 创建缓冲区对象
+function initVertexBuffers(gl) {
+  const vertices = new Float32Array([
+    0.0, 0.5,
+    -0.5, -0.5,
+    0.5, -0.5
+  ]);
+
+  // 创建缓冲区对象
+  const vertexBuffer = gl.createBuffer();
+  // 绑定目标
+  gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+  // 写入输入到缓冲区
+  gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+  // 访问位置
+  const a_Position = gl.getAttribLocation(program, 'a_position');
+  // 将缓冲区对象分配给 position 变量
+  gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 0, 0);
+  // 开启 attribute 变量
+  gl.enableVertexAttribArray(a_Position);
+  return 3;
+}
+</script>
+</html>

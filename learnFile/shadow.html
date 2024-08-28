@@ -57,10 +57,7 @@ function init() {
   camera.position.set(0, 200, 0);
   // 相机观察目标
   camera.lookAt(0, 0, 0);
-  // const texture = new THREE.TextureLoader().load('./image/mm.jpg');
-  // texture.wrapS = THREE.RepeatWrapping;
-  // texture.wrapT = THREE.RepeatWrapping;
-  // texture.repeat.set(6, 6);
+
 
   // 创建一个材质对象
   const material = new THREE.MeshStandardMaterial({
@@ -105,29 +102,36 @@ function initLight() {
   // 光源
   light = new THREE.DirectionalLight(0xffffff, 1);
   light.castShadow = true;
-  light.decay = 0.0;
+  // light.decay = 0.0;
   light.position.set(100, 100, 100);
   // 渲染质量
   light.shadow.mapSize.set(1024, 1024);
   light.shadow.radius = 4;
-  console.log(light.shadow.radius);
-  // console.log(light.shadow.mapSize);
   scene.add(light);
 
   // 设置三维场景计算阴影的范围
-  light.shadow.camera.top = 200;
-  light.shadow.camera.bottom = -200;
-  light.shadow.camera.left = -200;
-  light.shadow.camera.right = 200;
-  light.shadow.camera.near = 0.5;
-  light.shadow.camera.far = 500;
+  // light.shadow.camera.top = 200;
+  // light.shadow.camera.bottom = -200;
+  // light.shadow.camera.left = -200;
+  // light.shadow.camera.right = 200;
+  // light.shadow.camera.near = 0.5;
+  // light.shadow.camera.far = 500;
 
-  const lightHelper = new THREE.DirectionalLightHelper(light, 1);
+  light.shadow.camera.top = 100;
+  light.shadow.camera.bottom = -10;
+  light.shadow.camera.left = -100;
+  light.shadow.camera.right = 100;
+  light.shadow.camera.near = 0.5;
+  light.shadow.camera.far = 400;
+
+  const lightHelper = new THREE.DirectionalLightHelper(light, 10);
   scene.add(lightHelper);
+
+  scene.add(new THREE.CameraHelper(light.shadow.camera));
 
   // 环境光没有特定的方向
   ambient = new THREE.AmbientLight(0xffffff, 1);
-  scene.add(ambient);
+  // scene.add(ambient);
 }
 
 function initRenderer() {
@@ -135,11 +139,10 @@ function initRenderer() {
   renderer = new THREE.WebGLRenderer({
     // antialias: true
   });
-  const composer = new EffectComposer(renderer);
-  const pixelRatio = renderer.getPixelRatio();
-  console.log(pixelRatio)
-  const smaaPass = new SMAAPass(obj.width * pixelRatio, obj.height * pixelRatio);
-  composer.addPass(smaaPass);
+  // const composer = new EffectComposer(renderer);
+  // const pixelRatio = renderer.getPixelRatio();
+  // const smaaPass = new SMAAPass(obj.width * pixelRatio, obj.height * pixelRatio);
+  // composer.addPass(smaaPass);
   // 4 允许阴影渲染
   renderer.shadowMap.enabled = true;
   renderer.setPixelRatio(window.devicePixelRatio);
@@ -189,8 +192,6 @@ function initGUI() {
   shadowFolder.add(cam, 'bottom', 0, 400).onChange(v => {
     cam.updateProjectionMatrix();
   });
-
-
   gui.open();
 }
 

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shader</title>
+  <style>
+    body{
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <div id="webgl"></div>
+</body>
+<!-- <script type="text/javascript" src="../learnFile/shader/spector.bundle.js"></script> -->
+<script type="importmap">
+  {
+    "imports": {
+      "three": "../../../build/three.module.js",
+      "three/addons/": "../../../examples/jsm/"
+    }
+  }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { Scene, PlaneGeometry, Vector3, TextureLoader } from 'three';
+import {
+			initRenderer,
+			initCamera,
+			initDefaultLighting,
+		} from "./utils.js";
+    import { Water } from 'three/addons/objects/Water.js';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+let w = window.innerWidth;
+let h = window.innerHeight;
+
+let camera, scene, renderer, group, light, mesh, water;
+
+function init() {
+  renderer = initRenderer();
+  camera = initCamera();
+
+  scene = new Scene();
+
+
+  initDefaultLighting(scene);
+
+
+  const cont = new OrbitControls(camera, renderer.domElement);
+  initWater();
+}
+
+init();
+
+function initWater() {
+  const waterGeometry = new PlaneGeometry(10000, 10000);
+  water = new Water(waterGeometry, {
+    textureWidth: 512,
+    textureHeight: 512,
+    waterNormals: new TextureLoader().load('./img/waternormals.jpg', function (texture) {
+      texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+    }),
+    alpha: 1.0,
+    sunDirection: new Vector3(),
+    sunColor: 0xffffff,
+    side: THREE.DoubleSide,
+    distortionScale: 3.7,
+    waterColor: 0x001e0f,
+    fog: scene.fog !== undefined
+  });
+
+  scene.add(water);
+  water.rotation.x = - Math.PI / 2;
+}
+
+function animate() {
+  requestAnimationFrame(animate);
+  water.material.uniforms.time.value += 1.0 / 60.0;
+  // water.position.y = Math.sin(Date.now() * 0.005) * 0.5;
+  renderer.render(scene, camera);
+}
+
+animate();
+
+</script>
+</html>

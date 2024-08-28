@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>webgl</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background-color: #000;
+    }
+    html {
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+</body>
+<script type="module">
+import { initShader, getMousePosInWebgl } from "../utils.js";
+import Matrix4 from '../M4.js';
+
+// 顶点
+const VertexShader = `
+  attribute vec4 a_Position;
+  attribute vec4 a_Color;
+  uniform mat4 u_VMatrix;
+  uniform mat4 u_PMatrix;
+  varying vec4 v_Color;
+  void main() {
+    gl_Position = u_PMatrix * u_VMatrix * a_Position;
+    v_Color = a_Color;
+  }
+`;
+
+const FragmentShader = `
+  precision mediump float;
+  varying vec4 v_Color;
+  void main() {
+    // float tanARadian = tan(120, 180);
+    // float vertexY = gl__FragCoord.x * tan(tanARadian) - gl_FragCoord.y;
+    // gl_FragColor = mix(vec4(0.0, 0.0, 0.0, 0.9), v_Color, smoothstep(0.1, 2.4, vertexY));
+    gl_FragColor = v_Color;
+  }
+`;
+
+const canvas = document.getElementById('canvas');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+const gl = canvas.getContext('webgl');
+
+initShader(gl, VertexShader, FragmentShader);
+
+function main() {
+  const n = initVertexBuffers();
+  
+  gl.clearColor(0.6, 0.6, 0.7, 1.0);
+  gl.clear(gl.COLOR_BUFFER_BIT);
+
+  const u_PMatrix = gl.getUniformLocation(gl.program, 'u_PMatrix');
+  const u_VMatrix = gl.getUniformLocation(gl.program, 'u_VMatrix');
+  // const u_ModelMatrix = gl.getUniformLocation(gl.program, 'u_ModelMatrix');
+
+  // const modelMatrix = new Matrix4();
+  const viewMatrix = new Matrix4();
+  const projMatrix = new Matrix4();
+
+  // modelMatrix.translate(0.75, 0, 0);
+  viewMatrix.setLookAt(0, 0, 5, 0, 0,-100, 0, 1, 0);
+  projMatrix.setPerspective(30, canvas.width / canvas.height, 1, 100);
+
+  gl.uniformMatrix4fv(u_VMatrix, false, viewMatrix.elements);
+  gl.uniformMatrix4fv(u_PMatrix, false, projMatrix.elements);
+
+  gl.clear(gl.COLOR_BUFFER_BIT);
+  gl.enable(GLUT_MULTISAMPLE);
+  gl.enable(gl.DEPTH_TEST);
+  gl.clear(gl.DEPTH_BUFFER_BIT);
+  gl.drawArrays(gl.TRIANGLES,0,n);
+}
+
+// 创建缓冲区对象
+function initVertexBuffers() {
+  const vertices = new Float32Array([
+    // 右侧三角形
+    0.75, 1.0, 0.0, 0.4, 1.0, 0.4,
+    0.25, -1.0, 0.0, 0.4, 0.4, 1.0,
+    1.25, -1.0, 0.0, 1.0, 0.4, 0.4,
+
+    0.75, 1.0, -2.0, 1.0, 1.0, 0.4,
+    0.25, -1.0, -2.0, 1.0, 1.0, 0.4,
+    1.25, -1.0, -2.0, 1.0, 0.4, 0.4,
+
+    0.75, 1.0, -4.0, 0.4, 1.0, 0.4,
+    0.25, -1.0, -4.0, 0.4, 1.0, 0.4,
+    1.25, -1.0, -4.0, 1.0, 0.4, 0.4,
+
+
+    -0.75, 1.0, -4.0, 0.4, 1.0, 0.4,
+    -1.25, -1.0, -4.0, 0.4, 1.0, 0.4,
+    -0.25, -1.0, -4.0, 1.0, 0.4, 0.4,
+
+    -0.75, 1.0, -2.0, 1.0, 1.0, 0.4,
+    -1.25, -1.0, -2.0, 1.0, 1.0, 0.4,
+    -0.25, -1.0, -2.0, 1.0, 0.4, 0.4,
+
+    -0.75, 1.0, 0.0, 0.4, 0.4, 1.0,
+    -1.25, -1.0, 0.0, 0.4, 0.4, 1.0,
+    -0.25, -1.0, 0.0, 1.0, 0.4, 0.4,
+  ]);
+
+  // 创建缓冲区
+  const vertexBuffer = gl.createBuffer();
+
+  const FSIZE = vertices.BYTES_PER_ELEMENT;
+
+  // 绑定缓冲区 将数据写入缓冲区
+  gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+
+  const a_Position = gl.getAttribLocation(gl.program, 'a_Position');
+  gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, FSIZE * 6, 0);
+  // 开启变量
+  gl.enableVertexAttribArray(a_Position);
+
+  const a_Color = gl.getAttribLocation(gl.program, 'a_Color');
+  gl.vertexAttribPointer(a_Color, 3, gl.FLOAT, false, FSIZE * 6, FSIZE * 3);
+  gl.enableVertexAttribArray(a_Color);
+
+  return 18;
+}
+
+main();
+</script>
+</html>

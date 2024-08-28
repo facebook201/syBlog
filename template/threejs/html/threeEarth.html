@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Shader</title>
+		<style>
+			body {
+				margin: 0;
+				padding: 0;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="webgl"></div>
+	</body>
+	<!-- <script type="text/javascript" src="../learnFile/shader/spector.bundle.js"></script> -->
+	<script type="importmap">
+		{
+			"imports": {
+				"three": "../../../build/three.module.js",
+				"three/addons/": "../../../examples/jsm/"
+			}
+		}
+	</script>
+	<script src="https://cdn.bootcdn.net/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+	<script type="module">
+		import * as THREE from "three";
+		import {
+			initRenderer,
+			initCamera,
+			addHouseAndTree,
+			initDefaultLighting,
+		} from "./utils.js";
+		import data from './data.js';
+		import { flyArc } from './fly.js';
+		import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+		import { GUI } from "three/addons/libs/lil-gui.module.min.js";
+
+		let w = window.innerWidth;
+		let h = window.innerHeight;
+
+		// 地球
+		let renderer,
+			camera,
+			scene,
+			stats,
+			controls,
+			earthCube,
+			earthGroup,
+			group,
+      rotationList = [],
+      l2,
+			l3,
+      ball,
+			flyGroup,
+			radius = 10;
+
+		function init() {
+			// 摄像机 渲染器 场景
+			renderer = initRenderer({
+				antialias: true,
+			});
+			camera = initCamera();
+			camera.position.set(0, 30, 50);
+
+			scene = new THREE.Scene();
+			scene.background = new THREE.Color(0x020924);
+			scene.fog = new THREE.Fog(0x020924, 200, 1000);
+
+			window.screen = scene;
+
+      const axe = new THREE.AxesHelper(200);
+
+			group = new THREE.Group();
+			earthGroup = new THREE.Group();
+			group.scale.set(0,0,0);
+			scene.add(group);
+
+			initControls();
+			initLight();
+			renderStar();
+			renderEarth();
+			renderLine();
+			// 飞线
+			createFlyLine();
+		}
+
+		function createFlyLine() {
+			// 飞线
+			flyGroup = new THREE.Group();
+			flyGroup.userData['flyLineArray'] = []
+			earthGroup.add(flyGroup);
+
+			data.forEach((cities) => {
+				cities.endArray.forEach(item => {
+					// 调用函数flyArc绘制球面上任意两点之间飞线圆弧轨迹
+					const arcline = flyArc(
+						radius,
+						cities.startArray.E,
+						cities.startArray.N,
+						item.E,
+						item.N,
+						{
+							color: 0xf3ae76, // 飞线的颜色
+							flyLineColor: 0xff7714, // 飞行线的颜色
+							speed: 0.01, // 拖尾飞线的速度
+						}
+					);
+					flyGroup.add(arcline); // 飞线插入flyArcGroup中
+					flyGroup.userData['flyLineArray'].push(arcline.userData['flyLine'])
+				});
+			})
+		};
+
+
+		function renderLine() {
+			const list = getCirclePoints({
+				radius: radius + 3,
+				number: 150, //切割数
+				closed: true, // 闭合
+			});
+
+			const mat = new THREE.MeshBasicMaterial({
+				color: "#0c3172",
+				transparent: true,
+				opacity: 0.4,
+				side: THREE.DoubleSide,
+			});
+
+			const line = createAnimateLine({
+				pointList: list,
+				material: mat,
+				number: 100,
+				radius: 0.1,
+			});
+
+      l2 = line.clone();
+      l2.scale.set(1.2, 1.2, 1.2);
+      // l2.rotateZ(-Math.PI / 4);
+
+			l3 = line.clone();
+      l3.scale.set(1.5, 1.5, 1.5);
+			l3.rotateZ(Math.PI / 4);
+      group.add(l3);
+
+      group.add(l2);
+
+      // 轨道上的球
+      const ball = new THREE.Mesh(
+        new THREE.SphereGeometry(0.5, 32, 32),
+        new THREE.MeshBasicMaterial({ color: "#628fbb" })
+      );
+
+			const ball1 = new THREE.Mesh(
+        new THREE.SphereGeometry(0.5, 32, 32),
+        new THREE.MeshBasicMaterial({ color: "#806bdf" })
+      );
+
+      const ball01 = ball.clone();
+
+      ball01.position.set(0, 0, 13);
+			ball1.position.set(0, 0, 13);
+			l3.add(ball1);
+      l2.add(ball01);
+			
+			const axe = new THREE.AxesHelper(200);
+      // l2.add(axe);
+      // l3.add(axe);
+
+
+      rotationList.push(l2);
+		}
+
+		// 获取点
+		const getCirclePoints = (option) => {
+			const list = [];
+			for (
+				let j = 0;
+				j < 2 * Math.PI - 0.1;
+				j += (2 * Math.PI) / (option.number || 100)
+			) {
+				list.push([
+					parseFloat((Math.cos(j) * (option.radius || 10)).toFixed(2)),
+					0,
+					parseFloat((Math.sin(j) * (option.radius || 10)).toFixed(2)),
+				]);
+			}
+			if (option.closed) list.push(list[0]);
+			return list;
+		};
+
+		function createAnimateLine(option) {
+			const line = [];
+			option.pointList.forEach((e) => {
+				line.push(new THREE.Vector3(e[0], e[1], e[2]));
+			});
+			// 曲线路径
+			const curve = new THREE.CatmullRomCurve3(line);
+
+			const tubeGeometry = new THREE.TubeGeometry(
+				curve,
+				100,
+				0.03,
+			);
+			return new THREE.Mesh(tubeGeometry, option.material);
+		}
+
+		// 灯光
+		function initLight() {
+			initDefaultLighting(scene);
+			const ambientLight = new THREE.AmbientLight(0xcccccc, 1.1);
+			scene.add(ambientLight);
+		}
+
+		// 用户交互行为
+		function initControls() {
+			controls = new OrbitControls(camera, renderer.domElement);
+			controls.enableDamping = true;
+			controls.enableZoom = true;
+			controls.autoRotate = false;
+			controls.autoRotateSpeed = 2;
+			controls.enablePan = true;
+		}
+
+		// 渲染星星
+		function renderStar() {
+			const positions = [];
+			const colors = [];
+			const geometry = new THREE.BufferGeometry();
+			for (var i = 0; i < 5000; i++) {
+				var vertex = new THREE.Vector3();
+				vertex.x = Math.random() * 2 - 1;
+				vertex.y = Math.random() * 2 - 1;
+				vertex.z = Math.random() * 2 - 1;
+				positions.push(vertex.x, vertex.y, vertex.z);
+				var color = new THREE.Color();
+				color.setHSL(
+					Math.random() * 0.2 + 0.5,
+					0.55,
+					Math.random() * 0.25 + 0.55
+				);
+				colors.push(color.r, color.g, color.b);
+			}
+			geometry.setAttribute(
+				"position",
+				new THREE.Float32BufferAttribute(positions, 3)
+			);
+			geometry.setAttribute(
+				"color",
+				new THREE.Float32BufferAttribute(colors, 3)
+			);
+
+			const texLoader = new THREE.TextureLoader();
+			// .load()方法加载图像，返回一个纹理对象Texture
+			const texture = texLoader.load("./img/gradient.png");
+
+			const starsMaterial = new THREE.PointsMaterial({
+				map: texture,
+				size: 1,
+				transparent: true,
+				opacity: 1,
+				vertexColors: true, //true：且该几何体的colors属性有值，则该粒子会舍弃第一个属性--color，而应用该几何体的colors属性的颜色
+				blending: THREE.AdditiveBlending,
+				sizeAttenuation: true,
+			});
+			const points = new THREE.Points(geometry, starsMaterial);
+			points.scale.set(300, 300, 300);
+			scene.add(points);
+		}
+
+		// 加载地图
+		function renderEarth() {
+			const texLoader = new THREE.TextureLoader();
+			// .load()方法加载图像，返回一个纹理对象Texture
+			const texture = texLoader.load("./img/earth.jpg");
+			const geometry = new THREE.SphereGeometry(radius, 60, 60);
+			const material = new THREE.MeshBasicMaterial({ map: texture });
+
+			const earth_border = new THREE.SphereGeometry(
+				radius + 4,
+				50,
+				50
+			);
+			const pointMaterial = new THREE.PointsMaterial({
+				color: 0x81ffff, //设置颜色，默认 0xFFFFFF
+				transparent: true,
+				sizeAttenuation: true,
+				opacity: 0.1,
+				vertexColors: false, //定义材料是否使用顶点颜色，默认false ---如果该选项设置为true，则color属性失效
+				size: 0.01, //定义粒子的大小。默认为1.0
+			})
+			const points = new THREE.Points(earth_border, pointMaterial); //将模型添加到场景
+
+			earthCube = new THREE.Mesh(geometry, material);
+			earthGroup.add(earthCube);
+			group.add(points);
+			group.add(earthGroup);
+			renderAperture();
+		}
+
+		// 大气层
+		function renderAperture() {
+			const texLoader = new THREE.TextureLoader();
+			const texture = texLoader.load("./img/glow.png");
+			const spriteMaterial = new THREE.SpriteMaterial({
+				map: texture,
+				transparent: true,
+				opacity: 0.5,
+				depthWrite: false,
+			});
+			var sprite = new THREE.Sprite(spriteMaterial);
+			sprite.scale.set(radius * 3, radius * 3, 1);
+			group.add(sprite);
+		}
+
+		// 渐变色圆柱体
+		function renderGradient(color, height) {
+			let bottom = [];
+			let top = [];
+			let angleOffset = (Math.PI * 2) / 64;
+
+			for (let i = 0; i < 64; i++) {
+				const x = Math.cos(angleOffset * i) * radius * 3;
+				const z = Math.sin(angleOffset * i) * radius * 3;
+				bottom.push(x, 0, z);
+				top.push(x, height, z);
+			}
+
+			bottom = bottom.concat(top);
+
+			let face = [];
+
+			for (let i = 0; i < 64; i++) {
+				if (i != 63) {
+					face.push(i + 64 + 1, i, i + 64);
+					face.push(i, i + 65, i + 1);
+				} else {
+					face.push(64, i, i + 64);
+					face.push(i, 64, 0);
+				}
+			}
+
+			const geometry = new THREE.BufferGeometry();
+			geometry.setAttribute(
+				"position",
+				new THREE.Float32BufferAttribute(bottom, 3)
+			);
+			// geometry.setIndex(new THREE.Float32BufferAttribute(face, 1));
+
+			const c = new THREE.Color(color);
+
+			const mat = new THREE.ShaderMaterial({
+				uniforms: {
+					targetColor: { value: new THREE.Vector3(c.r, c.g, c.b) },
+				},
+				// side: DoubleSide,
+				transparent: true,
+				depthWrite: false,
+				vertexShader: `
+          varying vec3 modelPos;
+          void main() {
+            modelPos = position;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `,
+				fragmentShader: `
+          uniform vec3 targetColor;
+          // varying vec3 modelPos;
+          void main() {
+            gl_FragColor = vec4(targetColor, 1.0);
+          }
+        `,
+			});
+
+			const mesh = new THREE.Mesh(geometry, mat);
+			mesh.renderOrder = 9999;
+			group.add(mesh);
+		}
+
+		// 光圈
+		function cyclePlane() {
+			const g = new THREE.RingGeometry(12, 15, 200);
+			const c = new THREE.Color(0x00ffcc);
+
+			const m = new THREE.ShaderMaterial({
+				uniforms: {
+					Color: { value: new THREE.Vector3(c.r, c.g, c.b) },
+				},
+				side: THREE.DoubleSide,
+				transparent: true,
+				opacity: 0.5,
+				depthWrite: false,
+				vertexShader: `
+          varying vec3 modelPos;
+          void main() {
+            modelPos = position;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `,
+				fragmentShader: `
+          varying vec3 modelPos;
+          void main() {
+            // float color = step(modelPos.x, 0.5);
+            gl_FragColor = vec4(vec3(color), 1.0);
+          }
+        `,
+			});
+			const mesh = new THREE.Mesh(g, m);
+			mesh.renderOrder = 9999;
+			group.add(mesh);
+		}
+
+    const createWaveMesh = ({ radius, lon, lat, textures }) => {
+      const geometry = new THREE.PlaneBufferGeometry(1, 1); //默认在XOY平面上
+      const texLoader = new THREE.TextureLoader();
+			// .load()方法加载图像，返回一个纹理对象Texture
+			const texture = texLoader.load("./img/redCircle.png");
+
+      const material = new THREE.MeshBasicMaterial({
+        color: 0xe99f68,
+        map: texture,
+        transparent: true, //使用背景透明的png贴图，注意开启透明计算
+        opacity: 1.0,
+        depthWrite: false, //禁止写入深度缓冲区数据
+      });
+
+      const mesh = new THREE.Mesh(geometry, material);
+      // 经纬度转球面坐标
+      // console.log(lon, lat)
+      const coord = THREE.lon2xyz(radius * 1.001, options.lon, options.lat);
+      const size = options.radius * 0.12; //矩形平面Mesh的尺寸
+      mesh.scale.set(size, size, size); //设置mesh大小
+      mesh.userData['size'] = size; //自顶一个属性，表示mesh静态大小
+      mesh.userData['scale'] = Math.random() * 1.0; //自定义属性._s表示mesh在原始大小基础上放大倍数  光圈在原来mesh.size基础上1~2倍之间变化
+      mesh.position.set(coord.x, coord.y, coord.z);
+      const coordVec3 = new THREE.Vector3(coord.x, coord.y, coord.z).normalize();
+      const meshNormal = new THREE.Vector3(0, 0, 1);
+      mesh.quaternion.setFromUnitVectors(meshNormal, coordVec3);
+      return mesh;
+    }
+
+		/**
+		 * 窗口变动
+		 **/
+		function onWindowResize() {
+			camera.aspect = innerWidth / innerHeight;
+			camera.updateProjectionMatrix();
+			renderer.setSize(innerWidth, innerHeight);
+			renders();
+		}
+
+		/**
+		 * @description 渲染
+		 */
+		function renders() {
+			renderer.clear();
+      earthGroup.rotation.y += 0.001;
+			flyGroup?.userData['flyLineArray']?.forEach(fly => {
+				fly.rotation.z += 0.004; // 调节飞线速度
+				if (fly.rotation.z >= fly.flyEndAngle) fly.rotation.z = 0;
+			})
+			// rotation 按照局部轴旋转 欧拉角
+			// rotateX 按照自身（本地空间）去旋转
+			l2.rotateY(-0.005);
+			l3.rotateY(0.005);
+			renderer.render(scene, camera);
+      requestAnimationFrame(renders);
+		}
+
+		/**
+		 * 更新
+		 **/
+		window.onload = () => {
+			init();
+			renders();
+			// 补间动画
+			gsap.to(group.scale, {
+				x: 1,
+				y: 1,
+				z: 1,
+				duration: 2,
+				ease: "Quadratic",
+			});
+		};
+	</script>
+</html>

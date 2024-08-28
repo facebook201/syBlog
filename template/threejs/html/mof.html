@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shader</title>
+  <style>
+    body{
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <div id="webgl"></div>
+</body>
+<!-- <script type="text/javascript" src="../learnFile/shader/spector.bundle.js"></script> -->
+<script type="importmap">
+  {
+    "imports": {
+      "three": "../../../build/three.module.js",
+      "three/addons/": "../../../examples/jsm/"
+    }
+  }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { initRenderer, initCamera, initStats, addHouseAndTree } from './utils.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+
+let w = window.innerWidth;
+let h = window.innerHeight;
+
+let renderer, camera, scene, stats;
+
+function init() {
+  renderer = initRenderer();
+  renderer.setClearColor(0xe6ffff, 1);
+  camera = initCamera();
+  camera.lookAt(0, 0, 0);
+
+  scene = new THREE.Scene();
+
+  const axes = new THREE.AxesHelper(20);
+  // scene.add(axes);
+
+  const cont = new OrbitControls(camera, renderer.domElement);
+  cont.update();
+
+  const group = new THREE.Mesh();
+
+  const g = new THREE.BoxGeometry(10, 10, 10);
+  var mats = [];
+  mats.push(new THREE.MeshBasicMaterial({
+    color: 0x009e60
+  }));
+  mats.push(new THREE.MeshBasicMaterial({
+    color: 0x0051ba
+  }));
+
+  mats.push(new THREE.MeshBasicMaterial({
+    color: 0xffd500
+  }));
+
+  mats.push(new THREE.MeshBasicMaterial({
+    color: 0xff5800
+  }));
+
+  mats.push(new THREE.MeshBasicMaterial({
+    color: 0xC41E3A
+  }));
+
+  mats.push(new THREE.MeshBasicMaterial({
+    color: 0xffffff
+  }));
+
+
+  for (var x = 0; x < 3; x++) {
+    for (var y = 0; y < 3; y++) {
+      for (var z = 0; z < 3; z++) {
+        var cubeGeom = new THREE.BoxGeometry(2.9, 2.9, 2.9);
+        var cube = new THREE.Mesh(cubeGeom, mats);
+        cube.position.set(x * 3 - 3, y * 3 - 3, z * 3 - 3);
+        group.add(cube);
+      }
+    }
+  }
+
+  group.scale.copy(new THREE.Vector3(2,2,2))
+  scene.add(group);
+
+  const gui = new GUI();
+  const cubeFolder = gui.addFolder('cube');
+  cubeFolder.add(cube.rotation, 'x', 0, Math.PI * 2);
+  cubeFolder.add(cube.rotation, 'y', 0, Math.PI * 2);
+
+  let step = 0;
+  const controls = {
+    rotationSpeed: 0.02
+  }
+
+  function render() {
+    group.rotation.y = step += controls.rotationSpeed;
+    group.rotation.z = step -= controls.rotationSpeed;
+    group.rotation.x = step += controls.rotationSpeed
+
+    renderer.render(scene, camera);
+    requestAnimationFrame(render);
+  }
+  render();
+}
+
+init();
+
+
+
+</script>
+</html>

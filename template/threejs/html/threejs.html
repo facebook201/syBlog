@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shader</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="webgl"></div>
+</body>
+<script type="importmap">
+  {
+    "imports": {
+      "three": "../../../build/three.module.js",
+      "three/addons/": "../../../examples/jsm/"
+    }
+  }
+</script>
+<script type="module">
+  import * as THREE from 'three';
+  import { initRenderer, initCamera, initDefaultLighting, addGroundPlane, applyMeshNormalMaterial, redrawGeometryAndUpdateUI } from './utils.js';
+  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+  import { FontLoader } from 'three/addons/loaders/FontLoader.js';
+  import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+
+  let w = window.innerWidth;
+  let h = window.innerHeight;
+
+  let renderer, camera, scene, stats, mesh;
+  // 阴影 
+  function init() {
+    renderer = initRenderer();
+    // renderer.setClearColor(0xe6ffff, 1);
+    camera = initCamera();
+
+    scene = new THREE.Scene();
+    initDefaultLighting(scene);
+    var groundPlane = addGroundPlane(scene)
+    groundPlane.position.y = -20;
+
+    const axes = new THREE.AxesHelper(10000);
+    // scene.add(axes);
+
+    const cont = new OrbitControls(camera, renderer.domElement);
+    cont.update();
+
+    const gui = new GUI();
+
+    const font1 = new FontLoader();
+    font1.load("./helvetiker_bold.typeface.json", function (response) {
+      const material = new THREE.MeshNormalMaterial();
+      const text = new TextGeometry("Three.js", {
+        font: response,
+        size: 90,
+        depth: 10,
+        weight: 10,
+        bevelThickness: 10,
+        bevelSize: 0.5,
+        bevelSegments: 3,
+        bevelEnabled: true,
+        curveSegments: 3,
+        steps: 1,
+      });
+
+      text.scale(0.05, 0.05, 0.05);
+      mesh = new THREE.Mesh(text, material);
+      mesh.castShadow = true;
+      mesh.position.x = -10;
+
+      scene.add(mesh);
+      render();
+    });
+
+    let step = 0;
+    const controls = {
+      rotationSpeed: 0.02
+    }
+    function render() {
+      mesh.rotation.y = step += 0.005;
+      mesh.rotation.z = step;
+      mesh.rotation.x = step;
+
+      renderer.render(scene, camera);
+      requestAnimationFrame(render);
+    }
+    // render();
+  }
+
+  init();
+</script>
+
+</html>

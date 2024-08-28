@@ -6,23 +6,56 @@
   <title>Shader</title>
   <style>
     body{
-      margin: 0;
+      margin: 3;
       padding: 0;
       overflow: hidden;
+    }
+    section {
+      padding: 0 50px;
     }
   </style>
 </head>
 <body>
-  <div id="webgl"></div>
+  <div>
+    <section>
+      <h1>三维立体</h1>
+      <a href="./template/html/3d.html">3D旋转变色</a>
+    </section>
+    <section>
+      <h1>Shader</h1>
+      <h1><a href="./template/html/toy.html">shadertoy 转 threejs shader 案例</a></h1>
+      <ul>
+        <li><a href="./template/html/shaderlz.html">3D粒子</a></li>
+        <li><a href="./template/html/shaderm.html">3D粒子波动</a></li>
+        <li><a href="./template/html/shaderyd.html">雨滴Shader</a></li>
+      </ul>
+    </section>
+
+    <section>
+      <h1>WebGL</h1>
+      <ul>
+        <!-- <li><a href="./template/html/webgl.html">WebGL</a></li> -->
+      </ul>
+    </section>
+
+    <section>
+      <h1>GlSL shader</h1>
+      <ul>
+        <li><a href="./template/html/glsl/grid.html">画圆</a></li>
+      </ul>
+    </section>
+
+    <section>
+      <h1>Three 开发指南</h1>
+      <ul>
+        <li><a href="./template/threejs/html/index.html">跳跳球</a></li>
+        <li><a href="./template/threejs/html/index2.html">随机生成几何体</a></li>
+        <li><a href="./template/threejs/html/light.html">光源</a></li>
+        <li><a href="./template/threejs/html/mof.html">魔方</a></li>
+        <li><a href="./template/threejs/html/threejs.html">Threejs 字体</a></li>
+        <li><a href="./template/threejs/html/threeEarth.html">地球</a></li>
+      </ul>
+    </section>
+  </div>
 </body>
-<script type="text/javascript" src="./learnFile/shader/spector.bundle.js"></script>
-<script type="importmap">
-  {
-    "imports": {
-      "three": "./build/three.module.js",
-      "three/addons/": "./examples/jsm/"
-    }
-  }
-</script>
-<script src="./learnFile/shader/shaderm.js" type="module"></script>
 </html>
