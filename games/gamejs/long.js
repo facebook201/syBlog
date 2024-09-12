@@ -287,9 +287,11 @@ function restartGame() {
 
 function respawnPterodactyl() {
   nextPterodactylResetTime = clock.elapsedTime + PTERODACTYL_SPAWN_INTERVAL;
-  pterodactyl.position.x = PTERODACTYL_SPAWN_X;
-  // 飞龙
-  pterodactyl.position.y = randomFloat(PTERODACTYL_MIN_Y, PTERODACTYL_MAX_Y);
+  if (pterodactyl) {
+    pterodactyl.position.x = PTERODACTYL_SPAWN_X;
+    // 飞龙
+    pterodactyl.position.y = randomFloat(PTERODACTYL_MIN_Y, PTERODACTYL_MAX_Y);
+  }
 }
 
 function update(delta) {
