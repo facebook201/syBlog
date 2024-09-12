@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Babylonjs --- 01</title>
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+    #webgl {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="webgl"></canvas>
+  <script src="https://cdn.cnbabylon.com/babylon.js"></script>
+<script>
+
+const webgl = document.getElementById('webgl');
+
+// 初始化 引擎
+const engine = new BABYLON.Engine(webgl, true);
+
+const scene = new BABYLON.Scene(engine);
+
+scene.createDefaultCamera(true, true, true);
+
+// 创建光源
+scene.createDefaultLight();
+
+// 创建默认环境
+scene.createDefaultEnvironment();
+
+const box = BABYLON.MeshBuilder.CreateBox('box', {size: 0.3}, scene);
+box.position.y = 0.05;
+
+const cylinder = BABYLON.MeshBuilder.CreateCylinder('cylinder', {
+  height: 0.3,
+  diameter: 0.1
+}, scene);
+
+cylinder.position.y = -0.05;
+cylinder.position.x = 0.05;
+
+
+engine.runRenderLoop(() => {
+  scene.render();
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>飞线</title>
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+    }
+    #webgl {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div id="webgl"></div>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "../../../build/three.module.js",
+        "three/addons/": "../../../examples/jsm/"
+      }
+    }
+  </script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { initRenderer, initCamera, initStats, initDefaultLighting } from './utils.js';
+
+let w = window.innerWidth;
+let h = window.innerHeight;
+
+let camera, scene, renderer, group, lineGroup;
+
+function init() {
+	renderer = initRenderer({ antialias: true });
+	camera = initCamera();
+	scene = new THREE.Scene();
+
+  initDefaultLighting(scene);
+
+	group = new THREE.Group();
+  lineGroup = new THREE.Group();
+
+  const axis = new THREE.AxesHelper(10);
+  scene.add(axis);
+
+  scene.add(lineGroup);
+
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.target.set(0, 0, 0);
+  controls.update();
+  // addHouseAndTree(scene);
+
+  createLine();
+}
+
+function createLine() {
+  const curve = new THREE.QuadraticBezierCurve3(
+    new THREE.Vector3(5, 5, 0),
+    new THREE.Vector3(-0.5, 1, 1),
+    new THREE.Vector3(0, 0, 5)
+  );
+
+  const points = curve.getPoints(50);
+
+  const geometry = new THREE.BufferGeometry();
+  const dotted = [];
+  points.forEach(p => {
+    dotted.push(p.x, p.y, p.z);
+  });
+
+  geometry.setAttribute("position", new THREE.Float32BufferAttribute(dotted, 3));
+
+  const material = new THREE.LineBasicMaterial({ color: 0xff0000 });
+  const obj = new THREE.Line(geometry, material);
+
+  lineGroup.add(obj);
+
+  const ball = new THREE.Mesh(
+    new THREE.SphereGeometry(1, 32, 32),
+    new THREE.MeshBasicMaterial({ color: 0xffa500 })
+  );
+  ball.position.copy(0, 5, 0);
+  lineGroup.add(ball);
+}
+
+function render() {
+  renderer.render(scene, camera);
+  requestAnimationFrame(render);
+}
+init();
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shader</title>
+  <style>
+    body{
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <div id="webgl"></div>
+</body>
+<script type="importmap">
+  {
+    "imports": {
+      "three": "../../build/three.module.js",
+      "three/addons/": "../../examples/jsm/"
+    }
+  }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+let w = window.innerWidth;
+let h = window.innerHeight;
+
+let camera, scene, renderer;
+
+// shader
+const vertexShader = `
+  uniform vec3 uColor;
+  uniform float uTime;
+  uniform float uHeight;
+
+  varying float vOpacity; // 透明值
+  void main() {
+    // 顶点位置
+    vec3 vPosition = position * smoothstep(0.0, 1.0, abs(sin(uTime)));
+
+    // 底部不透明到透明值
+    vOpacity = mix(1., 0., position.y / uHeight);
+
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(vPosition, 1.0);
+  }
+`;
+
+
+const fragmentShader = `
+  uniform vec3 uColor; // 传进来的颜色
+  uniform float uOpacity; // 传进来的透明度
+  varying float vOpacity;
+
+  uniform vec3 uEndColor;
+  uniform float uTime;
+
+  void main() {
+    float pct = smoothstep(0.0, 1.0, abs(sin(uTime)));
+    vec3 color = mix(uColor, uEndColor, pct);
+    gl_FragColor = vec4(color, vOpacity);
+  }
+`;
+
+
+function init() {
+  camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 1000);
+  camera.position.set(0, 0, 10);
+  scene = new THREE.Scene();
+
+  // scene.background = new THREE.Color(0x000fff)
+  scene.add(new THREE.AxesHelper(100));
+
+  renderer = new THREE.WebGLRenderer({
+    antialias: true,
+  });
+  renderer.setSize(w, h);
+  renderer.setPixelRatio(window.devicePixelRatio);
+  document.getElementById('webgl').appendChild(renderer.domElement);
+
+  const controls = new OrbitControls(camera, renderer.domElement);
+  setPlane();
+}
+
+const uniforms = {
+    uHeight: { value: 4 },
+    uTime: { value: 0.5 },
+    uColor: { value: new THREE.Color(0xff66ff) },
+    uTime: { value: 1},
+    uEndColor: { value: new THREE.Color(0xff0000) },
+    uOpacity: { value: 0.6 },
+}
+
+function setPlane() {
+  const geometry = new THREE.CylinderGeometry(3, 3, 4, 32, 1, true);
+  geometry.translate(0, 2, 0);
+  const material = new THREE.ShaderMaterial({
+    vertexShader,
+    fragmentShader,
+    uniforms,
+    transparent: true,
+    depthTest: false,
+    depthWrite: false,
+    side: THREE.DoubleSide,
+  });
+  const cube = new THREE.Mesh(geometry, material);
+  cube.position.set(0,0,0);
+  scene.add(cube);
+}
+
+let time = 0;
+function render() {
+  time += 0.02;
+  uniforms.uTime.value = time;
+  renderer.render(scene, camera);
+  requestAnimationFrame(render);
+}
+
+init();
+render();
+
+</script>
+</html>

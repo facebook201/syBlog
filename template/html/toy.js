@@ -58,7 +58,7 @@ const fragmentShader = `
 `;
 
 
-function init() {
+export default function init() {
   camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 1000);
   camera.position.z = 1;
   scene = new THREE.Scene();
