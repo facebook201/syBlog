@@ -150,7 +150,7 @@ function load3DModels() {
     pterodactyl.scale.multiplyScalar(4);
 
     console.log(pterodactyl, gltf.scene);
-    respawnPterodactyl();
+    // respawnPterodactyl();
 
     scene.add(pterodactyl);
 
