@@ -149,10 +149,9 @@ function load3DModels() {
     pterodactyl.rotation.y = Math.PI / 2;
     pterodactyl.scale.multiplyScalar(4);
 
-    console.log(pterodactyl, gltf.scene);
-    // respawnPterodactyl();
+    respawnPterodactyl();
 
-    scene.add(pterodactyl);
+    // scene.add(pterodactyl);
 
     const mixer = new THREE.AnimationMixer(pterodactyl);
     const clip = THREE.AnimationClip.findByName(gltf.animations, "flying");
