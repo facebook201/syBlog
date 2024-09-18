@@ -126,7 +126,7 @@ function load3DModels() {
     function (gltf) {
       trex = gltf.scene;
 
-      trex.scale.setScalar(0.4);
+      trex.scale.setScalar(0.5 );
       trex.rotation.y = Math.PI / 2;
       trex.rotation.z = 0.1;
 
@@ -151,7 +151,7 @@ function load3DModels() {
 
     respawnPterodactyl();
 
-    // scene.add(pterodactyl);
+    scene.add(pterodactyl);
 
     const mixer = new THREE.AnimationMixer(pterodactyl);
     const clip = THREE.AnimationClip.findByName(gltf.animations, "flying");

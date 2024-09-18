@@ -21,14 +21,10 @@
 		</script>
 
 		<script type="module">
-
 			import * as THREE from 'three';
-
 			import Stats from 'three/addons/libs/stats.module.js';
-
 			import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 			import { HDRCubeTextureLoader } from 'three/addons/loaders/HDRCubeTextureLoader.js';
-
 			import { FlakesTexture } from 'three/addons/textures/FlakesTexture.js';
 
 			let container, stats;
@@ -55,7 +51,7 @@
 
 				new HDRCubeTextureLoader()
 					.setPath( 'textures/cube/pisaHDR/' )
-					.load( [ 'px.hdr', 'nx.hdr', 'py.hdr', 'ny.hdr', 'pz.hdr', 'nz.hdr' ],
+					.load([ 'px.hdr', 'nx.hdr', 'py.hdr', 'ny.hdr', 'pz.hdr', 'nz.hdr' ],
 						function ( texture ) {
 
 							const geometry = new THREE.SphereGeometry( .8, 64, 32 );
@@ -89,7 +85,7 @@
 							const clearcoatNormalMap = textureLoader.load( 'textures/pbr/Scratched_gold/Scratched_gold_01_1K_Normal.png' );
 
 							// car paint
-
+							// 蓝色
 							let material = new THREE.MeshPhysicalMaterial( {
 								clearcoat: 1.0,
 								clearcoatRoughness: 0.1,
@@ -106,7 +102,6 @@
 							group.add( mesh );
 
 							// fibers
-
 							material = new THREE.MeshPhysicalMaterial( {
 								roughness: 0.5,
 								clearcoat: 1.0,
@@ -117,20 +112,18 @@
 							mesh = new THREE.Mesh( geometry, material );
 							mesh.position.x = 1;
 							mesh.position.y = 1;
-							group.add( mesh );
+							group.add(mesh);
 
 							// golf
-
-							material = new THREE.MeshPhysicalMaterial( {
+							material = new THREE.MeshPhysicalMaterial({
 								metalness: 0.0,
 								roughness: 0.1,
 								clearcoat: 1.0,
 								normalMap: normalMap4,
-								clearcoatNormalMap: clearcoatNormalMap,
-
-								// y scale is negated to compensate for normal map handedness.
-								clearcoatNormalScale: new THREE.Vector2( 2.0, - 2.0 )
-							} );
+								normalScale: new THREE.Vector2(2.0, 2.0),
+								// clearcoatNormalMap: clearcoatNormalMap,
+								// clearcoatNormalScale: new THREE.Vector2( 2.0, - 2.0 )
+							});
 							mesh = new THREE.Mesh( geometry, material );
 							mesh.position.x = - 1;
 							mesh.position.y = - 1;
@@ -142,23 +135,20 @@
 								clearcoat: 1.0,
 								metalness: 1.0,
 								color: 0xff0000,
-								normalMap: normalMap2,
-								normalScale: new THREE.Vector2( 0.15, 0.15 ),
-								clearcoatNormalMap: clearcoatNormalMap,
-
+								normalMap: normalMap4,
+								// normalScale: new THREE.Vector2(2, 2),
+								// clearcoatNormalMap: clearcoatNormalMap,
 								// y scale is negated to compensate for normal map handedness.
-								clearcoatNormalScale: new THREE.Vector2( 2.0, - 2.0 )
-							} );
+								// clearcoatNormalScale: new THREE.Vector2( 2.0, - 2.0 )
+							});
 							mesh = new THREE.Mesh( geometry, material );
 							mesh.position.x = 1;
 							mesh.position.y = - 1;
 							group.add( mesh );
 
 							//
-
 							scene.background = texture;
 							scene.environment = texture;
-
 						}
 
 					);

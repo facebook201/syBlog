@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shader</title>
+  <style>
+    body {
+      width: 100vw;
+      height: 100vh;
+      margin: 0;
+      background: radial-gradient(#292929, #000000);
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+</body>
+<script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@v0.146.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@v0.146.0/examples/jsm/"
+    }
+  }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { FlakesTexture } from 'three/addons/textures/FlakesTexture.js';
+import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+
+let renderer, scene, camera, controls, light, material, geometry, mesh, texture, envMap, plight;
+
+function init() {
+  // 场景 渲染器
+  scene = new THREE.Scene();
+
+  renderer = new THREE.WebGLRenderer({alpha:true,antialias:true});
+  renderer.setSize(window.innerWidth,window.innerHeight);
+  document.body.appendChild(renderer.domElement);
+
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping; // 渲染器色调映射
+  renderer.toneMappingExposure = 1.25; // 渲染器色调映射曝光
+
+  camera = new THREE.PerspectiveCamera(50, window.innerWidth/window.innerHeight,1,1000);
+  camera.position.set(0,0, 500);
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = 0.5;
+  controls.enableDamping = true;
+
+  createFloor();
+
+  // 点光源
+  plight = new THREE.PointLight(0xffffff, 1);
+  plight.position.set(200, 200, 200);
+  scene.add(plight);
+
+  let envmaploader = new THREE.PMREMGenerator(renderer);
+  // 环境贴图
+  const rgbeLoader = new RGBELoader();
+  rgbeLoader.load('./file/212k.hdr', function(hdrMap) {
+    let envmap = envmaploader.fromCubemap(hdrMap)
+    let texture = new THREE.CanvasTexture(new FlakesTexture());
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.x = 10;
+    texture.repeat.y = 6;
+
+    
+    const ballMaterial = {
+      clearcoat: 1.0,
+      cleacoatRoughness: 0.2,
+      metalness: 0.9,
+      roughness:0.5,
+      color: 0x8412ca,
+      normalMap: texture,
+      normalScale: new THREE.Vector2(0.15,0.15),
+      envMap: envmap.texture
+    };
+
+    let ballGeo = new THREE.SphereGeometry(100,64,64);
+    let ballMat = new THREE.MeshPhysicalMaterial(ballMaterial);
+    let ballMesh = new THREE.Mesh(ballGeo, ballMat);
+    scene.add(ballMesh);
+    animate();
+  });
+}
+
+function createFloor() {
+  const texLoader = new THREE.TextureLoader();
+  const texture = texLoader.load('./file/fabric.png');
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(100, 100);
+
+
+  let floorGeo = new THREE.PlaneGeometry(10000, 10000);
+  let floorMat = new THREE.MeshBasicMaterial({
+    map: texture,
+    side: THREE.DoubleSide
+  });
+  let floorMesh = new THREE.Mesh(floorGeo, floorMat);
+
+  floorMesh.rotation.x = -Math.PI / 2;
+  // scene.add(floorMesh);
+}
+
+function animate() {
+  controls.update();
+  requestAnimationFrame(animate);
+  renderer.render(scene,camera);
+}
+
+init();
+
+</script>
+</html>
