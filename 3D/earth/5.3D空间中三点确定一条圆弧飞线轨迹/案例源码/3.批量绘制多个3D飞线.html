@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Three.js中文网：http://www.webgl3d.cn/</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+
+<body>
+  <script type="module">
+    // 引入three.js
+    import * as THREE from '../../../three.js-r123/build/three.module.js';
+    import config from './config.js'
+    var R = config.R;//地球半径
+    import { helpView } from './help.js'
+    import { flyArc } from './arc.js'
+    import { scene, renderer } from './scene.js'
+    //Three.js渲染结果Canvas画布插入到body元素中
+    document.body.appendChild(renderer.domElement);
+
+    var sphere = new THREE.SphereGeometry(R, 30, 30);//创建一个球体
+    var startSphere = sphere.vertices[10]; //球面上随机选取一个飞线起点
+    var max = sphere.vertices.length;//球面上顶点数量
+    //循环创建多条圆弧飞线轨迹，对代码进行测试
+    for (var i = 0; i < 40; i++) {
+      //批量设置飞线结束点
+      var endSphere = sphere.vertices[Math.floor(max * Math.random())]
+      var arcline = flyArc(startSphere, endSphere)
+      scene.add(arcline); //飞线插入场景中
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Three.js中文网：http://www.webgl3d.cn/</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+
+<body>
+  <script type="module">
+    // 现在浏览器支持ES6语法，自然包括import方式引入js文件
+    import * as THREE from '../../../three.js-r123/build/three.module.js';
+    // 引入Three.js扩展库
+    import { OrbitControls } from '../../../three.js-r123/examples/jsm/controls/OrbitControls.js';
+
+    import { 边界线 } from './line.js';
+    import { ExtrudeMesh } from './ExtrudeMesh.js';
+    /**
+     * 创建场景对象Scene
+     */
+    var scene = new THREE.Scene();
+    //three.js文件加载类FileLoader：封装了XMLHttpRequest
+    var loader = new THREE.FileLoader();
+    loader.setResponseType('json');
+    // 组对象mapGroup是所有国家边界Line模型的父对象
+    var mapGroup = new THREE.Group();
+    scene.add(mapGroup);
+    var lineGroup = new THREE.Group();//边界线组
+    mapGroup.add(lineGroup);
+    var meshGroup = new THREE.Group();//轮廓Mesh组
+    mapGroup.add(meshGroup);
+    var 拉伸高度 = 0.5;//地图轮廓拉伸高度
+    lineGroup.position.z = 拉伸高度 + 拉伸高度 * 0.1;//适当偏移解决深度冲突
+    //  加载./china.json，结构和world.json 一样，省份对应国家
+    loader.load('./china.json', function (data) {
+      // 访问所有省份边界坐标数据：data.features
+      data.features.forEach(function (area) {
+        // "Polygon"：省份area有一个封闭轮廓
+        //"MultiPolygon"：省份area有多个封闭轮廓
+        if (area.geometry.type === "Polygon") {
+          // 把"Polygon"和"MultiPolygon"的geometry.coordinates数据结构处理为一致
+          area.geometry.coordinates = [area.geometry.coordinates];
+        }
+        // 解析所有封闭轮廓边界坐标area.geometry.coordinates
+        lineGroup.add(边界线(area.geometry.coordinates));//省份边界轮廓插入组对象mapGroup
+        // height：根据行政区尺寸范围设置，比如高度设置为地图尺寸范围的2%、5%等，过小感觉不到高度，过大太高了
+        var height = 拉伸高度;//拉伸高度
+        var mesh = ExtrudeMesh(area.geometry.coordinates, height)
+        // 半透明效果
+        // mesh.material.transparent = true;
+        // mesh.material.opacity = 0.8;
+        meshGroup.add(mesh);//省份轮廓拉伸Mesh插入组对象mapGroup
+      });
+      // 地图底部边界线
+      var lineGroup2 = lineGroup.clone();
+      mapGroup.add(lineGroup2);
+      lineGroup2.position.z = -拉伸高度 * 0.1;//适当偏移解决深度冲突
+    })
+    // 浙江杭州经纬度120.153576,30.287459
+    var start = new THREE.Vector3(120.153576, 30.287459, 0); //起点
+    // 甘肃兰州经纬度103.823557,36.058039
+    var end = new THREE.Vector3(103.823557, 36.058039, 0); //终点
+    // 湖南长沙经纬度112.982279,28.19409
+    // var end = new THREE.Vector3(112.982279,28.19409, 0); //终点
+    var middle = new THREE.Vector3(0, 0, 0);
+    middle.add(start).add(end).divideScalar(2);
+    // 根据两点之间距离计算轨迹线高度
+    var v3 =  new THREE.Vector3(0, 0, 0);
+    var L =  start.clone().sub(end).length();//地图上两点之间距离
+    var H = L*0.2; //轨迹线高度，注意考虑两点距离来设置，弧线高度和两点之间距离正相关
+    middle.z += H;
+    /**
+    * 创建线条模型
+    */
+    var geometry = new THREE.BufferGeometry(); //创建一个缓冲类型几何体
+    // 三维样条曲线
+    var curve = new THREE.CatmullRomCurve3([
+      start,
+      middle,
+      end,
+    ]);
+    //曲线上等间距返回多个顶点坐标
+    var points = curve.getSpacedPoints(100); //分段数100，返回101个顶点
+    // setFromPoints方法从points中提取数据赋值给attributes.position
+    geometry.setFromPoints(points);
+    var material = new THREE.LineBasicMaterial({
+      color: 0x00ffff, //轨迹颜色
+    });
+    //线条模型对象
+    var line = new THREE.Line(geometry, material);
+    line.position.z = 拉伸高度;//注意考虑地图拉伸高度
+    scene.add(line);
+    /**
+    * 光源设置
+    */
+    // 平行光1
+    var directionalLight = new THREE.DirectionalLight(0xffffff, 0.6);
+    directionalLight.position.set(400, 200, 300);
+    scene.add(directionalLight);
+    // 平行光2
+    var directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.6);
+    directionalLight2.position.set(-400, -200, -300);
+    scene.add(directionalLight2);
+    //环境光
+    var ambient = new THREE.AmbientLight(0xffffff, 0.6);
+    scene.add(ambient);
+    //three.js辅助坐标系
+    var axesHelper = new THREE.AxesHelper(300);
+    scene.add(axesHelper);
+    /**
+     * 相机设置
+     */
+    var width = window.innerWidth; //窗口宽度
+    var height = window.innerHeight; //窗口高度
+    var k = width / height; //窗口宽高比
+    // var s = 200;
+    var s = 15;//根据包围盒大小(行政区域经纬度分布范围大小)设置渲染范围
+    //创建相机对象
+    var camera = new THREE.OrthographicCamera(-s * k, s * k, s, -s, 1, 1000);
+    // camera.position.set(200, 300, 200); //设置相机位置
+    // camera.position.set(104, 35, 200); //沿着z轴观察
+    // 通过OrbitControls在控制台打印相机位置选择一个合适的位置
+    camera.position.set(104, -105, 200);
+    camera.lookAt(104, 35, 0); //指向中国地图的几何中心
+    /**
+     * 创建渲染器对象
+     */
+    var renderer = new THREE.WebGLRenderer({
+      antialias: true, //开启锯齿
+    });
+    renderer.setSize(width, height); //设置渲染区域尺寸
+    // renderer.setClearColor(0xb9d3ff, 1); //设置背景颜色
+    document.body.appendChild(renderer.domElement); //body元素中插入canvas对象
+
+    // 渲染函数
+    function render() {
+      renderer.render(scene, camera); //执行渲染操作
+      requestAnimationFrame(render); //请求再次执行渲染函数render，渲染下一帧
+      // console.log(camera.position);
+    }
+    render();
+    //创建控件对象  控件可以监听鼠标的变化，改变相机对象的属性
+    // 旋转、缩放用于代码调试
+    
+    var controls = new OrbitControls(camera, renderer.domElement);
+    // 相机控件与.lookAt()无效( .target属性 )
+    controls.target.set(104, 35, 0);
+    controls.update();//update()函数内会执行camera.lookAt(controls.target)
+  </script>
+</body>
+
+</html>

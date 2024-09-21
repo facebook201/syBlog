@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Three.js中文网：http://www.webgl3d.cn/</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+
+<body>
+  <script type="module">
+    import { scene, renderer, camera } from './scene.js'
+    //Three.js渲染结果Canvas画布插入到body元素中
+    document.body.appendChild(renderer.domElement);
+
+
+
+    import arcline from './arc.js'//圆弧轨迹线
+    scene.add(arcline);
+
+    import { createFlyLine } from './FlyLine.js'//圆弧飞线
+
+
+    var flyAngle = Math.PI/ 10; //飞线圆弧固定弧度
+    // var flyAngle = (arcline.endAngle - arcline.startAngle) / 7; //飞线圆弧的弧度和轨迹线弧度相关    
+    var flyLine = createFlyLine(arcline.R, arcline.startAngle, arcline.startAngle + flyAngle);// 绘制一段飞线，圆心做坐标原点
+    flyLine.position.y = arcline.y;//平移飞线圆弧和飞线轨迹圆弧重合
+    //飞线段flyLine作为飞线轨迹arcLine子对象，继承飞线轨迹平移旋转等变换
+    arcline.add(flyLine);
+
+
+    //飞线段运动范围startAngle~flyEndAngle
+    flyLine.flyEndAngle = arcline.endAngle - arcline.startAngle - flyAngle;
+    flyLine.startAngle = arcline.startAngle;
+
+
+  
+
+
+    // 渲染循环
+    function render() {
+      flyLine.rotation.z += 0.02;
+      if(flyLine.rotation.z>flyLine.flyEndAngle)flyLine.rotation.z=0.0;
+      renderer.render(scene, camera); //执行渲染操作
+      requestAnimationFrame(render); //请求再次执行渲染函数render，渲染下一帧
+    }
+    render();
+  </script>
+</body>
+
+</html>

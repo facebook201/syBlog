@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Three.js中文网：http://www.webgl3d.cn/</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <script type="module">
+        import { scene, renderer, camera } from './scene.js'
+        //Three.js渲染结果Canvas画布插入到body元素中
+        document.body.appendChild(renderer.domElement);
+
+
+        // 引入Three.js
+        import * as THREE from '../../../three.js-r123/build/three.module.js';
+        var height = 100;//棱锥高度
+        var radius = 25;//半径
+        // 圆锥体几何体API(ConeGeometry)圆周方向四等分实现四棱锥效果
+        var geometry = new THREE.ConeGeometry(radius, height, 4);
+        // 缓冲类型几何体BufferGeometry没有computeFlatVertexNormals方法
+        geometry.computeFlatVertexNormals();//一种计算顶点法线方式，非光滑渲染
+        // 可以根据需要旋转到特定角度
+        // geometry.rotateX(Math.PI);
+        geometry.rotateX(-Math.PI / 2);
+        geometry.translate(0, 0, height / 2);
+        // MeshBasicMaterial MeshLambertMaterial
+        var material = new THREE.MeshLambertMaterial({
+            color: 0x00ffff,
+        });
+        var mesh = new THREE.Mesh(geometry, material);
+
+        scene.add(mesh)
+
+        // 棱锥上在叠加一个棱锥
+        var mesh2 = mesh.clone();
+        mesh2.scale.z = 0.5;
+        mesh2.position.z = height*(1+mesh2.scale.z);
+        mesh2.rotateX(Math.PI);
+        mesh.add(mesh2);
+
+
+
+
+
+        // 渲染循环
+        function render() {
+            // mesh.rotateZ(0.01);
+            renderer.render(scene, camera); //执行渲染操作
+            requestAnimationFrame(render); //请求再次执行渲染函数render，渲染下一帧
+        }
+        render();
+    </script>
+</body>
+
+</html>

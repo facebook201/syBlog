@@ -3,6 +3,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { HDRCubeTextureLoader } from 'three/addons/loaders/HDRCubeTextureLoader.js';
 
+const spector = new SPECTOR.Spector();
+spector.displayUI();
 
 let scene, renderer, gui, camera, plight, ballMesh, controls;
 
@@ -12,6 +14,8 @@ function init() {
   renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.physicallyCorrectLights = true;
 
   renderer.outputColorSpace = THREE.SRGBColorSpace;//设置为SRGB颜色空间
   renderer.toneMappingExposure = 1.25; // 渲染器色调映射曝光
@@ -34,7 +38,7 @@ function init() {
   scene.add(plight1);
 
   let aLight = new THREE.AmbientLight(0x3b2e37, 30);
-  scene.add(aLight);
+  // scene.add(aLight);
 
   new HDRCubeTextureLoader()
     .setPath('./file/pisaHDR/')
@@ -191,3 +195,6 @@ function animate() {
 
 init();
 
+/**
+ * 1、webglRenderer 调用 this.render 渲染函数(scene, camera)
+ */

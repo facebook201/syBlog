@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Three.js中文网：http://www.webgl3d.cn/</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+
+<body>
+  <script type="module">
+    // 引入three.js
+    import * as THREE from '../../../three.js-r123/build/three.module.js';
+    import config from './config.js'
+    var R = config.R;//地球半径
+    import { helpView } from './help.js'
+    import { arcXOY } from './arc.js'
+    import { scene, renderer } from './scene.js'
+    //Three.js渲染结果Canvas画布插入到body元素中
+    document.body.appendChild(renderer.domElement);
+
+    /*正常情况下，飞线的起点和结束点是在地球球面上随机选择，
+    不过本节课先考虑一种特殊情况，在x轴上方绘制一条关于y轴
+    对称的圆弧飞线轨迹*/
+    var startAngle = Math.PI / 12; //圆弧起点和坐标原点构成的角度
+    var x = R * Math.cos(startAngle); //飞线圆弧起点横坐标
+    var y = R * Math.sin(startAngle); //飞线圆弧起点纵坐标
+    // 飞线圆弧起点坐标startPoint、结束点坐标endPoint
+    var startPoint = new THREE.Vector3(x, y, 0)
+    var endPoint = new THREE.Vector3(-x, y, 0)
+
+    // 调用arcXOY函数绘制一条圆弧飞线轨迹，你可以通过修改上面的角度startAngle查看不同起点、结束点对应飞线效果
+    var arcline = arcXOY(startPoint, endPoint);
+    scene.add(arcline); //飞线插入场景中
+   
+    var flyArcCenter = arcline.center; //.center属性表示飞线圆弧的圆心
+    var arcTopCoord = arcline.topCoord; //.topCoord属性表示飞线圆弧中间也就是顶部坐标
+    /*为了方便你观察和学习，下面通过球和箭头对一些几何数据进行标注*/
+    scene.add(helpView(startPoint, endPoint, flyArcCenter, arcTopCoord));
+
+    /*以飞线圆弧的圆心为坐标原点创建一个用于辅助观察的坐标系*/
+    var flyAxesHelper = new THREE.AxesHelper(200);
+    flyAxesHelper.position.y = flyArcCenter.y
+    scene.add(flyAxesHelper);
+    /*在飞线圆弧圆心创建一个网格模型*/
+    var flyGridHelper = new THREE.GridHelper(30, 10);
+    flyGridHelper.position.y = flyArcCenter.y
+    scene.add(flyGridHelper);
+  </script>
+</body>
+
+</html>

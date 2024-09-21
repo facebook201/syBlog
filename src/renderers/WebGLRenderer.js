@@ -1128,10 +1128,10 @@ class WebGLRenderer {
 
 			// update scene graph
 
-			if ( scene.matrixWorldAutoUpdate === true ) scene.updateMatrixWorld();
+			if (scene.matrixWorldAutoUpdate === true ) scene.updateMatrixWorld();
 
 			// update camera matrices and frustum
-
+			// 更新相机矩阵
 			if ( camera.parent === null && camera.matrixWorldAutoUpdate === true ) camera.updateMatrixWorld();
 
 			if ( xr.enabled === true && xr.isPresenting === true ) {

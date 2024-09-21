@@ -13,17 +13,12 @@
 
 		<script id="vertexShader" type="x-shader/x-vertex">
 			in int textureIndex;
-
 			flat out int vIndex; // "flat" indicates that the value will not be interpolated (required for integer attributes)
 			out vec2 vUv;
-
 			void main()	{
-
 				vIndex = textureIndex;
 				vUv = uv;
-
 				gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
-
 			}
 		</script>
 
@@ -62,18 +57,15 @@
 			init();
 
 			function init() {
-
 				camera = new THREE.PerspectiveCamera( 27, window.innerWidth / window.innerHeight, 1, 3500 );
 				camera.position.z = 2500;
-
 				scene = new THREE.Scene();
-				scene.background = new THREE.Color( 0x050505 );
-				scene.fog = new THREE.Fog( 0x050505, 2000, 3500 );
+				// scene.background = new THREE.Color( 0x050505 );
+				// scene.fog = new THREE.Fog( 0x050505, 2000, 3500 );
 
 				// geometry
 
 				const triangles = 10000;
-
 				const geometry = new THREE.BufferGeometry();
 
 				const positions = [];

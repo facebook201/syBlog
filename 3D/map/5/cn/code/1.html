@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+
+    .tagDiv {
+      /* width: 500px; */
+      position: absolute;
+      padding: 6px 20px;
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border-radius: 5px;
+      visibility: hidden;
+    }
+  </style>
+  <!--引入three.js三维引擎-->
+  <script src="http://www.yanhuangxueyuan.com/versions/threejsR92/build/three.js"></script>
+  <!-- 引入threejs扩展控件OrbitControls.js -->
+  <script src="http://www.yanhuangxueyuan.com/versions/threejsR92/examples/js/controls/OrbitControls.js"></script>
+  <!-- 线条设置宽度相关的扩展库：/examples/js/lines目录下的文件 -->
+  <script src='http://www.yanhuangxueyuan.com/versions/threejsR92/examples/js/lines/LineSegmentsGeometry.js'></script>
+  <script src='http://www.yanhuangxueyuan.com/versions/threejsR92/examples/js/lines/LineGeometry.js'></script>
+  <script src='http://www.yanhuangxueyuan.com/versions/threejsR92/examples/js/lines/LineMaterial.js'></script>
+  <script src='http://www.yanhuangxueyuan.com/versions/threejsR92/examples/js/lines/LineSegments2.js'></script>
+  <script src='http://www.yanhuangxueyuan.com/versions/threejsR92/examples/js/lines/Line2.js'></script>
+
+</head>
+
+<body>
+  <div class="tagDiv" id="tag">
+    <div id="name" style="color:#ffffff;">
+      省份：河南
+    </div>
+    <!-- 可以尝试插入一个国旗标志 -->
+    <div id="title" style="margin-top:10px;color:#ffffff;">
+      数量：10
+    </div>
+  </div>
+  <!-- 为了授课和编写代码方便，把相机、渲染器、场景等代码单独放在frame.js文件中 -->
+  <script src="./frame.js"></script>
+  <script src="./flydata.js"></script>
+  <script src="./fly.js"></script>
+  <script src="./GeoJSON.js"></script>
+  <script>
+    var flyGroup = new THREE.Group();
+    var cityGroup = new THREE.Group(); //飞线所有端点标注集合
+    var cityPointArr = []; //所有波动光圈mesh的数组
+    var _s = 1.5; //波动光圈增加倍数范围
+    var startMesh = null; //表示发射中心悬浮棱锥Mesh
+    var ENdata = data(); //多组经纬度数据
+    updateFly('河南'); //飞线首次绘制，河南作为飞线起点
+
+
+    //更新绘制飞线
+    function updateFly(provinceName) {
+      //飞线起点坐标
+      var start = null;
+
+      var endArr = []; //飞线结束点坐标集合.
+
+      ENdata.forEach((coord, i) => {
+        if (coord.name == provinceName) {
+          // 设置飞线发射起点坐标
+          start = new THREE.Vector3(coord.E, coord.N, 0);
+        } else {
+          // 所有飞线结束点的坐标
+          endArr.push(coord)
+        }
+      });
+      // 绘制当前选中省份对应的所有飞线
+      currentCityAllFlys(start, endArr)
+    }
+
+    var loader = new THREE.FileLoader();
+    loader.setResponseType('json');
+    loader.load('./GeoJSON/china.json', function(data) {
+      //Line绘制国家
+      var mapGroup = GeoJSON(data);
+      scene.add(mapGroup);
+      // 注意居中之前进行旋转
+      mapGroup.rotateX(-Math.PI / 2);
+      var maxL = centerCamera(mapGroup, camera);
+      flyGroup.position.z = maxL * 0.01 * 1.01;
+      mapGroup.add(flyGroup);
+      cityGroup.position.z = maxL * 0.01 * 1.01; //比地图Mesh略高一点，避免重叠
+      mapGroup.add(cityGroup);
+    })
+
+
+
+    function render() {
+      // updateFly('河南'); //不停地重新绘制飞线，测试内存占用变化
+      cityPointArr.forEach((cirMesh, i) => {
+        if (cirMesh.s <= 1) {
+          cirMesh.s += 0.01;
+          cirMesh.scale.set(cirMesh.s, cirMesh.s, cirMesh.s)
+          cirMesh.material.opacity = (cirMesh.s - 0.7) * 3.3;
+        } else if (cirMesh.s > 1 && cirMesh.s <= _s + 1) {
+          cirMesh.s += 0.01;
+          cirMesh.scale.set(cirMesh.s, cirMesh.s, cirMesh.s)
+          cirMesh.material.opacity = 1 - (cirMesh.s - 1) / _s;
+        } else {
+          cirMesh.s = 0.7;
+        }
+      });
+
+      // console.log(startMesh);
+      startMesh.rotateZ(0.02);
+      flyGroup.children.forEach((flyTrack, i) => {
+        // 获取飞线轨迹线上的顶点坐标，用于飞线段绘制
+        var points = flyTrack.flyTrackPoints;
+        var flyline = flyTrack.children[0];
+        var indexMax = points.length - flyline.num; //飞线取点索引范围
+        if (flyline.index < indexMax) {
+          flyline.index += 1
+        } else {
+          flyline.index = 0
+        }
+        updateFlyGeo(flyline, flyline.index, points); //更新飞线的位置，生成飞行动画
+      });
+
+      renderer.render(scene, camera); //执行渲染操作
+      requestAnimationFrame(render); //请求再次执行渲染函数render，渲染下一帧
+      // 在控制台选择一个你想要的视角
+      // console.log('相机位置', camera.position);
+    }
+    render();
+
+
+
+    /*射线拾取模型*/
+    function choose(event) {
+      var Sx = event.clientX; //鼠标单击位置横坐标
+      var Sy = event.clientY; //鼠标单击位置纵坐标
+      //屏幕坐标转WebGL标准设备坐标
+      var x = (Sx / window.innerWidth) * 2 - 1; //WebGL标准设备横坐标
+      var y = -(Sy / window.innerHeight) * 2 + 1; //WebGL标准设备纵坐标
+      var raycaster = new THREE.Raycaster(); //创建一个射线投射器`Raycaster`
+      //通过鼠标单击位置标准设备坐标和相机参数计算射线投射器`Raycaster`的射线属性.ray
+      raycaster.setFromCamera(new THREE.Vector2(x, y), camera);
+      //返回.intersectObjects()参数中射线选中的网格模型对象
+      var intersects = raycaster.intersectObjects(meshArr);
+      return intersects
+    }
+    addEventListener('click', function() {
+      var intersects = choose(event); //射线拾取结果
+      if (intersects.length > 0) { // intersects.length大于0说明，说明选中了模型
+        // 原来飞线发射省份恢复选中前的颜色
+        if (chooseMesh) chooseMesh.material.color.set(0x004444);
+        // 提升旋转省份颜色亮度
+        intersects[0].object.material.color.set(0x006666);
+        // chooseMesh指向新的发射中心Mesh
+        chooseMesh = intersects[0].object;
+        updateFly(chooseMesh.name); //绘制当前省份作为起点的所有飞线
+      }
+    }); // 监听窗口鼠标单击事件
+    var div = document.getElementById('tag');
+    var nameDiv = document.getElementById('name');
+    var titleDiv = document.getElementById('title');
+    // 监听窗口鼠标单击事件
+    addEventListener('mousemove', function() {
+      var intersects = choose(event); //射线拾取结果
+      if (intersects.length > 0) { // intersects.length大于0说明，说明选中了模型
+        var moveChooseMesh = intersects[0].object;
+        nameDiv.innerText = '省份：' + moveChooseMesh.name;
+        titleDiv.innerText = '数量：' + Math.floor(Math.random() * 100);
+        div.style.visibility = 'visible';
+        var worldVector = null; //表示省份行政中心的世界坐标
+        ENdata.forEach((coord, i) => {
+          if (coord.name == moveChooseMesh.name) {
+            worldVector = new THREE.Vector3(coord.E, coord.N, 0);
+            worldVector.applyMatrix4(moveChooseMesh.matrixWorld)
+          }
+        });
+        var standardVector = worldVector.project(camera); //世界坐标转标准设备坐标
+        var a = window.innerWidth / 2;
+        var b = window.innerHeight / 2;
+        var x = Math.round(standardVector.x * a + a); //标准设备坐标转屏幕坐标
+        var y = Math.round(-standardVector.y * b + b); //标准设备坐标转屏幕坐标
+
+        div.style.left = x + 'px';
+        div.style.top = y + 'px';
+      } else {
+        div.style.visibility = 'hidden';
+      }
+    });
+  </script>
+
+</body>
+
+</html>

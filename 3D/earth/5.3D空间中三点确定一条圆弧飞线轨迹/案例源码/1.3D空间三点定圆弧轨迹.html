@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Three.js中文网：http://www.webgl3d.cn/</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+
+<body>
+  <script type="module">
+    // 引入three.js
+    import * as THREE from '../../../three.js-r123/build/three.module.js';
+    import config from './config.js'
+    var R = config.R;//地球半径
+    import { helpView } from './help.js'
+    import { arcXOY } from './arc.js'
+    import { scene, renderer } from './scene.js'
+    //Three.js渲染结果Canvas画布插入到body元素中
+    document.body.appendChild(renderer.domElement);
+
+    /*把3D球面上任意的两个飞线起点和结束点绕球心旋转到到XOY平面上，
+     同时保持关于y轴对称，借助旋转得到的新起点和新结束点绘制
+    一个圆弧，最后把绘制的圆弧反向旋转到原来的起点和结束点即
+    可*/
+    var sphere = new THREE.SphereGeometry(R, 30, 30);
+    //球面上随机选取两个点
+    var startSphere = sphere.vertices[10]; //飞线起点
+    var endSphere = sphere.vertices[700]; //飞线结束点
+
+    //计算绘制圆弧需要的关于y轴对称的起点、结束点和旋转四元数
+    var startEndQua = startEndQuaternion(startSphere, endSphere)
+    // 调用arcXOY函数绘制一条圆弧飞线轨迹
+    var arcline = arcXOY(startEndQua.startPoint, startEndQua.endPoint);
+    arcline.quaternion.multiply(startEndQua.quaternion)
+    scene.add(arcline); //飞线插入场景中
+
+    /*把球面上任意两点坐标转化到XOY平面内，且关于y轴对称*/
+    function startEndQuaternion(startSphere, endSphere) {
+      /*计算第一次旋转的四元数：表示从一个平面如何旋转到另一个平面*/
+      var origin = new THREE.Vector3(0, 0, 0);//球心坐标
+      var startDir = startSphere.clone().sub(origin);//飞线起点与球心构成方向向量
+      var endDir = endSphere.clone().sub(origin);//飞线结束点与球心构成方向向量
+      // dir1和dir2构成一个三角形，.cross()叉乘计算该三角形法线normal
+      var normal = startDir.clone().cross(endDir).normalize();
+      var xoyNormal = new THREE.Vector3(0, 0, 1);//XOY平面的法线
+      //.setFromUnitVectors()计算从normal向量旋转达到xoyNormal向量所需要的四元数
+      // quaternion表示把球面飞线旋转到XOY平面上需要的四元数
+      var quaternion3D_XOY = new THREE.Quaternion().setFromUnitVectors(normal, xoyNormal);
+      /*第一次旋转：飞线起点、结束点从3D空间第一次旋转到XOY平面*/
+      var startSphereXOY = startSphere.clone().applyQuaternion(quaternion3D_XOY);
+      var endSphereXOY = endSphere.clone().applyQuaternion(quaternion3D_XOY);
+
+      /*计算第二次旋转的四元数*/
+      // middleV3：startSphereXOY和endSphereXOY的中点
+      var middleV3 = startSphereXOY.clone().add(endSphereXOY).multiplyScalar(0.5);
+      var midDir = middleV3.clone().sub(origin).normalize();// 旋转前向量midDir，中点middleV3和球心构成的方向向量
+      var yDir = new THREE.Vector3(0, 1, 0);// 旋转后向量yDir，即y轴
+      // .setFromUnitVectors()计算从midDir向量旋转达到yDir向量所需要的四元数
+      // quaternion2表示让第一次旋转到XOY平面的起点和结束点关于y轴对称需要的四元数
+      var quaternionXOY_Y = new THREE.Quaternion().setFromUnitVectors(midDir, yDir);
+
+      /*第二次旋转：使旋转到XOY平面的点再次旋转，实现关于Y轴对称*/
+      var startSpherXOY_Y = startSphereXOY.clone().applyQuaternion(quaternionXOY_Y);
+      var endSphereXOY_Y = endSphereXOY.clone().applyQuaternion(quaternionXOY_Y);
+
+      /*一个四元数表示一个旋转过程
+      .invert()方法表示四元数的逆，简单说就是把旋转过程倒过来
+      两次旋转的四元数执行.invert()求逆，然后执行.multiply()相乘*/
+      var quaternionInverse = quaternion3D_XOY.clone().invert().multiply(quaternionXOY_Y.clone().invert())
+
+      //大球：飞线起点、结束点
+      scene.add(helpView(8,startSphere, endSphere))
+      //中球：飞线起点、结束点从3D空间第一次旋转到XOY平面
+      scene.add(helpView(5,startSphereXOY, endSphereXOY))
+      // 第二次旋转：使旋转到XOY平面的点再次旋转，实现关于Y轴对称
+      //小球：飞线起点、结束点从3D空间两次旋转结果
+      scene.add(helpView(2,startSpherXOY_Y, endSphereXOY_Y))
+
+      // 飞线 起点  结束点转回去测试
+      // var startSphere3 = startSpherXOY_Y.clone()
+      // startSphere3.applyQuaternion(quaternionInverse)
+      // var endSphere3 = endSphereXOY_Y.clone()
+      // endSphere3.applyQuaternion(quaternionInverse)
+      // var start3 = sphereMesh(20)
+      // start3.position.copy(startSphere3)
+      // var end3 = sphereMesh(20)
+      // end3.position.copy(endSphere3)
+      // end3.material.color.set(0x00ff00)
+      // scene.add(start3, end3)
+
+      return {
+        // 返回两次旋转四元数的逆四元数
+        quaternion: quaternionInverse,
+        // 范围两次旋转后在XOY平面上关于y轴对称的圆弧起点和结束点坐标
+        startPoint: startSpherXOY_Y,
+        endPoint: endSphereXOY_Y,
+      }
+    }
+
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Three.js中文网：http://www.webgl3d.cn/</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+
+<body>
+  <script type="module">
+    // 引入three.js
+    import * as THREE from '../../../three.js-r123/build/three.module.js';
+    import config from './config.js'
+    var R = config.R;//地球半径
+    import { helpView } from './help.js'
+    import { arcXOY } from './arc.js'
+    import { scene, renderer } from './scene.js'
+    //Three.js渲染结果Canvas画布插入到body元素中
+    document.body.appendChild(renderer.domElement);
+
+    var num = 10//批量绘制多组
+    /*所有飞线弧线顶部距离地球球面的距离和夹角大小成正比，(飞线起点-球心-飞线结束点构成的夹角)
+    夹角均匀变化，飞线之间的间距自然均匀变化*/
+    for (var i = 1; i < num; i++) {
+      var startAngle = Math.PI/2/num*i;//圆弧起点和坐标原点构成的角度
+      var x = R * Math.cos(startAngle); //飞线圆弧起点横坐标
+      var y = R * Math.sin(startAngle); //飞线圆弧起点纵坐标
+      // 飞线圆弧起点坐标startPoint、结束点坐标endPoint
+      var startPoint = new THREE.Vector3(x, y, 0)
+      var endPoint = new THREE.Vector3(-x, y, 0)
+
+      // 调用arcXOY函数绘制一条圆弧飞线轨迹，你可以通过修改上面的角度startAngle查看不同起点、结束点对应飞线效果
+      var arcline = arcXOY(startPoint, endPoint);
+      scene.add(arcline); //飞线插入场景中
+
+      /*为了方便你观察和学习，下面通过球和箭头对一些几何数据进行标注
+      arcline.center属性表示飞线圆弧的圆心
+      arcline.topCoord属性表示飞线圆弧中间也就是顶部坐标*/
+      scene.add(helpView(startPoint, endPoint, arcline.center, arcline.topCoord));
+    }
+  </script>
+</body>
+
+</html>
