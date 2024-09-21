@@ -1,3 +1,4 @@
+
 /*当前城市所有相关飞线、柱子、波动光圈批量绘制函数
 参数start：当前城市，也就是飞线发射中心的经纬度坐标Vector3
 参数endArr：与当前当成所有相关城市的经纬度坐标Vector3构成的集合*/
@@ -60,7 +61,7 @@ function disposeGroup(group) {
 /*startMeshFun函数创建一个四棱锥标注飞线起点
 startCoord：表示起点经纬度坐标*/
 function startMeshFun(startCoord) {
-  var startgeometry = new THREE.ConeBufferGeometry(0.5, 2, 4);
+  var startgeometry = new THREE.ConeGeometry(0.5, 2, 4);
   startgeometry.rotateX(-Math.PI / 2);
   var startmaterial = new THREE.MeshLambertMaterial({
     color: 0x00ffff,
@@ -78,10 +79,8 @@ percent：h和最大高度数据的比值，用于柱子颜色计算*/
 var geometryHeight = new THREE.CylinderGeometry(0.2, 0.2, 1, 6);
 geometryHeight.rotateX(Math.PI / 2);
 geometryHeight.translate(0, 0, 0.5);
-geometryHeight.computeFlatVertexNormals();
+// geometryHeight.computeFlatVertexNormals();
 // color1、color2表示柱子的颜色范围
-// var color1 = new THREE.Color(0xffff00);
-// var color2 = new THREE.Color(0xff3300);
 var color1 = new THREE.Color(0x00ffff);
 var color2 = new THREE.Color(0x00ff33);
 function cityHeight(h, percent) {
@@ -126,7 +125,7 @@ function updateFlyGeo(flyline, index, points) {
     pointArr.push(v3.x, v3.y, v3.z)
   }
   // 设置几何体顶点位置坐标
-  flyline.geometry.setPositions(pointArr);
+  flyline.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(pointArr), 3));
   flyline.geometry.verticesNeedUpdate = true; //通知three.js几何体顶点位置坐标数据更新
 }
 /*flylineFun函数：在飞线轨迹样条曲线上选取一段曲线绘制出来
@@ -141,14 +140,14 @@ function flylineFun(index, points) {
     choosePoints.push(points[i + index])
   }
   // 创建一个LineGeometry几何体
-  var geometry = new THREE.LineGeometry();
+  var geometry = new THREE.BufferGeometry();
   var pointArr = []
   //把样条曲线返回的顶点坐标Vector3中xyz坐标提取到pointArr数组中
   choosePoints.forEach(function(v3) {
     pointArr.push(v3.x, v3.y, v3.z)
   })
   // 设置几何体顶点位置坐标
-  geometry.setPositions(pointArr);
+  geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(pointArr), 3));
   // 给几何体每个顶点设置对应颜色值
   var colorArr = []
   for (var i = 0; i < choosePoints.length; i++) {
@@ -166,16 +165,16 @@ function flylineFun(index, points) {
     colorArr.push(colo.r, colo.g, colo.b)
   }
   //设置几何体顶点颜色值，进行插值计算
-  geometry.setColors(colorArr);
+  // geometry.setColors(colorArr);
   //几何体LineGeometry对应的材质LineMaterial
-  var material = new THREE.LineMaterial({
-    // color: 0xffff00,//使用顶点颜色，材质颜色不用设置
-    vertexColors: THREE.VertexColors, //使用顶点颜色插值计算
-    linewidth: 2.5, // 设置线宽
+  var material = new THREE.LineBasicMaterial({
+    color: 0xffff00,//使用顶点颜色，材质颜色不用设置
+    // vertexColors: THREE.VertexColors, //使用顶点颜色插值计算
+    // linewidth: 10, // 设置线宽
   });
   //材质输入Three.js渲染canvas画布的宽高度
-  material.resolution.set(window.innerWidth, window.innerHeight);
-  var flyline = new THREE.Line2(geometry, material);
+  // material.resolution.set(window.innerWidth, window.innerHeight);
+  var flyline = new THREE.Line(geometry, material);
   // 自定义飞线属性flyline.num、flyline.index，用于飞线动画
   flyline.num = num;
   flyline.index = index;
@@ -193,7 +192,7 @@ function flyTrackFun(start, end) {
   // middle.y += H;
   middle.z += H; //调整高度方向为z
 
-  var geometry = new THREE.Geometry(); //声明一个几何体对象Geometry
+  var geometry = new THREE.BufferGeometry(); //声明一个几何体对象Geometry
   // 起始点坐标和弧线高度确定一条3D样条曲线
   var curve = new THREE.CatmullRomCurve3([
     start,

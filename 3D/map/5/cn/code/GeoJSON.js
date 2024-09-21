@@ -1,4 +1,5 @@
 
+
 var meshArr = [];// 声明一个变量，存储所有省份的Mesh，用于射线拾取
 var chooseMesh = null; //表示飞线发射中心对应的省份吗esh
 
@@ -13,11 +14,12 @@ function lineFun(childAreaArr, mapGroup) {
       vertices.forEach((v2, i) => {
         newVertices.push(new THREE.Vector3(v2.x, v2.y, 0))
       });
-      var geometry = new THREE.Geometry()
-      geometry.vertices = newVertices; // 设置几何体顶点位置坐标
-      var line = new THREE.LineLoop(geometry, material);
-      group.add(line); //子行政单元childArea边界轮廓Line插入组对象mapGroup
-
+      // geometry.vertices = newVertices; // 设置几何体顶点位置坐标
+      var geometry = new THREE.BufferGeometry();
+      geometry.setFromPoints(newVertices);
+      var line = new THREE.Line(geometry, material);
+      //子行政单元childArea边界轮廓Line插入组对象mapGroup
+      group.add(line);
     });
   });
   return group
@@ -35,13 +37,13 @@ function extrudeMeshFun(childAreaArr, mapGroup, h) {
       //拉伸参数
       {
         amount: h, //拉伸长度
-        curveSegments: 35, //拉伸轮廓细分数
+        curveSegments: 1, //拉伸轮廓细分数
         bevelEnabled: false //无倒角
       }
     );
     var material = new THREE.MeshPhongMaterial({
       color: 0x004444,
-      // transparent: true,
+      transparent: true,
       // opacity: 0.8,
     }); //材质对象
     var mesh = new THREE.Mesh(geometry, material); //网格模型对象
@@ -93,7 +95,7 @@ function GeoJSON(data) {
   var linegroup = lineFun(childAreaArr);
   mapGroup.add(linegroup)
   var maxL = centerCamera(mapGroup, camera);
-  var h = maxL * 0.01; //轮廓拉伸高度
+  var h = maxL * 0.017; //轮廓拉伸高度
   extrudeMeshFun(childAreaArr, mapGroup, h)
   var linegroup2 = linegroup.clone();
   linegroup2.position.z = h + h * 0.01;

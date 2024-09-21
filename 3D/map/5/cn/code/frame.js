@@ -39,4 +39,4 @@ renderer.setSize(width, height); //设置渲染区域尺寸
 document.body.appendChild(renderer.domElement); //body元素中插入canvas对象
 
 //创建控件对象  相机对象camera作为参数   控件可以监听鼠标的变化，改变相机对象的属性
-var controls = new THREE.OrbitControls(camera, renderer.domElement);
+// var controls = new THREE.OrbitControls(camera, renderer.domElement);

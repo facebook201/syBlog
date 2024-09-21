@@ -19,17 +19,6 @@
       visibility: hidden;
     }
   </style>
-  <!--引入three.js三维引擎-->
-  <script src="http://www.yanhuangxueyuan.com/versions/threejsR92/build/three.js"></script>
-  <!-- 引入threejs扩展控件OrbitControls.js -->
-  <script src="http://www.yanhuangxueyuan.com/versions/threejsR92/examples/js/controls/OrbitControls.js"></script>
-  <!-- 线条设置宽度相关的扩展库：/examples/js/lines目录下的文件 -->
-  <script src='http://www.yanhuangxueyuan.com/versions/threejsR92/examples/js/lines/LineSegmentsGeometry.js'></script>
-  <script src='http://www.yanhuangxueyuan.com/versions/threejsR92/examples/js/lines/LineGeometry.js'></script>
-  <script src='http://www.yanhuangxueyuan.com/versions/threejsR92/examples/js/lines/LineMaterial.js'></script>
-  <script src='http://www.yanhuangxueyuan.com/versions/threejsR92/examples/js/lines/LineSegments2.js'></script>
-  <script src='http://www.yanhuangxueyuan.com/versions/threejsR92/examples/js/lines/Line2.js'></script>
-
 </head>
 
 <body>
@@ -42,6 +31,7 @@
       数量：10
     </div>
   </div>
+  <script src="https://unpkg.com/three@v0.146.0/build/three.js"></script>
   <!-- 为了授课和编写代码方便，把相机、渲染器、场景等代码单独放在frame.js文件中 -->
   <script src="./frame.js"></script>
   <script src="./flydata.js"></script>
@@ -55,7 +45,6 @@
     var startMesh = null; //表示发射中心悬浮棱锥Mesh
     var ENdata = data(); //多组经纬度数据
     updateFly('河南'); //飞线首次绘制，河南作为飞线起点
-
 
     //更新绘制飞线
     function updateFly(provinceName) {
@@ -80,7 +69,7 @@
     var loader = new THREE.FileLoader();
     loader.setResponseType('json');
     loader.load('./GeoJSON/china.json', function(data) {
-      //Line绘制国家
+      // Line绘制国家
       var mapGroup = GeoJSON(data);
       scene.add(mapGroup);
       // 注意居中之前进行旋转
