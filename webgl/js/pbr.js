@@ -1,12 +1,13 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { HDRCubeTextureLoader } from 'three/addons/loaders/HDRCubeTextureLoader.js';
 
-const spector = new SPECTOR.Spector();
-spector.displayUI();
+// const spector = new SPECTOR.Spector();
+// spector.displayUI();
 
-let scene, renderer, gui, camera, plight, ballMesh, controls;
+let scene, renderer, gui, camera, plight, ballMesh, composer, controls;
 
 function init() {
   scene = new THREE.Scene();
@@ -23,7 +24,9 @@ function init() {
   camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
   camera.lookAt(0, 0, 0);
   camera.position.set(0, 0, 100);
-  // controls = new OrbitControls(camera, renderer.domElement);
+  controls = new OrbitControls(camera, renderer.domElement);
+
+  composer = new EffectComposer(renderer);
 
   // scene.add(new THREE.AxesHelper(1000));
 
@@ -95,8 +98,8 @@ function paddedBall() {
     aoMap: aoMap,
     // displacementMap: heightMap,
     metalnessMap: metalMap,
-    roughness: 1, // 粗糙度
-    metalness: 0, // 金属度
+    roughness: 0.9, // 粗糙度
+    metalness: 0.05, // 金属度
     normalScale: new THREE.Vector2(2.0, 2.0),
   });
 
@@ -159,9 +162,23 @@ function rockBall() {
   scene.add(ballMesh);
 }
 
+// 截图
+
+function screenShot() {
+    renderer.render(scene, camera)
+    composer.render()
+    const base64 = renderer.domElement.toDataURL(['image/png', '0.8'])
+    const link = document.createElement('a');
+    link.href = base64;
+    link.download = 'myImage.png';
+    link.click();
+}
+
 function initGui() {
   gui = new GUI({ title: 'materialColor' });
   const materialFolder = gui.addFolder('material');
+
+  gui.add({ '截图': screenShot }, '截图')
 
   const obj = {
     color:0x00ffff,

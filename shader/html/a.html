@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>流光 Shader</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    #info {
+      color: white;
+      display: block;
+      font-family: "Press Start 2P";
+      font-size: 5vh;
+      position: absolute;
+      text-align: center;
+      text-shadow: 2px 2px #1f1f1f;
+      top: 5vh;
+      width: 100%;
+      z-index: 100;
+    }
+  </style>
+</head>
+
+<body>
+</body>
+<script type="importmap">
+  {
+    "imports": {
+      "three": "../../build/three.module.js",
+      "three/addons/": "../../examples/jsm/"
+    }
+  }
+</script>
+<script type="module">
+  import * as THREE from 'three';
+  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+  import PathPointList from './utils.js';
+
+  const { innerWidth, innerHeight } = window;
+  const aspect = innerWidth / innerHeight;
+
+  let renderer, camera, scene, controls, elapsedTime, lineMaterial, lod;
+
+  function init() {
+    renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      logarithmicDepthBuffer: true,
+    });
+
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(innerWidth, innerHeight);
+    renderer.setAnimationLoop(animate.bind());
+
+    document.body.appendChild(renderer.domElement);
+
+    camera = new THREE.PerspectiveCamera(60, aspect, 0.01, 10000);
+    camera.position.set(5, 5, 5);
+
+    scene = new THREE.Scene();
+    controls = new OrbitControls(camera, renderer.domElement);
+
+    const grid = new THREE.GridHelper(10);
+    scene.add(grid);
+
+    const light = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(light);
+    createPanel();
+  }
+
+  function createPanel() {
+		// 创建不同精度的几何体
+		const highDetailGeometry = new THREE.SphereGeometry(5, 128, 128);
+		const mediumDetailGeometry = new THREE.SphereGeometry(5, 32, 32);
+		const lowDetailGeometry = new THREE.SphereGeometry(5, 8, 8);
+		// 创建材质
+		const material = new THREE.MeshPhongMaterial({ color: 0x00ff00 });
+		const material2 = new THREE.MeshPhongMaterial({ color: 0xff0000 });
+		const material3 = new THREE.MeshPhongMaterial({ color: 0xfcfcfc });
+
+		// 创建不同精度的网格
+		const highDetailMesh = new THREE.Mesh(highDetailGeometry, material);
+		const mediumDetailMesh = new THREE.Mesh(mediumDetailGeometry, material2);
+		const lowDetailMesh = new THREE.Mesh(lowDetailGeometry, material3);
+		// 创建 LOD 对象并添加不同精度的网格
+		lod = new THREE.LOD();
+		lod.addLevel(highDetailMesh, 0);
+		lod.addLevel(mediumDetailMesh, 30);
+		lod.addLevel(lowDetailMesh, 60);
+		// 将 LOD 对象添加到场景中
+		scene.add(lod);
+  }
+
+  function animate() {
+    controls.update();
+		lod.update(camera);
+    renderer.render(scene, camera);
+  }
+
+  init();
+</script>
+</html>

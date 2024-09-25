@@ -19,7 +19,7 @@ function init() {
   camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
   camera.lookAt(0, 0, 0);
   camera.position.set(0, 0, 100);
-  // controls = new OrbitControls(camera, renderer.domElement);
+  controls = new OrbitControls(camera, renderer.domElement);
 
   // scene.add(new THREE.AxesHelper(1000));
 

@@ -6,80 +6,168 @@
   <title>Shader</title>
   <style>
     body{
-      margin: 3;
       padding: 0;
-      overflow: hidden;
     }
     section {
       padding: 0 50px;
+    }
+    a {
+      text-decoration: none;
+      color: #000;
+    }
+    .image {
+      display: block;
+      width: 200px;
+      margin: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .image img {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    p {
+      text-align: center;
+    }
+    a {
+      display: inline-block;
+    }
+    .center a {
+      display: block;
+      text-align: center;
+      font-size: 30px;
+      color: #9C27B0;
     }
   </style>
 </head>
 <body>
   <div>
+    <h1 class="center"><a href="https://facebook201.github.io/blog/articles/webgl/">前端图形学博客链接 (WebGL) </a></h1>
     <section>
       <h1>三维立体</h1>
-      <a href="./template/html/3d.html">3D旋转变色</a>
+      <a href="./template/html/3d.html">
+        <div class="image">
+          <image src="./images/3d1.png" alt="3D立体" />
+          <p>3D变色立方体</p>
+        </div>
+      </a>
+      <a href="./template/threejs/html/mof.html">
+        <div class="image">
+          <image src="./images/mf.png" alt="3D立体" />
+          <p>旋转魔方</p>
+        </div>
+      </a>
     </section>
     <section>
-      <h1>Shader</h1>
-      <h1><a href="./template/html/toy.html">shadertoy 转 threejs shader 案例</a></h1>
-      <ul>
-        <li><a href="./template/html/shaderlz.html">3D粒子</a></li>
-        <li><a href="./template/html/shaderm.html">3D粒子波动</a></li>
-        <li><a href="./template/html/shaderyd.html">雨滴Shader</a></li>
-      </ul>
+      <h1>ShaderToy</h1>
+      <a href="./template/html/shaderlz.html">
+        <div class="image">
+          <image src="./images/粒子.png" alt="3D粒子" />
+          <p>3D粒子</p>
+        </div>
+      </a>
+      <a href="./template/html/shaderm.html">
+        <div class="image">
+          <image src="./images/zaoyin.png" alt="3D噪音扰动" />
+          <p>3D噪音扰动</p>
+        </div>
+      </a>
+      <a href="./template/html/shaderyd.html">
+        <div class="image">
+          <image src="./images/rain.png" alt="雨滴Shader" />
+          <p>雨滴Shader</p>
+        </div>
+      </a>
+      <a href="./template/html/glsl/grid.html">
+        <div class="image">
+          <image src="./images/cicrle.png" alt="雨滴Shader" />
+          <p>画圆</p>
+        </div>
+      </a>
     </section>
 
     <section>
-      <h1>WebGL</h1>
-      <ul>
-        <!-- <li><a href="./template/html/webgl.html">WebGL</a></li> -->
-      </ul>
-    </section>
-
-    <section>
-      <h1>GlSL shader</h1>
-      <ul>
-        <li><a href="./template/html/glsl/grid.html">画圆</a></li>
-      </ul>
-    </section>
-
-    <section>
-      <h1>Three 开发指南</h1>
-      <ul>
-        <li><a href="./template/threejs/html/index.html">跳跳球</a></li>
-        <li><a href="./template/threejs/html/index2.html">随机生成几何体</a></li>
-        <li><a href="./template/threejs/html/light.html">光源</a></li>
-        <li><a href="./template/threejs/html/mof.html">魔方</a></li>
-        <li><a href="./template/threejs/html/threejs.html">Threejs 字体</a></li>
-        <li><a href="./template/threejs/html/threeEarth.html">地球</a></li>
-      </ul>
+      <h1>ThreeJS</h1>
+      <a href="./template/threejs/html/index.html">
+        <div class="image">
+          <image src="./images/cicrle.png" alt="跳跳球" />
+          <p>跳跳球</p>
+        </div>
+      </a>
+      <a href="./template/threejs/html/index2.html">
+        <div class="image">
+          <image src="./images/cube.png" alt="跳跳球" />
+          <p>随机生成几何体</p>
+        </div>
+      </a>
+      <a href="./template/threejs/html/light.html">
+        <div class="image">
+          <image src="./images/light.png" alt="跳跳球" />
+          <p>光源</p>
+        </div>
+      </a>
+      <a href="./template/threejs/html/threejs.html">
+        <div class="image">
+          <image src="./images/font.png" alt="跳跳球" />
+          <p>Threejs 字体</p>
+        </div>
+      </a>
+      <a href="./template/threejs/html/threeEarth.html">
+        <div class="image">
+          <image src="./images/earth.png" alt="旋转地球" />
+          <p>Threejs 旋转地球</p>
+        </div>
+      </a>
     </section>
 
     <section></section>
-      <h1>Three 小游戏</h1>
-      <ul>
-        <li><a href="./games/index.html">跳跳龙</a></li>
-      </ul>
+      <h1>ThreeJS 小游戏</h1>
+      <a href="./games/index.html">
+        <div class="image">
+          <image src="./images/long.png" alt="跳跳龙" />
+          <p>Threejs 跳跳龙</p>
+        </div>
+      </a>
     </section>
 
 
     <section></section>
-      <h1>Three PBR 基于物理渲染的材质</h1>
-      <ul>
-        <li><a href="./webgl/index.html">皮质球</a></li>
-        <li><a href="./webgl/rock.html">石头材质</a></li>
-        <li><a href="./webgl/phycle.html">虹彩效果</a></li>
-      </ul>
+      <h1>ThreeJS PBR 材质</h1>
+        <a href="./webgl/index.html">
+          <div class="image">
+            <image src="./images/PBR.png" alt="跳跳龙" />
+            <p>皮质球</p>
+          </div>
+        </a>
+        <a href="./webgl/rock.html">
+          <div class="image">
+            <image src="./images/rock.png" alt="跳跳龙" />
+            <p>石头材质</p>
+          </div>
+        </a>
+        <a href="./webgl/phycle.html">
+          <div class="image">
+            <image src="./images/rainbow.png" alt="跳跳龙" />
+            <p>虹彩效果</p>
+          </div>
+        </a>
     </section>
 
     <section></section>
       <h1>3D 可视化</h1>
-      <ul>
-        <li><a href="./3D/earth/12.棱锥标注飞线起点/2.案例源码/0.飞线可视化.html">3D地球可视化</a></li>
-        <li><a href="./3D/map/5/cn/code/1.html">3D地图可视化</a></li>
-      </ul>
+      <a href="./3D/earth/12.棱锥标注飞线起点/2.案例源码/0.飞线可视化.html">
+        <div class="image">
+          <image src="./images/3dearth.png" alt="跳跳龙" />
+          <p>3D地球可视化</p>
+        </div>
+      </a>
+      <a href="./3D/map/5/cn/code/1.html">
+        <div class="image">
+          <image src="./images/3dearth.png" alt="跳跳龙" />
+          <p>3D地图可视化</p>
+        </div>
+      </a>
     </section>
   </div>
 </body>

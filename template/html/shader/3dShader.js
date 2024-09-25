@@ -7,6 +7,7 @@ let h = window.innerHeight;
 
 const scene = new THREE.Scene();
 
+
 const camera = new THREE.PerspectiveCamera(75, w / h, 0.01, 1000);
 camera.position.set(0, 0, 4);
 camera.lookAt(new THREE.Vector3());
@@ -63,6 +64,16 @@ function render() {
   cube.rotation.y = time;
   renderer.render(scene, camera);
   requestAnimationFrame(render);
+}
+
+function screenShot() {
+  renderer.render(scene, camera)
+  composer.render()
+  const base64 = renderer.domElement.toDataURL(['image/png', '0.8'])
+  const link = document.createElement('a');
+  link.href = base64;
+  link.download = 'myImage.png';
+  link.click();
 }
 
 render();
