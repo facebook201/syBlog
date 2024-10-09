@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shader</title>
+  <style>
+    body{
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #fcfcfc;
+    }
+    #info {
+      color: white;
+      display: block;
+      font-family: "Press Start 2P";
+      font-size: 5vh;
+      position: absolute;
+      text-align: center;
+      text-shadow: 2px 2px #1f1f1f;
+      top: 5vh;
+      width: 100%;
+      z-index: 100;
+    }
+  </style>
+</head>
+<body>
+</body>
+<script type="importmap">
+  {
+    "imports": {
+      "three": "../build/three.module.js",
+      "three/addons/": "../examples/jsm/"
+    }
+  }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { HDRCubeTextureLoader } from 'three/addons/loaders/HDRCubeTextureLoader.js';
+
+let scene, renderer, gui, camera, plight, ballMesh, composer, controls;
+
+function init() {
+  scene = new THREE.Scene();
+
+  renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.physicallyCorrectLights = true;
+
+  renderer.outputColorSpace = THREE.SRGBColorSpace;//设置为SRGB颜色空间
+  renderer.toneMappingExposure = 1.25; // 渲染器色调映射曝光
+
+  camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
+  camera.lookAt(0, 0, 0);
+  camera.position.set(0, 0, 100);
+  controls = new OrbitControls(camera, renderer.domElement);
+
+  composer = new EffectComposer(renderer);
+
+  // scene.add(new THREE.AxesHelper(1000));
+
+  // 点光源
+  // const lightHelper = new THREE.DirectionalLightHelper(plight, 10);
+  let plight1 = new THREE.DirectionalLight(0x3b2e37, 40);
+  plight1.position.set(-50, 0, 20);
+  scene.add(plight1);
+
+  new HDRCubeTextureLoader()
+    .setPath('./file/pisaHDR/')
+    .load(['px.hdr', 'nx.hdr', 'py.hdr', 'ny.hdr', 'pz.hdr', 'nz.hdr'],
+      function (texture ) {
+        // scene.environment = texture;
+      }
+    );
+  paddedBall();
+  animate();
+}
+
+function paddedBall() {
+  // 普通材质
+  const geometry = new THREE.SphereGeometry(10, 32, 32);
+  const m1 = new THREE.MeshBasicMaterial({
+    color: 0x00ff00,
+  });
+  const ballMesh = new THREE.Mesh(geometry, m1);
+  scene.add(ballMesh);
+
+  // 高光 和 兰伯特
+  const m3 = new THREE.MeshLambertMaterial({
+    color: 0x00ff00,
+    specular: 0x00ff00,
+  });
+
+  const ballMesh3 = new THREE.Mesh(geometry, m3);
+  ballMesh3.position.set(-20, 0, 0);
+  scene.add(ballMesh3);
+
+
+  const m2 = new THREE.MeshPhongMaterial({
+    color: 0x00ff00,
+    specular: 0x00ff00,
+  });
+  const ballMesh2 = new THREE.Mesh(geometry, m2);
+  ballMesh2.position.set(20, 0, 0);
+  scene.add(ballMesh2);
+
+  // 高光 和 兰伯特
+}
+
+
+function screenShot() {
+    renderer.render(scene, camera)
+    composer.render()
+    const base64 = renderer.domElement.toDataURL(['image/png', '0.8'])
+    const link = document.createElement('a');
+    link.href = base64;
+    link.download = 'myImage.png';
+    link.click();
+}
+
+function animate() {
+  requestAnimationFrame(animate);
+  renderer.render(scene, camera);
+}
+
+init();
+
+</script>
+</html>

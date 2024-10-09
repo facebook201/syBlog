@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+
+    canvas {
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="webgl"></canvas>
+  <script src="./webgl.js"></script>
+  <script src="./lib/matrix.js"></script>
+  <script>
+    const canvas = document.getElementById('webgl');
+    const w = canvas.innerWidth;
+    const h = canvas.innerHeight;
+    let angle = 30.0;
+
+    resizeCanvas(canvas);
+    const gl = canvas.getContext('webgl');
+
+    // 顶点着色器
+    const vertexShaderSource = `
+      precision mediump float;
+      attribute vec4 a_Position;
+      void main() {
+        gl_Position = a_Position;
+      }
+    `;
+
+    // 片元着色器
+    const fragmentShaderSource = `
+      precision mediump float;
+      vec4 color = vec4(1.0, 2.0, 3.0, 1.0);
+      void main() {
+        gl_FragColor = color;
+      }
+    `;
+
+    webglInit(gl, vertexShaderSource, fragmentShaderSource);
+    initBuffers(gl, gl.program);
+
+
+    function initSphereBuffers(gl,) {
+      
+    }
+
+   
+    //设置canvas的大小
+    function resizeCanvas(canvas, width, height) {
+      if (canvas.width !== width) {
+        canvas.width = width ? width : window.innerWidth;
+      }
+      if (canvas.height !== height) {
+        canvas.height = height ? height : window.innerHeight;
+      }
+    }
+
+    function render(gl, n) {
+      translate(gl, gl.program);
+      gl.clearColor(0, 0, 0, 1);
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+      // 绘制立方体
+      gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_BYTE, 0);
+      requestAnimationFrame(() => render(gl, n));
+    }
+
+  </script>
+</body>
+
+</html>

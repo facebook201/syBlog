@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        @import url("../../../lib/webgl-tutorials.css");
+
+        body {
+            margin: 0;
+        }
+
+        canvas {
+            width: 100vw;
+            height: 100vh;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="info"></div>
+    <!-- vertex shader -->
+    <script id="3d-vertex-shader" type="x-shader/x-vertex">
+    attribute vec4 a_position;
+    attribute vec4 a_color;
+
+    uniform mat4 u_viewProjection;
+    uniform mat4 u_world;
+
+    varying vec4 v_color;
+
+    void main() {
+      // Multiply the position by the matrices
+      gl_Position = u_viewProjection * u_world * a_position;
+
+      // Pass the color to the fragment shader.
+      v_color = a_color;
+    }
+    </script>
+    <!-- fragment shader -->
+    <script id="3d-fragment-shader" type="x-shader/x-fragment">
+    precision mediump float;
+
+    // Passed in from the vertex shader.
+    varying vec4 v_color;
+
+    uniform vec4 u_colorMult;
+
+    void main() {
+        gl_FragColor = v_color * u_colorMult;
+    }
+    </script>
+    <!-- 选中物理的着色器代码 -->
+    <!-- vertex shader -->
+    <script id="pick-vertex-shader" type="x-shader/x-vertex">
+    attribute vec4 a_position;
+    
+    uniform mat4 u_viewProjection;
+    uniform mat4 u_world;
+    
+    void main() {
+        // Multiply the position by the matrices
+        gl_Position = u_viewProjection * u_world * a_position;
+    }
+    </script>
+    <!-- fragment shader -->
+    <script id="pick-fragment-shader" type="x-shader/x-fragment">
+    precision mediump float;
+    
+    uniform vec4 u_id;
+    
+    void main() {
+        gl_FragColor = u_id;
+    }
+    </script><!--
+for most samples webgl-utils only provides shader compiling/linking and
+canvas resizing because why clutter the examples with code that's the same in every sample.
+See http://webglfundamentals.org/webgl/lessons/webgl-boilerplate.html
+and http://webglfundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
+for webgl-utils, m3, m4, and webgl-lessons-ui.
+-->
+    <script src="../../../lib/webgl-utils2.js"></script>
+    <script src="../../../lib/m4.js"></script>
+    <script src="../../../lib/primitives.js"></script>
+    <script src="../../../lib/chroma.min.js"></script>
+</body>
+
+</html>
+<script type="module">
+    import {
+        degToRad, rand, eMod, createTexture, drawObjects, createObjects, computeMatrix
+    } from "./selectObject.js"
+    "use strict";
+    let mouseX = -1;
+    let mouseY = -1;
+    let oldPickNdx = -1;
+    let oldPickColor;
+    let frameCount = 0;
+    function main() {
+        // Get A WebGL context
+        /** @type {HTMLCanvasElement} */
+        const canvas = document.getElementById("canvas");
+        const gl = canvas.getContext("webgl");
+        if (!gl) {
+            return;
+        }
+        // 初始化着色器程序
+        const programInfo = webglUtils.createProgramInfo(
+            gl, ["3d-vertex-shader", "3d-fragment-shader"]);
+        // 被选中的着色器程序
+        const pickingProgramInfo = webglUtils.createProgramInfo(
+            gl, ["pick-vertex-shader", "pick-fragment-shader"]);
+
+        const fieldOfViewRadians = degToRad(60);
+        const near = 1;
+        const far = 2000;
+        const viewProjectionMatrix = m4.identity();
+        const { objectsToDraw, objects } = createObjects(gl, viewProjectionMatrix, programInfo);
+        // 创建一个纹理对象作为渲染目标
+        const targetTexture = createTexture(gl);
+        // 创建一个深度缓冲
+        const depthBuffer = gl.createRenderbuffer();
+        gl.bindRenderbuffer(gl.RENDERBUFFER, depthBuffer);
+        // 设置纹理和渲染缓冲大小
+
+        function setFramebufferAttachmentSizes(width, height) {
+            gl.bindTexture(gl.TEXTURE_2D, targetTexture);
+            // define size and format of level 0
+            const level = 0;
+            const internalFormat = gl.RGBA;
+            const border = 0;
+            const format = gl.RGBA;
+            const type = gl.UNSIGNED_BYTE;
+            const data = null;
+            gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
+                width, height, border,
+                format, type, data);
+
+            gl.bindRenderbuffer(gl.RENDERBUFFER, depthBuffer);
+            gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, width, height);
+        }
+        // 创建一个只有1x1像素的纹理和深度缓冲。
+        setFramebufferAttachmentSizes(1, 1);
+
+        // 创建并绑定帧缓冲
+        const fb = gl.createFramebuffer();
+        gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+
+        // 绑定纹理作为一个颜色附件
+        const attachmentPoint = gl.COLOR_ATTACHMENT0;
+        const level = 0;
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, attachmentPoint, gl.TEXTURE_2D, targetTexture, level);
+
+        // 创建一个和渲染目标储存相同的深度缓冲
+        gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, depthBuffer);
+
+        addMouseMoveEvent(gl.canvas);
+        requestAnimationFrame(drawScene);
+
+        // Draw the scene.
+        function drawScene(time) {
+            time *= 0.0005;
+            ++frameCount;
+            // 重置画布大小
+            webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+
+            // 使用lookAt创建相机矩阵
+            const cameraPosition = [0, 0, 100];
+            const target = [0, 0, 0];
+            const up = [0, 1, 0];
+            const cameraMatrix = m4.lookAt(cameraPosition, target, up);
+
+            // 创建视图矩阵
+            const viewMatrix = m4.inverse(cameraMatrix);
+
+            // 计算所有对象的矩阵
+            objects.forEach(function (object) {
+                object.uniforms.u_world = computeMatrix(
+                    object.translation,
+                    object.xRotationSpeed * time,
+                    object.yRotationSpeed * time);
+            });
+            // ------将对象绘制到纹理 --------
+            drawObjectsToTexture(gl, objectsToDraw, objects, viewMatrix, viewProjectionMatrix, pickingProgramInfo, fieldOfViewRadians, near, far, fb);
+
+            // ------ 将对象绘制到画布
+            drawObjectsToCanvas(gl, objectsToDraw, fieldOfViewRadians, near, far, viewMatrix, viewProjectionMatrix);
+
+            requestAnimationFrame(drawScene);
+        }
+
+    }
+    function addMouseMoveEvent(dom) {
+        dom.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mouseX = e.clientX - rect.left;
+            mouseY = e.clientY - rect.top;
+        });
+    }
+    function drawObjectsToTexture(gl, objectsToDraw, objects, viewMatrix, viewProjectionMatrix, pickingProgramInfo, fieldOfViewRadians, near, far, fb) {
+
+
+        //找出鼠标下的像素，然后设置一个截头体来渲染
+        {
+            // 计算覆盖视锥体前方的近平面矩形尺寸
+            const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+            const top = Math.tan(fieldOfViewRadians * 0.5) * near;
+            const bottom = -top;
+            const left = aspect * bottom;
+            const right = aspect * top;
+            const width = Math.abs(right - left);
+            const height = Math.abs(top - bottom);
+
+            //计算近平面覆盖鼠标下1像素的部分
+            const pixelX = mouseX * gl.canvas.width / gl.canvas.clientWidth;
+            const pixelY = gl.canvas.height - mouseY * gl.canvas.height / gl.canvas.clientHeight - 1;
+
+            const subLeft = left + pixelX * width / gl.canvas.width;
+            const subBottom = bottom + pixelY * height / gl.canvas.height;
+            // 计算每个像素在近平面上的宽度和高度
+            const subWidth = width / gl.canvas.width;
+            const subHeight = height / gl.canvas.height;
+
+            // 为此像素创建视锥体
+            const projectionMatrix = m4.frustum(
+                subLeft,
+                subLeft + subWidth,
+                subBottom,
+                subBottom + subHeight,
+                near,
+                far);
+            //计算viewProjectionMatrix根据projectionMatrix和viewMatrix
+            m4.multiply(projectionMatrix, viewMatrix, viewProjectionMatrix);
+        }
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+        gl.viewport(0, 0, 1, 1);
+
+        gl.enable(gl.CULL_FACE);
+        gl.enable(gl.DEPTH_TEST);
+
+        // Clear the canvas AND the depth buffer.
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+        drawObjects(gl, objectsToDraw, pickingProgramInfo);
+
+        // read the 1 pixel
+        const data = new Uint8Array(4);
+        gl.readPixels(
+            0,                 // x
+            0,                 // y
+            1,                 // width
+            1,                 // height
+            gl.RGBA,           // format
+            gl.UNSIGNED_BYTE,  // type
+            data);             // typed array to hold result
+        const id = data[0] + (data[1] << 8) + (data[2] << 16) + (data[3] << 24);
+
+        // 恢复对象的颜色
+        if (oldPickNdx >= 0) {
+            const object = objects[oldPickNdx];
+            object.uniforms.u_colorMult = oldPickColor;
+            oldPickNdx = -1;
+        }
+
+        // 高亮在鼠标下的物体
+        if (id > 0) {
+            const pickNdx = id - 1;
+            oldPickNdx = pickNdx;
+            const object = objects[pickNdx];
+            oldPickColor = object.uniforms.u_colorMult;
+            object.uniforms.u_colorMult = [1, 1, 0, 1];//(frameCount & 0x8) ? [1, 1, 0, 1] : [1, 1, 0, 1];
+        }
+
+    }
+
+    function drawObjectsToCanvas(gl, objectsToDraw, fieldOfViewRadians, near, far, viewMatrix, viewProjectionMatrix) {
+        {
+            // 计算投影矩阵
+            const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+            const projectionMatrix =
+                m4.perspective(fieldOfViewRadians, aspect, near, far);
+
+            m4.multiply(projectionMatrix, viewMatrix, viewProjectionMatrix);
+        }
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+        drawObjects(gl, objectsToDraw);
+    }
+
+    main();
+
+</script>

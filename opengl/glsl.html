@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+
+    canvas {
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="webgl"></canvas>
+  <script src="./webgl.js"></script>
+  <script src="./lib/matrix.js"></script>
+  <script>
+    const canvas = document.getElementById('webgl');
+    const w = canvas.innerWidth;
+    const h = canvas.innerHeight;
+    let angle = 30.0;
+    resizeCanvas(canvas);
+    const gl = canvas.getContext('webgl');
+
+    // 顶点着色器
+    const vertexShaderSource = `
+      precision mediump float;
+
+      attribute vec4 a_Position;
+      void main() {
+        gl_Position = a_Position;
+        gl_PointSize = 512.0;
+      }
+    `;
+
+    // 片元着色器
+    const fragmentShaderSource = `
+      precision mediump float;
+      vec4 v = vec4(1,2,3,4) + vec4(5,6,7,8);
+      void main(){
+        gl_FragColor = v / 255.0;
+      }
+    `;
+
+    webglInit(gl, vertexShaderSource, fragmentShaderSource);
+    initBuffers(gl, gl.program);
+
+    function initBuffers(gl, program) {
+      render(gl);
+    }
+
+    //设置canvas的大小
+    function resizeCanvas(canvas, width, height) {
+      if (canvas.width !== width) {
+        canvas.width = width ? width : window.innerWidth;
+      }
+      if (canvas.height !== height) {
+        canvas.height = height ? height : window.innerHeight;
+      }
+    }
+
+    function render(gl) {
+      gl.clearColor(0, 0, 0, 1);
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+      // 绘制立方体
+      gl.drawArrays(gl.POINTS, 0, 1);
+
+      const pixels = new Uint8Array(4);
+      gl.readPixels(canvas.width / 2, canvas.height / 2, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+      console.log(pixels);
+      // requestAnimationFrame(() => render(gl, n));
+    }
+
+
+    function getPixels(gl) {
+      gl.readPixels(canvas.width / 2, canvas.height / 2, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+    }
+
+    function translate(gl, program) {
+      const rad = angle * Math.PI / 180;
+      const cos = Math.cos(rad);
+      const sin = Math.sin(rad);
+
+      const mx = gl.getUniformLocation(program, 'mx');
+      const mxArr = new Float32Array([
+        1, 0, 0, 0,
+        0, cos, -sin, 0,
+        0, sin, cos, 0,
+        0, 0, 0, 1
+      ]);
+      gl.uniformMatrix4fv(mx, false, mxArr);
+
+      const my = gl.getUniformLocation(program, 'my');
+      const myArr = new Float32Array([
+        cos, 0, -sin, 0,
+        0, 1, 0, 0,
+        sin, 0, cos, 0,
+        0, 0, 0, 1
+      ]);
+      gl.uniformMatrix4fv(my, false, myArr);
+
+      angle += 1;
+    }
+
+  </script>
+</body>
+
+</html>

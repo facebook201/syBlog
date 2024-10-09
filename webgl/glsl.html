@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shader</title>
+  <style>
+    body{
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+    #info {
+      color: white;
+      display: block;
+      font-family: "Press Start 2P";
+      font-size: 5vh;
+      position: absolute;
+      text-align: center;
+      text-shadow: 2px 2px #1f1f1f;
+      top: 5vh;
+      width: 100%;
+      z-index: 100;
+    }
+  </style>
+</head>
+<body>
+</body>
+<!-- <script type="text/javascript" src="../spector.bundle.js"></script> -->
+<script type="importmap">
+  {
+    "imports": {
+      "three": "../build/three.module.js",
+      "three/addons/": "../examples/jsm/"
+    }
+  }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+let scene, renderer, gui, camera, plight, ballMesh, controls;
+
+function init() {
+  scene = new THREE.Scene();
+
+  renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
+
+  renderer.outputColorSpace = THREE.LinearSRGBColorSpace;//设置为SRGB颜色空间
+
+  renderer.outputColorSpace = THREE.SRGBColorSpace;//设置为SRGB颜色空间
+  renderer.toneMappingExposure = 1.25; // 渲染器色调映射曝光
+
+  camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
+  camera.lookAt(0, 0, 0);
+  camera.position.set(0, 0, 100);
+  controls = new OrbitControls(camera, renderer.domElement);
+  scene.add(new THREE.AxesHelper(1000));
+
+  animate();
+}
+
+
+function animate() {
+  controls.update();
+  requestAnimationFrame(animate);
+  renderer.render(scene, camera);
+}
+
+init();
+
+</script>
+</html>

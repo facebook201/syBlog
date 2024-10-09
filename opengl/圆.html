@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+    canvas {
+      width: 100%;
+      height: 100vh;
+    }
+  </style>
+</head>
+<body>
+<canvas id="webgl"></canvas>
+<script src="./webgl.js"></script>
+<script>
+
+  const canvas = document.getElementById('webgl');
+  const w = canvas.innerWidth;
+  const h = canvas.innerHeight;
+  resizeCanvas(canvas, w, h);
+  const gl = canvas.getContext('webgl');
+
+  // 顶点着色器
+  const vertexShaderSource = `
+    precision mediump float;
+    attribute vec2 a_Position;
+    attribute vec4 a_Color;
+    varying vec4 v_Color;
+    void main() {
+      gl_Position = vec4(a_Position, 0.0, 1.0);
+      v_Color = a_Color;
+    }
+  `;
+
+  // 片元着色器
+  const fragmentShaderSource = `
+    precision mediump float;
+    varying vec4 v_Color;
+    void main() {
+      gl_FragColor = v_Color;
+    }
+  `;
+
+  webglInit(gl, vertexShaderSource, fragmentShaderSource);
+
+  initBuffer(gl, gl.program)
+
+  function initBuffer(gl, program) {
+    // 定义组成矩形的两个三角形，共计四个顶点，每个顶点包含2个坐标分量和4个颜色分量，其中 V0,V1,V2代表左下角三角形，V1,V2,V3代表右上角三角形。
+    const x=Math.round(canvas.width/2);
+    const y=Math.round(canvas.height/2);
+    let positions = createCircle(x, y, 200, 350);
+
+    let a_Position = gl.getAttribLocation(program, 'a_Position');
+    let a_Color = gl.getAttribLocation(program, 'a_Color');
+
+    gl.enableVertexAttribArray(a_Position);
+    gl.enableVertexAttribArray(a_Color);
+    // 创建缓冲区
+    let buffer = gl.createBuffer();
+    // 绑定缓冲区为当前缓冲
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    // 设置 a_Position 属性从缓冲区读取数据方式
+    gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 24, 0);
+    // 设置 a_Color 属性从缓冲区读取数据方式
+    gl.vertexAttribPointer(a_Color, 4, gl.FLOAT, false, 24, 8);
+    // 向缓冲区传递数据
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+    render(gl, positions.length / 6);
+  }
+
+    //设置canvas的大小
+  function resizeCanvas(canvas, width, height) {
+      if (canvas.width !== width) {
+          canvas.width = width ? width : window.innerWidth;
+      }
+      if (canvas.height !== height) {
+          canvas.height = height ? height : window.innerHeight;
+      }
+    }
+
+  function createCircle(x,y,radius, n) {
+    let positions = [...coordTransform(x, y), 1, 1, 0, 1];
+    for (let i = 0; i <= n; i++) {
+      let angle = (i * Math.PI * 2) / n;
+      const [positionX, positionY] = coordTransform(x + radius * Math.sin(angle), y + radius * Math.cos(angle));
+      positions.push(positionX, positionY, 1, 0, 0, 1);
+    }
+    return positions;
+  }
+
+  function coordTransform(x, y) {
+    const { width, height } = canvas;
+    // 将 canvas 的坐标值 转换为 [-1.0, 1.0]的范围。
+    const posisionX = 2 * x / width - 1;
+    // canvas的 Y 轴坐标方向和 设备坐标系的相反。
+    const positionY = -(2 * y / height - 1);
+    return [posisionX, positionY];
+  }
+
+  function render(gl, count) {
+    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.drawArrays(gl.TRIANGLE_FAN, 0, count);
+  }
+
+</script>
+</body>
+</html>
